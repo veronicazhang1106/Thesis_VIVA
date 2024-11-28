@@ -1,0 +1,882 @@
+---
+title: "SNL_WRDS"
+subtitle: "Financial and CoVaR Estimation"
+author: "Veronica"
+date: today
+date-format: long
+format: 
+  html:
+    theme: minty
+    smooth-scroll: true
+    toc: true
+    code-overflow: scroll
+    self-contained: true
+    link-external-icon: true
+    link-external-newwindow: true
+execute: 
+  eval: true
+  echo: true
+  output: true
+  warning: false
+  error: false
+  include: true
+---
+```{r}
+#| label: Loading liabraries
+#| include: false
+
+library(tidyverse)
+library(scales)
+library(RSQLite)
+library(dbplyr)
+library(RPostgres)
+library(readxl)
+library(quantreg)
+library(lubridate)
+library(plm)
+library(sjPlot)
+
+compustat_item_list_vendor <- read_excel("compustat_item_list_vendor.xlsx", 
+    sheet = "Xpressfeed Items",col_types = "text")
+
+```
+
+
+
+## Accessing WRDS
+
+To establish a connection, you use the function dbConnect() with the following arguments. Note that you need to replace the user and password arguments with your own credentials. Delete *"Sys.getenv("user")" and "Sys.getenv("password")"* and put your own credentials. 
+
+```{r}
+#| label: Accessing WRDS
+
+wrds <- dbConnect(
+  Postgres(), 
+  host = "wrds-pgdata.wharton.upenn.edu", 
+  dbname = "wrds", 
+  port = 9737, 
+  sslmode = "require", 
+  user = "yzhang107", 
+  password = "771106v710812S"
+)
+
+```
+
+The remote connection to WRDS is very useful. Yet, the database itself contains many different tables. You can check the WRDS homepage to identify the table’s name you are looking for. 
+
+ Alternatively, you can also query the data structure with the function 'dbSendQuery()'. For more information, check out the WRDS webpage ["Querying WRDS Data Using R"](https://wrds-www.wharton.upenn.edu/pages/support/programming-wrds/programming-r/querying-wrds-data-r/). 
+ 
+WRDS data is organized by vendor (such as *crsp* and *comp(compustat)*) and referred to as a library. Each library contains a number of database tables or datasets (such as dsf), which contain the actual data in tabular format with column headers called variables.
+
+Alternatively, a comprehensive list of all WRDS libraries is available at the [Dataset List](https://wrds-www.wharton.upenn.edu/pages/get-data/) or the [Product List](https://wrds-www.wharton.upenn.edu/users/products/). These resources provide a listing of each library, their component datasets and variables, as well as a tabular database preview feature, and is helpful in establishing the structure of the data you're looking for in an easy manner from a Web browser. The above two lists show the Datasets/Products to which your institution currently has access. 
+
+By using the [*Dataset List*](https://wrds-www.wharton.upenn.edu/pages/get-data/), you may find *Compustat* under the section of **Third Party** and access to *Global* dataset. Then query data using a web browser. 
+
+By using the [*Product List*](https://wrds-www.wharton.upenn.edu/users/products/), you may find *comp_global* in the list. Click on it and enter the page of the listed tables in *comp_global* dataset. 
+
+Click on the table name ***g_funda*** to see all the variables in the "Merged Global Fundamental **Annual** File (g_funda)". 
+
+*g_fundq* is the "Merged Global Fundamental **Quarterly** file (g_fundq)". 
+
+*g_company* is the table of company information including company names (**conm**), gobal company key-company (**gvkey**), the Global Industry Classification Standard (GICS) sectors (**gsector**), Standard Industrial Classification (SIC) codes (**sic**), the International Standards Organization (ISO) country code - Headquarters (**loc**). 
+
+***loc*** - The ISO 3166 country codes are available on the [Online Browsing Platform](https://www.iso.org/obp/ui/#search). China's ISO country code is **"CHN"**. 
+
+***gsector*** - The Global Industry Classification Standard (GICS®) was developed in 1999 by S&P Dow Jones Indices and MSCI. *gsector* information is available on the website of [S&P Dow Jones Indices](https://www.spglobal.com/spdji/en/landing/topic/gics/). The financial sector is **40**. 
+
+***sic*** - SIC codes can be found on the website of [SEC United States](https://www.sec.gov/corpfin/division-of-corporation-finance-standard-industrial-classification-sic-code-list). 
+
+
+
+## About Resetting WRDS Connection
+
+*Only run this if you have set up the WRDS connection to run when you restart your R session*
+
+```{r}
+#| label: Reset WRDS connection
+#| eval: false
+
+rm(wrds)
+.rs.restartR()
+
+```
+
+
+
+## Prepare Financial Data from Compustat and SNL Pro
+
+### Compustat-1. Identify Company Table in Compustat Global (comp, or compg)
+
+Firm financial information we are using is from [Compustat - Capital IQ (in WRDS)](https://wrds-www.wharton.upenn.edu/pages/get-data/compustat-capital-iq-standard-poors/) which is a database provided by the Vendor - [S&P Global Market Intelligence](https://www.spglobal.com/marketintelligence/en/). 
+
+The dataset we are using is [Compustat_Global(Query Page)](https://wrds-www.wharton.upenn.edu/pages/get-data/compustat-capital-iq-standard-poors/compustat/global-daily/). 
+
+The dataset can be accessed via [Product List Page](https://wrds-www.wharton.upenn.edu/users/products/). Click on [company_global (variable as "comp" or "compg" in arguments)](https://wrds-www.wharton.upenn.edu/data-dictionary/comp_global/) and enter the table list of company-global. The above mentioned "g_funda", "g_fundq", "g_company" are tables in the list. Click on the table name [e.g. g_funda](https://wrds-www.wharton.upenn.edu/data-dictionary/comp_global/g_funda/) and enter the page of variables of that table.
+
+Identify companies in the *g_company* table
+
+```{r}
+#| label: Identify g_company table
+
+idgc_db <- tbl(src = wrds, 
+               in_schema(schema = "comp_global",
+                         table = "g_company"))
+
+```
+
+
+
+### SNL-1. Retrieve companies from SNL as a data frame
+
+```{r}
+#| label: Retrieve company data frame from SNL
+
+SNL_co <- read_excel(path = "SNL_Company.xls", 
+                     sheet = "Sheet1", 
+                     col_names = TRUE, 
+                     col_types = "text")
+
+```
+
+
+
+### 2. Identify Dates for Daily Prices
+
+```{r}
+#| label: Setting date range
+
+start_date <- ymd("2010-01-01")
+end_date <- ymd("2022-12-31")
+
+```
+
+
+
+### SNL-3. Identify company names and SIC codes in the SNL_co data frame
+
+```{r}
+#| label: Identify company names and SIC codes
+
+co_name <- SNL_co$COMPANY_NAME
+sic_code <- SNL_co$SIC
+
+```
+
+
+
+### Compustat-3. Use SIC codes to identify Firms in the Financial Sector
+
+```{r}
+#| label: SIC codes list
+#| eval: false
+
+SIC_codes=c(6311, 6794, 6020, 6331, 6799
+,6159
+,6726
+,6512
+,6141
+,6211
+,6510
+,6552
+,6029
+,6282
+,6300
+,6513
+,6532
+,6172
+,6722
+,6036
+,6411
+,6500
+,6099
+,6399
+,6199
+,6163
+,6531
+,6519
+,6200
+,6798
+,6162
+,6321
+,6351
+,6153
+,6361) |>
+  as.character()
+```
+
+
+Then use the variable "loc" to locate the country as "CHN" and the variable "sic" to locate the financial sector. 
+
+```{r}
+#| label: Filter the financial firms using SIC codes
+#| eval: false
+
+f_company <- idgc_db |>
+  filter(loc=="CHN" &
+           sic %in% SIC_codes) |> 
+  collect() #Retrieve the results from the query to the remote database and put it into a tbl_df() in local
+
+```
+
+
+3-1. **Or**, we can also use GICs codes to search for firms in the financial sector
+
+```{r}
+#| label: Filter the financial firms using GICs codes ("gsector")
+#| eval: false
+
+f_company_gic <- idgc_db |> 
+  filter(loc == "CHN" &
+           gsector == "40"|
+           loc == "CHN" &
+           gsector == "60") |> # 40 financials, 60 real estate
+  collect()
+
+```
+
+
+
+### Compustat-4. Extract annual financial information variables for the second stage regression
+
+```{r}
+#| label: Extract firm-level control variables for regression
+#| eval: false
+
+gvkeys <- f_company$gvkey #Retrieve the gvkeys for all financial firms in the tibble "f_company"
+
+funda_db <- tbl(src = wrds, 
+                in_schema(schema = "compg", 
+                          table = "g_funda")) #Retrieve the annual table
+
+compustat_financials <- funda_db |> 
+  filter(gvkey %in% gvkeys &
+           datadate >= start_date & datadate <= end_date) |>
+  select(gvkey, #company identifier 
+         conm, #company name
+         datadate, #date of accounting data
+         caprt, #total risk-adjusted capital ratio
+         at, #total assets,
+         act, #total current assets
+         dptb, #total deposits-banks
+         rcl, #loan loss provision
+         lcat #total loans
+         ) |> 
+  collect()
+
+#Next step, mutate lnAsset as bank size, act/at as liquidity ratio, dptb/at as funding ratio, rcl/at as LLR, and lcat/at as loan_to_assets
+
+compustat_controls <- compustat_financials |>
+  mutate(SIZE = log(at), 
+         Liquid = act/at, 
+         Funding = dptb/at, 
+         LLR = rcl/at, 
+         NL_to_TA = lcat/at)
+
+```
+
+
+
+### SNL-4. Retrieve Financial Information from SNL
+
+Because the total_capital_ratio came back with all "NA" from wrds, the financial data will be retrieved from SNL. The first step is to tidy all the raw data from the SNL; then merge all the raw data into a data frame. 
+
+```{r}
+#| label: Tidy all the raw data from the SNL
+#| echo: false
+
+# Total Regulatory Capital Ratio
+
+TRCap <- read_excel(path = "Financial_data/TRCap_Ratio.xls", 
+                    sheet = "Sheet1", 
+                    col_names = TRUE) |> 
+  pivot_longer(cols = c("2022":"2010"), 
+         names_to = "Year", 
+         values_to = "Total_Capital_Ratio")
+
+TRCap$Total_Capital_Ratio <- as.numeric(TRCap$Total_Capital_Ratio)
+
+# Total Assets and LnAssets
+
+TA <- read_excel(path = "Financial_data/Total_Assets.xls", 
+                 sheet = "Sheet1", 
+                 col_names = TRUE) |> 
+  pivot_longer(cols = c("2022":"2010"), 
+         names_to = "Year",
+         values_to = "Total_Assets")
+
+TA$Total_Assets <- as.numeric(TA$Total_Assets)
+
+TA_Size <- TA |>
+  mutate(LnAssets = log(Total_Assets))
+
+# Net Loans to Total Assets 
+
+NetLoans <- read_excel(path = "Financial_data/NetLoans.xls", 
+                       sheet = "Sheet1", 
+                       col_names = TRUE) |>
+  pivot_longer(cols = c("2022":"2010"), 
+               names_to = "Year", 
+               values_to = "NL_to_TA")
+  
+NetLoans$NL_to_TA <- as.numeric(NetLoans$NL_to_TA)
+
+# Loan Loss Reserve to Total Gross Loans
+
+LLR <- read_excel(path = "Financial_data/LLR_Ratio.xls", 
+                  sheet = "Sheet1", 
+                  col_names = TRUE) |> 
+  pivot_longer(cols = c("2022":"2010"), 
+               names_to = "Year", 
+               values_to = "LLR")
+
+LLR$LLR <- as.numeric(LLR$LLR)
+
+# Liquidity Assets to Total Assets
+
+Liquidity <- read_excel(path = "Financial_data/Liquidity.xls", 
+                        sheet = "Sheet1", 
+                        col_names = TRUE) |> 
+  pivot_longer(cols = c("2022":"2010"), 
+               names_to = "Year", 
+               values_to = "Liquidity_Ratio")
+
+Liquidity$Liquidity_Ratio <- as.numeric(Liquidity$Liquidity_Ratio)
+
+# Deposits to Total Assets
+
+Funding <- read_excel(path = "Financial_data/Funding_Ratio.xls",
+                      sheet = "Sheet1", 
+                      col_names = TRUE) |>
+  pivot_longer(cols = c("2022":"2010"), 
+               names_to = "Year", 
+               values_to = "Funding_Ratio")
+
+Funding$Funding_Ratio <- as.numeric(Funding$Funding_Ratio)
+
+# Create a data_list for all the data frames
+
+df_list <- list(TRCap, TA_Size, NetLoans, LLR, Liquidity, Funding)
+
+df_variables <- df_list |> 
+  reduce(inner_join, 
+         by = c("COMPANY_NAME", "SNL_INSTN_KEY","SIC", "ISIN","Year"))
+
+df_variables$Year <- as.numeric(df_variables$Year)
+
+```
+
+
+
+### Compustat-5. Extract daily prices for f_company
+
+```{r}
+#| label: Daily prices
+#| eval: false
+
+gvkeys <- f_company$gvkey
+
+daily_db <- tbl(src = wrds, 
+                in_schema(schema = "comp", 
+                          table = "g_secd"))
+
+compustat_daily <- daily_db |> 
+  filter(gvkey %in% gvkeys &
+           datadate >= start_date & datadate <= end_date) |>
+  collect()
+
+```
+
+
+
+### SNL-5. Extract Daily Prices from Compustat for the companies retrieved from SNL
+
+```{r}
+#| label: Extract daily prices using the companies in the SNL_co data frame and the SIC codes
+
+co_name <- SNL_co$COMPANY_NAME
+sic_code <- SNL_co$SIC
+isin_code <- SNL_co$ISIN
+
+daily_db_SNL <- tbl(src = wrds, 
+                    in_schema(schema = "comp", 
+                              table = "g_secd"))
+
+
+price_dly_SNL <- daily_db_SNL |> 
+  filter(isin %in% isin_code &
+           datadate >= start_date & datadate <= end_date) |>
+  collect()
+  
+```
+
+
+
+### Compustat-6. Save all the date files from *wrds* into a .RDS file
+
+```{r}
+#| label: Save a .RDS file
+#| eval: false
+
+saveRDS(object = list(
+  sic_search = f_company, 
+  gic_search = f_company_gic, 
+  daily_price = compustat_daily, 
+  financials = compustat_financials, 
+  controls = compustat_controls), 
+  file = "wrds_China.rds")
+
+```
+
+
+
+### SNL_6. Save all the data files from *SNL* into a .RDS file
+
+```{r}
+#| label: Save a .rds file
+
+saveRDS(object = list(
+  companies = SNL_co, 
+  daily_price_SNL = price_dly_SNL, 
+  financials_SNL = df_variables), 
+  file = "SNL_China.rds")
+
+```
+
+
+
+## CoVaR Estimation - Using SNL_China.rds file
+
+### Get Stock Prices and Mutate Returns
+
+```{r}
+#| label: compustat stock prices and mutate returns
+
+dat<-readRDS("SNL_China.rds")
+
+dat$daily_price_SNL %>% 
+  {table(.$fic)} # countries where Chinese financials listed
+
+dat$daily_price_SNL %>%
+  filter(fic=="CHN") %>%
+  {length(unique(.$gvkey))} # number of financials listed in china
+
+china_only <- dat$daily_price_SNL %>%
+  filter(fic=="CHN")
+
+varlist <- read_excel("compustat_item_list_vendor.xlsx",sheet = 3,col_types = "text") |>
+  filter(Mnemonic %in% names(china_only)) %>%
+  distinct(Mnemonic,.keep_all = T)
+
+china_only <- china_only |>
+  arrange(gvkey,iid,datadate,isin) |>
+  group_by(gvkey,iid,isin) |>
+  mutate(pr_rtn=log(prccd/lag(prccd))) |>
+  ungroup()
+
+```
+
+
+### Collect State Variables - Federal Reserves Database
+
+```{r}
+library(fredr)
+
+fredr_set_key("d8f866099f2698f6c0efef09c4c361ee")
+
+start_date=ymd("2009-01-01")
+
+end_date=ymd("2022-12-31")
+
+fredr_series_search_text("spread")
+
+var_names<-c("VIXCLS","WILLRESIND","DGS1MO","TEDRATE")
+
+state_vars<-vector("list",length = 4)
+
+names(state_vars) <- var_names
+for (i in var_names) {
+  print(i)
+  fredr(series_id = i,
+  observation_start = as.Date(start_date),
+  observation_end = as.Date(end_date))->series  
+  state_vars[[i]]<-series
+}
+
+state_vars |> 
+  bind_rows()->state_vars
+
+state_vars |> 
+  select(date,series_id,value) |> 
+  pivot_wider(names_from = series_id,values_from = value) -> state_vars
+
+state_vars |>
+  mutate(RERTN=log(WILLRESIND/lag(WILLRESIND)))-> state_vars
+
+```
+
+
+
+### Collect State Variables - Bloomberg
+
+```{r}
+
+```
+
+
+
+
+
+### Data exploration
+
+```{r}
+#| label: Create full names list of variable mnemonics
+
+compustat_item_list_vendor <- read_excel("compustat_item_list_vendor.xlsx", 
+    sheet = "Xpressfeed Items",col_types = "text")
+```
+
+    compustat_item_list_vendor |>
+      filter(Mnemonic=="exchg")
+    china_only |>
+      filter(curcdd %in% c("CNY")) %>%
+      {table(.$exchg)}
+    china_only |>
+      filter(curcdd %in% c("CNY")) %>%
+      {table(.$iid)}
+    china_only %>%
+      filter(exchg!=170) |>
+      group_by(exchg) %>%
+      reframe(companies=length(unique(gvkey)),
+              codes_for_uniques=list(unique(gvkey))) -> exchg_tests
+    shenzhen_stocks<-exchg_tests |>
+      filter(exchg==249) %>%
+      select(codes_for_uniques) %>%
+      unlist()
+    shanghai_stocks<-exchg_tests |>
+      filter(exchg==250) %>%
+      select(codes_for_uniques) %>%
+      unlist()
+    match(shanghai_stocks,shenzhen_stocks)
+    match(shenzhen_stocks,shanghai_stocks)
+
+    other_stocks1<-exchg_tests |>
+      filter(exchg==342) %>%
+      select(codes_for_uniques) %>%
+      unlist()
+    other_stocks2<-exchg_tests |>
+      filter(exchg==347) %>%
+      select(codes_for_uniques) %>%
+      unlist()
+    match(other_stocks1,shenzhen_stocks)
+    match(other_stocks2,shanghai_stocks)
+
+The data has a number of features that require careful filtering. Importantly, there is various issuations for each firm, the most prominent being **`iid=="01W"`**. This is what I use to create a unique list of price returns as follows:
+
+
+```{r}
+# Create a unique list of price returns using "iid == 01W"
+
+df_returns <- china_only |>
+  filter(iid=="01W") |>
+  select(datadate,isin,pr_rtn) |>
+  drop_na(pr_rtn) |>
+  pivot_wider(names_from = "isin",values_from ="pr_rtn")
+
+```
+
+
+### Data Preparation - State Variables
+
+```{r}
+#| label: State Variables
+
+library(tidyquant)
+library(zoo)
+
+state_vars <- read_csv("Market_data/china_market_vars.csv") |>
+  left_join(read_csv("Market_data/shibor.csv"),by="Date")
+
+names_updates <- c("Shanghai_Index","HangSengVol_Index","SSE 180 Volatility Weighted Index","CSI Real Estate Index","China Securities Financials Index","Chinese Renminbi Overnight SHIBOR","Chinese Renminbi 3M SHIBOR","Bank Liquidity Risk Spread")
+
+names(state_vars)[-1] <- names_updates
+
+state_vars$MktRtn = c(NA, diff(log(state_vars$Shanghai_Index)))
+
+
+state_vars1 <- state_vars |>
+  drop_na(MktRtn) |>
+  tidyquant::tq_mutate(select = MktRtn,
+                       mutate_fun = runSD,
+                       n=22,
+                       col_rename = "Vol_22DaySD"
+                       ) 
+
+state_vars2 <- state_vars1 |>
+  mutate(Chg3M=(`Chinese Renminbi 3M SHIBOR`)/lag(`Chinese Renminbi 3M SHIBOR`)-1)
+
+# lagged values
+state_vars2 %>%
+  arrange(Date) %>%
+  transmute(lgMktR=lag(MktRtn)
+         ,lgVol=lag(Vol_22DaySD)
+         ,ChgCrSpd=`Bank Liquidity Risk Spread`-lag(`Bank Liquidity Risk Spread`)
+         ,lgChgCrSpd=lag(ChgCrSpd)
+         ,lgchg3M=lag(Chg3M),
+         Date=Date)-> state
+
+state |>
+  drop_na()
+
+```
+
+
+
+### Data Preparation - Financials' Returns
+
+```{r}
+#| label: financials-returns
+
+library(skimr)
+
+# non-missing greater than 252 day
+df_returns |>
+  pivot_longer(-datadate,
+               names_to = "ISIN",
+               values_to = "Rtn") |>
+  rename(Date=datadate) |>
+  arrange(ISIN,Date) |>
+  group_by(ISIN) |>
+  summarise(NonMissing =sum(!is.na(Rtn)),
+            Missing=sum(is.na(Rtn)))-> Missingness
+
+Missingness |> 
+  filter(NonMissing>252) |>
+  nrow()
+
+skimr::skim(Missingness)
+
+```
+
+
+
+### Data Preparation - Losses
+
+```{r}
+#| label: Calculate Losses
+
+df_returns |>
+  pivot_longer(-datadate,
+               names_to = "ISIN",
+               values_to = "Rtn") |>
+  rename(Date=datadate) |>
+  arrange(ISIN,Date) |>
+  group_by(ISIN) |>
+  drop_na(Rtn) |>
+  skimr::skim(Rtn)
+
+df_returns |>
+  pivot_longer(-datadate,
+               names_to = "ISIN",
+               values_to = "Rtn") |>
+  rename(Date=datadate) |>
+  arrange(Date,ISIN) |>
+  group_by(Date) |>
+  drop_na(Rtn) |>
+  mutate(rtn_loss=Rtn*(-1),
+         sys_loss=ifelse(
+    rtn_loss!=Inf,mean(rtn_loss,na.rm = T),NA)) |>
+  ungroup() -> FI_returns
+
+skimr::skim(FI_returns)
+
+```
+
+
+
+### Data Preparation - Add State Variables
+
+```{r}
+#| label: add-state-variables
+
+FI_returns %>% split(f=FI_returns$ISIN) -> rtn
+
+rtn %>% map(~(left_join(.x,state ,by="Date") |> drop_na())) -> rtn
+
+```
+
+
+
+### Contribution CoVaR estimation
+
+This has 3 steps: 
+
+1. Run quantile regressions for 50th, 95th and 99th percentiles to estimate time varying VaRs for each institution 
+
+2. Estimate system betas $b_tVaR_k|System$ 
+
+3. Estimate Delta CoVaRs
+
+```{r}
+#| label: CoVaR-calcs - QUantiel Regression
+
+reg_spec<-formula(rtn_loss~lgMktR+lgVol+lgChgCrSpd+lgchg3M)
+
+reg_spec_sys<-formula(sys_loss~rtn_loss+lgMktR+lgVol+lgChgCrSpd+lgchg3M)
+
+pb<-progress::progress_bar$new(total=length(rtn))
+
+covar <- function(df) {
+  pb$tick()
+  df %>% drop_na()->df
+  if (nrow(df)>40) {
+      v50<-fitted(rq(reg_spec,data =df,tau = 0.5))
+  v95<-fitted(rq(reg_spec,data =df,tau = 0.95))
+  v99<-fitted(rq(reg_spec,data =df,tau = 0.99))
+  
+  rq(reg_spec_sys,data=df,tau=0.95) %>% coef() -> beta
+  
+  b95<-beta["rtn_loss"]
+  
+  rq(reg_spec_sys,data=df,tau=0.99) %>% coef() -> beta
+  
+  b99<-beta["rtn_loss"]
+  
+  DCoVaR95<-b95*(v95-v50)
+  
+  DCoVaR99<-b99*(v99-v50)
+  
+  return(tibble(c99=DCoVaR99,c95=DCoVaR95,v95=v95,v99=v99,b95=b95,b99=b99))
+  } else{
+  return(NULL)  
+  }
+
+}  
+
+rtn %>% map(~covar(.x)) ->CoVaR_res
+
+CoVaR_res %>% 
+  bind_rows(.id = 'ISIN') %>% 
+  summary
+
+rtn %>% bind_rows(.id="ISIN") %>% 
+  drop_na() %>%  
+  add_column(CoVaR_res %>% bind_rows)->dat_anual
+
+
+
+```
+
+
+
+## Visualization of DCoVaR
+
+```{r}
+#| label: DCoVaR Visualization
+
+dat$companies
+
+table(dat$companies$ISIN)
+
+dat_anual |>
+  left_join(dat$companies,by="ISIN") |>
+  group_by(Date,SIC) |>
+  summarise(DCoVaR99=mean(c99,na.rm=T),DCoVaR95=mean(c95,na.rm=T)) |>
+  pivot_longer(!Date&!SIC,names_to = "Type",values_to = "MeanCoVaR") |>
+  ggplot(aes(x=Date,y=MeanCoVaR,colour=Type)) + geom_line() + facet_wrap(~SIC)
+
+```
+
+
+
+## Regression - CoVaR and Capital Ratio
+
+1. Aggregate daily CoVaR to annual data;
+2. Combine financial data with CoVaR to a data frame according to ISIN key;
+3. Run regression in the data frame
+
+```{r}
+#| label: tbl-regression
+#| tbl-cap: Regulatory Capital and Systemic Risk Estimated 
+
+# Aggregate dail CoVaR
+CoVaR_aggr <- dat_anual |> 
+  select(Date, ISIN, c99, c95)
+
+
+# Round dates down to year
+CoVaR_aggr$year <- floor_date(CoVaR_aggr$Date, "year")
+
+CoVaR_aggrY <- CoVaR_aggr |> 
+  group_by(year, ISIN) |> 
+  summarize(C99 = mean(c99, na.rm = TRUE), 
+            C95 = mean(c95, na.rm = TRUE))
+
+CoVaR_aggrY$Year <- strftime(CoVaR_aggrY$year, "%Y") # Extract Year from year (20xx-xx-01)
+CoVaR_aggrY$Year <- as.numeric(CoVaR_aggrY$Year)
+
+
+# Combine financial data and CoVaR yearly data
+df_annual <- df_variables |> 
+  left_join(CoVaR_aggrY, 
+            by = c("ISIN", "Year"))
+
+
+# Run fixed-effect regression
+
+## Create a pdata.frame
+panel <- df_annual |> 
+  pdata.frame(index = c("COMPANY_NAME", "Year"), 
+              drop.index = FALSE, 
+              row.names = TRUE)
+
+colnames(panel)[colnames(panel) == "Total_Capital_Ratio"] <- "TC_to_RWA" #Change the variable name
+
+fixed_95 <- plm(C95 ~ TC_to_RWA + LnAssets + NL_to_TA + LLR + Liquidity_Ratio + Funding_Ratio, 
+             data = panel,
+             effect = "time", 
+             model = "pooling")
+
+summary(fixed_95)
+
+fixed_99 <- plm(C99 ~ TC_to_RWA + LnAssets + NL_to_TA + LLR + Liquidity_Ratio + Funding_Ratio, 
+             data = panel,
+             effect = "time", 
+             model = "pooling")
+
+summary(fixed_99)
+
+model_1 <- tab_model(fixed_95, fixed_99,
+                     digits = 5, 
+                     auto.label = TRUE, 
+                     p.style = "stars")
+model_1
+
+
+
+
+
+
+
+  
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,69 @@
+# Conclusion
+
+## Research Summary
+
+My thesis explores the interplay between Basel III capital adequacy regulation and risk-taking, efficiency, and systemic stability within the Chinese banking industry, specifically focusing on the influence of ownership structure. The objectives were to analyze the impact of Basel III capital regulation on bank credit risk, cost efficiency, and stability of the whole financial system and to assess the influence of different ownership structures in the Chinese context. The 2007-2009 Global Financial Crisis (GFC) uncovered that the pre-crisis capital regulations have structural weaknesses and are inadequate to protect financial institutions from systemic distress. The Basel Committee on Banking Regulation and Supervision (BCBS) developed a consolidated framework (Basel III) for more stringent capital adequacy regulations. There is continued academic interest in the effect of the implementation of Basel III capital requirements [see @DEMIRGUC-KUNT2013] despite the regulatory consensus. This thesis reveals nuanced insights that contribute significantly to our understanding of the interplay between regulatory framework, ownership structures, and the broader financial stability landscape. 
+
+Since 1978, the Chinese banking sector has been reformed as part of the country's overall economic reform. After forty years, Chinese banks have actively participated in global financial markets as influential players and contributed to the interconnectedness of the international financial system. Chapter 2 reviews China's banking landscape, including the evolution of the financial reforms, the regulatory framework, and the essential financial indicators. The objectives of Chapter 2 were to understand the unique context of China's banking industry, the adherence to the Basel III framework, and the Chinese banks' presence in and interconnectedness to the global financial system, thereby offering research background for the following chapters of empirical analyses. The review shows that the reform and legislative advancements in China's banking sector and transformation initiatives have resulted in a diversified ownership structure,  contemporary corporate governance frameworks, and heightened market competition. The government's active intervention is progressively receding with each phase of reform. The Basel III framework has been fully adopted and incorporated into the banking regulatory framework in China [^summary-01]. Employing the CAMELS rating system, Chapter 2 assesses the safety and soundness of Chinese banks.
+In summary, China's commercial banks exhibit robust capital adequacy, surpassing the Basel III standard with a ratio exceeding 10%, and maintain a lower average NPL ratio compared to G20 peers. However, our analysis highlights potential vulnerabilities for small and medium banks facing elevated credit risks, suggesting enhanced safeguards are needed. Notably, Chinese commercial banks demonstrate a competitive edge with lower cost-to-income ratios and an average return on equity exceeding 14%. While liquidity risk is generally well-managed in the biggest and small-sized banks, medium-sized banks, particularly those historically linked to local government shareholders, may face higher liquidity risks due to increased reliance on wholesale funding channels.
+
+[^summary-01]: China fully adopted Basel III in 2012, after adopting and implementing Basel II and Basel II.5 in previous years.
+
+Chapter 3, our initial investigation builds upon previous empirical studies that examine how Basel III risk-based capital requirements influence banks' credit risk-taking. We enhance our research by considering the interplay between capital regulation and ownership structure. This study employs forensically analyzed data on 231 Chinese banks over the period 2010-2019. The negative impact on bank credit risk-taking suggests that implementing Basel III has indeed fortified financial stability. Notably, state-owned banks emerge as key players in this dynamic, exhibiting higher credit risk-taking compared to other ownership structures. This finding is consistent with the results of @ZHU2016 and, to some extent, echoes the empirical results of @LAEVEN2009, indicating that banks with large shareholders holding substantial cash flow rights tend to assume greater credit risk. Our findings also align with the social perspective of the theory of state ownership of banks [see @STIGLITZ1993], indicating that state-owned banks are inclined to undertake credit projects even if they may not be financially profitable. Moreover, this study provides new evidence that the influence of Basel III capital regulation on credit risk-taking is, to some extent, contingent on ownership structure. This result reinforces the empirical conclusion drawn by @LAEVEN2009. 
+
+Efficiency analysis forms the core of Chapter 4, unraveling the nuanced components of transient and persistent efficiency, which contributes granularity to our comprehension of the efficiency dynamics in China's banking sector. Our empirical research provides evidence using a four-component panel stochastic frontier cost model on an unbalanced panel of 233 China's commercial banks over the period 2010-2020. A key finding of this chapter is the distinctive profile exhibited by state-owned banks in terms of efficiency. The results provide evidence that state-owned banks have higher transient efficiency and much lower persistent efficiency compared with other ownership types, which collaborate with the findings by @FUNGACOVA2020. We do not find a statistically significant relation between the regulatory capital requirements and persistent cost efficiency but a negative relation between regulatory capital and transient efficiency. This result supports the findings of some empirical literature [see @BARTH2004; @LEE2013; @DJALILOV2019; @LESANOVSKA2016]; however, it differs from other previous studies. The intricate relationship between ownership structure and bank cost efficiency is statistically significant. We provide the explanation for state-owned banks' relatively low persistent efficiency and high transient efficiency compared with other ownership. 
+
+The efficiency analysis in Chapter 4 sheds light on broader banking dynamics by adding a layer of complexity to the understanding of the regulatory impact of the Basel III framework. In particular, the findings refine our understanding of state-owned banks by introducing their distinctive efficiency profile. 
+
+Chapter 5 delves into the complex realm of Basel III regulatory capital ratios and systemic risk. We collect data from 376 Chinese financial institutions, including 236 banks, over the period of 2010-2022 and compute the conditional value at risk (CoVaR) proposed by @ADRIAN2016 as the measure of systemic risk. This study establishes a negative relation between total regulatory capital ratio and systemic risk, signaling a pivotal role of Basel III risk-based capital adequacy requirements in enhancing financial stability. Our finding aligns and corroborates the previous empirical results [see @DEMIRGUC-KUNT2018; @LAEVEN2016_SYSTEMIC]. Bank size is identified as a positive contributor to systemic risk, while a high liquidity ratio emerges as a potential source of excessive systemic risk, emphasizing the necessity for more stringent regulations. Notably, examining ownership structures highlights state-owned banks as significant contributors to systemic risk, reinforcing the importance of regulating "Too-big-to-fail" financial institutions. The intricate interplay of ownership structure, bank size, and diversification is unveiled as a crucial determinant of systemic risk in economic stress.
+
+Chapter 5, our final empirical chapter, serves as a crucial piece of the overall narrative, relating and expanding the insights gleaned from the first two studies. This chapter further solidifies that Basel III capital regulation enhances overall financial stability by establishing a negative relation between the total regulatory capital ratio and systemic risk. The bank efficiency considerations are incorporated into the broader context of systemic stability, demonstrating that efficiency dynamics are integral to understanding the potential systemic repercussions of different ownership structures. The empirical results from the three chapters contribute to a holistic understanding of the determinants of systemic risk. The interplay of Basel III capital regulations, ownership structure, efficiency dynamics, and risk dimensions provides a comprehensive view of the factors influencing financial stability in the context of China's banking sector.
+
+
+
+### Contribution
+
+Based on the investigated research, this thesis contributes to understanding China's banking industry by exploring dimensions related to Basel III capital regulations, efficiency components, and systemic stability. The study holds importance to policy-making as it aligns with the Basel Committee on Banking Supervision's (BCBS) post-crisis reform initiative, as well as addresses fostering global financial stability by evaluating the influence of Basel III risk-based capital regulations on individual bank risk-taking and overall systemic risk in China's banking system given China's significant role in the global financial system. The research bridges a gap by examining the joint effects of ownership structure and Basel III capital requirements on bank credit risk-taking. Existing studies rarely explore this interaction, making this research valuable in understanding how ownership structure and regulatory measures collectively shape risk-taking behavior in Chinese banks. The study also contributes to the literature by analyzing how ownership structure influences efficiency and financial stability, offering insights into moral hazard factors and designing targeted regulatory measures. The study addresses a gap in the literature by focusing on the systemic risk within China's banking sector, which is a relatively under-explored area, particularly after the implementation of Basel III in China. 
+
+
+
+### Limitations
+
+This thesis has limitations that should be addressed: 
+
+#### Data Quality and Availability
+
+The accuracy and comprehensiveness of the findings depend on the quality and availability of the data used. The data provided by our primary data source - the SNL Capital Pro database have been supplemented by manually collected data from other official data sources such as the China Banking and Insurance Regulatory Commission (CBIRC), and the annual reports of individual banks. Incomplete data could be a limitation that affects the study's robustness. 
+
+
+#### Model Limitation
+
+The efficiency study employs a three-step, four-component stochastic frontier model, which may introduce complexity and high demands on data and computation, which could affect the accuracy of empirical results. 
+
+CoVaR is employed in Chapter 5 as a measure of systemic risk. However, this measure has been criticized for not fully capturing externalities such as contagion, fire sales, or spillover effects [see @DEMIRGUC-KUNT2018] and might need to be complemented by other metrics such as Marginal Expected Shortfall (MES) to obtain a comprehensive view of systemic risk.    
+
+#### External Factors
+
+The study may not account for all external factors that could influence the observed relationships. Economic, geopolitical, or regulatory changes not considered in the research could impact the results. For example, the input and output variables for measuring the level of bank efficiency might not be exhaustive. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

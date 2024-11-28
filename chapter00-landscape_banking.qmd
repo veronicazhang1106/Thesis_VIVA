@@ -1,0 +1,798 @@
+---
+title: "The Review of China's Banking Industry Landscape"
+---
+
+```{r}
+#| label: set up and load libraries
+#| output: false
+#| include: false
+
+library(tidyverse)
+library(readxl)
+library(rstatix)
+library(ggcorrplot)
+library(corrplot)
+library(janitor)
+library(formattable)
+library(scales)
+library(kableExtra)
+library(knitr)
+library(rmarkdown)
+library(tinytex)
+
+
+```
+
+
+
+
+
+China’s banking sector plays an essential role in the country’s economic development. According to National Bureau of Statistics, the growth of the banking sector contributes 5.4% to the increase of GDP in 2018.^[See China Statistical Yearbook(2019) <http://www.stats.gov.cn/sj/ndsj/2019/indexeh.htm>] The total added value of the financial sector is RMB7,707.7 billion Yuan (around $1,100 billion USD) in 2019, an increase of 7.2% compared to 2018.^[See Statistical Communique of the People’s Republic of China on 2019 National Economic and Social Development <http://www.stats.gov.cn/english/PressRelease/202002/t20200228_1728917.html>] Therefore, the performance of China’s banks attracts increasing attention from both academics and practitioners. China’s banking sector has evolved over the last forty years. The reform implementation in all aspects of banking industry, the evolution of financial legislation, and the adoptions of advanced regulatory guidelines all dramatically influence the ecosystem of China’s banking sector [@LEE2013]. Therefore, a review of China’s banking sector is useful to aid understanding of this complex financial landscape. For example, @BERGER2009 and @HUANG2019, among others, discuss the financial reforms to help understand the whole picture. 
+
+This section also provides quantitative information about bank performance through an analysis of key financial ratios. Part I reviews China’s banking sector, mainly focusing on China’s financial reforms, and providing a foundation for the mechanism of current China’s banking industry. Part II provides an overview of the regulatory framework of China’s banking sector. Part III displays and investigates some essential financial ratios of China’s banks, supplementing the review of China’s banking industry from the quantitative angle.  
+
+
+## Part I: Chinese Banking Sector Reforms
+
+The Chinese banking system has been reformed as part of the country’s overall economic reform and structural adjustments since 1978. During this period, almost all aspects of the Chinese banking industry have transformed and matured, from ownership structures to marketization, to product diversification, and to new technology. The literature commonly identifies three stages/waves of the financial system reform in the times before 2010: since 1978 to the early 1990s; during the 1990s until 2001 China’s accession to the World Trade Organization (WTO); and since the entry of the WTO, through five years of transitional time until 2010 [@BERGER2009; @WANG2014; @DONG2017]. In 2010 China became the world’s second large economy based on the Gross Domestic Product (GDP) of $6,078 billion USD.^[See GDP ranking on the World Bank Database <https://data.worldbank.org/indicator/NY.GDP.MKTP.CD?end=2010&most_recent_value_desc=true&start=1960&view=chart>] Since then, the reforms of China’s banking sector have led to an in-depth transformation which is generally considered as the fourth phase of the financial reforms. In Part I of this review, we present an overview of the structural and regulatory changes of China’s banking sector. The timeline and some of the milestones concerning China’s financial reforms can be found in @fig-timeline.
+
+![The Financial Reform Timeline](chapter00-landscape-timeline.png){#fig-timeline}
+
+### The era from 1978 - early 1990s
+
+China’s central bank, the People’s Bank of China (PBOC)^[For detailed history of the People’s Bank of China, see the official webpage of the PBOC <http://www.pbc.gov.cn/en/3688066/3688089/index.html>] was founded in 1948 with the merging of the North China Bank, Beihai Bank, and the Northwest Peasant Bank. In 1949, the Chinese People’s Political Consultative Conference designated the PBOC as the central bank and its national financial functions. The responsibilities of the PBOC included: issuing and circulating the unified currency – the Renminbi (RMB), controlling inflation, managing exchange rates, and centralizing, allocating, as well as utilizing credit endowment to support and accelerate national economic recovery. 
+
+Before 1978, China’s banking system took the form of the ‘mono-bank’ structure, the idea referencing the financial system of the former Soviet Union. [@BERGER2009] The reason behind this choice relies upon the fragile social and economic environment China was facing at that time. After World War II and the civil war, China’s economy was extremely weakened and the social situation was rather severe, with high level of poverty, unemployment, and inflation. Under these circumstances, the PBOC established a rudimentary banking system, aiming at building up people’s faith to the government and to their communities, as well as boosting the national recovery in all aspects. 
+
+From 1979, national strategies have shifted to developing and strengthening the economy from economic recovery. A series of relative national strategies created and executed by the Chinese government are usually labeled ‘Reform-Open’ strategies.  The essence of the ‘Reform-Open’ strategies involve: 1) lifting the restriction of accession to China’s domestic markets; 2) loosening the constraints of foreign shareholding; 3) establishing and fortifying legislation upon markets, competition, corporate governance, and intellectual property protection. The reform of financial system is a critical part in the chain of China’s industrial reforms. 
+
+During the period between 1979 and 1992, China’s banking sector reconstructed its institutional framework. First, the commercial-banking function of the People’s Bank of China was delegated to four state-owned commercial banks: Bank of China, China Construction Bank, Agricultural Bank of China, and Industrial and Commercial Bank of China. These four commercial banks are traditionally called ‘the Big Four’. By the time they were founded or resumed^[Bank of Communications], their business was limited in a specified sector of economy, namely foreign trade, construction, agriculture, and industrial and commercial sectors [see @BERGER2009; @JIANG2009]. Second, national banks came into existence from 1986 [@HSIAO2015]. The first national bank is Bank of Communications which was resumed in 1987 [^chapter00-landscape-01]. Apart from the biggest shareholder- the Finance Ministry, state-owned enterprises were allowed to invest in banks for the first time. Third, other types of financial institutions were set up or resumed to complete the financial system. For instance, the State Administration of Foreign Exchange (SAFE) was founded as the authority administrating foreign Exchange issues. The People’s Insurance company was re-established.[^chapter00-landscape-02] Trust companies and urban credit cooperatives, as new players, entered China’s financial system. Foreign banks were allowed to enter China’s financial market by operating in Special Economic Zones[^chapter00-landscape-03] [@BERGER2009]. Lastly, starting from 1984, the PBOC performs solely as a central bank, a decision made by the State Council the previous year. 
+
+A key feature of China’s financial reform during this period is the restructuring at the institutional level, marking the first wave of China’s financial reform. At this stage, new types of players began to operate in China’s financial markets. However, the government still controlled the ownership of all layers of financial institutions. In addition to the Big Four banks, city credit cooperatives that emerged during this period remained wholly owned by local Bureaus of Finance. This ownership structure persisted because the capital used to establish these financial institutions originated from the Treasury system(funded by taxpayers). This initial phase of financial reorganization serves as a significant milestone in China’s reform process. Opportunities for further changes and development were provided at this stage, nevertheless, Chinese government exhibited a conservative stance regarding the entry of foreign banks.
+
+
+[^chapter00-landscape-01]: Bank of Communications was founded in 1908 during the Qing Dynasty. The bank was dismantled and its business was taken over by the Big Four after 1949. In 1987, Bank of Communication was resumed and performed banking business again. 
+
+[^chapter00-landscape-02]: The People’s Insurance Company was existed before 1949. Therefore, the company was re-established in the early 1990’s. 
+
+[^chapter00-landscape-03]: Special Economic Zones: a form of Free Ports in China where companies may benefit from tariff allowances and exemption. Chinese government designated the first four Special Economic Zones – Shenzhen, Xiamen, Shantou, and Hainan Province – in order to encourage foreign investments and improve economy and technology by the end of 1980’s. More details may be found in  <http://www.npc.gov.cn/npc/c12434/c234/201905/t20190522_64495.html> 
+
+
+### Early 1990s - End 2001
+
+Besides financial reforms,  industrial reforms took place during the same period. The first wave of China’s industrial reform, which occurred concurrently with the financial changes, not only granted the state-owned enterprises greater autonomy in decision-making but also introduced the ‘Contract Responsibility System’ (CRS) in a tentative attempt in separation of ownership and management [@LIN2020]. The CRS resembles corporate governance structures in advanced nations. However, the CRS, functioning within the framework of state-owned ownership, had certain constraints and led to both positive and negative outcomes. The CRS boosted the incentives of management of the state-owned enterprises and at the same time caused some issues such as superfluous supply and moral hazard problems due to the leeway of the CRS system. 
+
+One of the results was the severe deterioration of loan quality of the Big Four, since they played a main role in the state-owned enterprises’ financing which were involved directly with the government before 1990’s. Concerning the Big Four, several initiatives were adopted. In 1994, three policy banks (China Development Bank, Agricultural Development Bank of China, Export-Import Bank of China) were established to undertake the policy-lending function performed by the Big Four.  In 1998, Ministry of Finance issued 270 billion RMB of long-term special Treasury bonds as the supplement capital invested into the Big Four. In 1999, four state-owned asset management companies (AMCs)  were founded and bought in total 1.4 trillion RMB of Non-performing Loans from the Big Four[^chapter00-landscape-04].
+
+Regulatory legislation surrounding financial reforms made a breakthrough during this period. In 1995, Central Bank Law (the People’s Bank of China Law of the People’s Republic of China) and Commercial Bank Law (Commercial Bank Law of the People’s Republic of China) were enacted by the National People’s Congress. Central Bank Law authorizes the People’s Bank of China as the central banks of China to perform regulation and supervision over China’s financial system. Commercial Bank Law clarifies banks should conduct their business as commercial entities. Commercial Bank Law also, for the first time, stipulates the requirement of the capital adequacy towards commercial banks. It requires that commercial banks must remain the capital adequacy ratios over 8%. 
+
+National banks^[National banks: commercial banks which have nationwide branches with no geographical constrains.] transitioned to a joint-stock ownership structure [^chapter00-landscape-05]. In 1996, China Minsheng Bank was established and jointly owned by private companies instead of having state-owned institutions and/or Ministry of Finance as its shareholders. Required by the State Council, and abiding the guidance document ‘State Council Decisions on Financial System Reform’ issued in 1993, urban credit cooperatives located in cities embarked on merge and consolidation to establish the new type of joint-stock financial institutions known as city banks.  In principle, there would be one city bank located in one city and provide financial services focusing on that geographic area. Like city banks, the establishment of rural commercial banks was also started out on the basis of the associations of rural credit cooperatives which take private company-individual shareholding structure. Rural commercial banks primarily focus their business in rural areas surrounding a city.
+
+The year 1994 marked a significant shift with the 'Regulation of the People's Republic of China governing foreign financial institutions,' allowing foreign banks to enter China's financial markets. Subsequently, in 1996, foreign banks were licensed to conduct business in the local currency in Shanghai Pudong[^chapter00-landscape-06] and further expanded to neighboring areas [@BERGER2009; @HSIAO2015]. Since 1998, foreign banks have been authorized entry to China’s inter-bank market. 
+
+A distinguishing feature of the financial reforms during this period is commercialization of banks. They evolved into genuine commercial entities, departing from their previous role as ‘policy-lending ‘conduit’ [@BERGER2009]. The 1995 Commercial Bank Law had a profound impact upon banking industry in the aftermath of its introduction. During this period, shareholders of banks diversified compared to the direct government shareholders and the state-owned shareholders in the first stage of the financial reforms. Alongside with the government (Ministry of Finance), state-owned enterprises, private companies even individuals were allowed to invest in banking industry. The act of embracing foreign financial institutions also improved the speed of Chinese banks’ commercialization, to some extent, regarding learning from the advanced countries. This period, from the perspective of ownership structures, marked the beginning of reduced direct government intervention in banks' operations, owing to the inclusion of diversified shareholders. 
+
+
+[^chapter00-landscape-04]: Four state-owned asset management companies: China Huarong Asset Management Co., Ltd., China Great Wall Asset Management Co., Ltd., China Cinda Asset Management Co., Ltd., and China Orient Asset Management Co., Ltd. 
+
+[^chapter00-landscape-05]: Joint-Stock banks: commercial banks which shares are held by institutional investors, mainly local treasury bureaus and other enterprises.
+
+[^chapter00-landscape-06]: Shanghai Pudong District: an area similar to the Special Trade Zones where foreign companies have tariff and other benefits; officially designated as China (Shanghai) Pilot Free Trade Zone in 2013. 
+
+
+### WTO accession 2001 - 2010
+
+China gained entry into the WTO in 2001. The WTO agreement deepened and broadened China’s overall economic reform in terms of the extent and fields covered. China committed to put much more effort into legislation, commercial banks’ transformation, opening domestic financial markets to foreign banks, among others. China was granted by the WTO a five-year transition period to fulfill the commitment in stages. 
+
+Since 2003, several laws have been changed and new institutions have been founded to align with the WTO agreement and the environment of the ongoing reforms. The 1995 Central Bank Law was amended to reinforce the People’s Bank of China as the central bank performing monetary policies and macro-prudential administration. A new regulatory department – China Banking Regulatory Commission (CBRC)[^chapter00-landscape-07] was established. Most of regulatory duties performed by the People’s Bank of China (PBOC) during the initial stages of the economic recovery and reform were transferred to the CBRC since the end of 2003. By the time the CBRC was established, its founding law ‘the Law of the People’s Republic of China on Banking Supervision’ also took effect and empowered the CBRC as the main regulatory body in banking sector. The 1995 Commercial Bank Law also was amended to satisfy the new market environment by broadening the business scope of commercial banks and adding more articles in terms of governance, disclosure, and supervision. In the end of 2006, the amendment of ‘Regulation of the People’s Republic of China governing foreign financial institutions’ was executed with the new definitions of foreign financial institutions and new articles in terms of regulation and supervision. 
+
+Since 2003, aiming at Initial Public Offering and becoming market-oriented institutions, the transformation of the state-owned banks, i.e. the Big Four, began. At the end of 2003, Central Huijin Investment Ltd. (‘Central Huijin’) was established by the People’s Republic of China (‘the State’). Since then, Central Huijin has been acting as a shareholding representative of the State in those state-owned financial firms including banks, insurance companies, securities firms, and other financial firms.[^chapter00-landscape-08] Between 2003 and 2008, Central Huijin injected around 125 billion US dollars in total as supplement capital into the Big Four.  During the same period, the NPLs were bought by the four asset management companies (AMCs) ar market prices again. After the aforementioned preparation for listing, during 2005-2007, three of the Big Four went public on Shanghai Stock Exchange and Hong Kong Stock Exchange. Other national banks such as Bank of Communications, China Minsheng Bank and China Merchants Bank had been listed on the domestic stock market before that time. In 2006, Post Savings Bank of China was founded by China Post Group. The Big Four, Bank of Communications and Post Savings Bank of China have become the six Systemically Important Banks in China, i.e. the Big Six, since 2019. The assets of the Big Six account for 40.27% of the total assets of the banking sector.^[<http://www.cbirc.gov.cn/cn/view/pages/ItemDetail.html?docId=890465&itemId=954&generaltype=0 >]
+
+The reforms in city credit cooperatives took further steps following the WTO agreement. City/urban credit cooperatives^[See regulatory document <http://www.pbc.gov.cn/bangongting/135485/135495/135499/2833472/index.html>] are a primary financial institutional form in cities during the 1990s, apart from the Big Four and the national banks. The ownership structure of city/urban credit cooperatives is joint-investment, the legitimate shareholders include individual investors and private companies. The cooperatives mainly provide financial services to the members. In 2005, the CBRC issued ‘guidance on development of city credit cooperatives’, proposing that city credit cooperatives should be transformed into joint-stock banks within three years. In 2006, city commercial banks were permitted to set up branches and operate in regions other than the host cities. By the end of 2006, there were 113 city commercial banks and 78 city credit cooperatives in China. The numbers of city commercial banks increased to 143 by the end of 2009. In 2007, three city banks Nanjing Bank, Ningbo Bank and Beijing Bank went public and listed in Shanghai or Shenzhen Stock Exchange. 
+
+Similar to city credit cooperatives, rural credit cooperatives provide financial services to their members in rural areas. Their primary shareholders are rural private investors. The reform in rural credit cooperatives, i.e. the establishment of rural commercial banks, has also increased up since 2003. In 2003, the CBRC issued the regulatory documents ‘Transitional Regulation on the Administration of Rural Commercial Banks’ and ‘Transitional Regulation on the Administration of Rural Cooperative Banks’ aiming at regulating those new rural commercial/cooperative banks[^chapter00-landscape-09]. In 2004, the State Council also issued a policy document seeking to accelerate the reform. By the end of 2009, there were already 43 rural commercial banks and 196 rural cooperative banks in China’s banking sector.
+
+China fulfilled WTO commitments by allowing foreign institutions to conduct business in its financial markets and permitting them to hold shares of Chinese banks as strategic investors. The taxonomy ‘Strategic Investors’ is firstly used by the China Securities Regulatory Commission (CSRC), referring to those institutional investors which invest in listed companies for long-term/strategic purposes rather than short-term financial returns. In the banking sector, strategic investors are mostly those foreign large financial conglomerates (including foreign banks and non-banking institutions) which invest in Chinese commercial banks. A single foreign strategic investor is allowed to hold no more than 20% of shares of a Chinese bank; and multiple foreign strategic investors are allowed to hold in total no more than 25% of shares of a Chinese bank.
+
+In 2006, the amendment of ‘Regulation of the People’s Republic of China governing foreign financial institutions’ was issued and took effect. The restrictions over business region and clientele have been relaxed. By the end of 2006, there were 312 foreign banking entities[^chapter00-landscape-10] conducting business in China’s financial markets, compared to only 192 foreign financial entities in 2003. During this period, foreign banks also actively investing in Chinese banks as strategic investors. By the end of 2006, foreign banks and institutional investors were holding investments in three of the Big Four, Bank of Communications and several national banks. The Royal Bank of Scotland Group (RBS Group), Temasek Holdings Private Ltd., and UBS Group AG totally held 16.85% of the listed shares of Bank of China. The Goldman Sachs Group Inc., Allianz Group, and American Express held 10% of the listed shares of Industrial and Commercial Bank of China. Bank of America and Temasek Holdings Private Ltd. (also through Asia Financial Holding Group and other subsidiaries) held almost 20% of the listed shares of China Construction Bank. HSBC Group held 19.9% of the listed shares of Bank of Communications.^[The data come from the individual banks’ annual financial reports.]  Apart from investing in the state-owned banks and national banks, foreign financial institutions, as strategic investors, also invested in city banks such as Xi’an Bank, Nanjing Bank, Ningbo Bank, Beijing Bank, etc. The period of 2005-2006 is the heyday of foreign investment into domestic banks, expanding from the biggest cities such as Beijing and Shanghai, to the medium sized cities such as Nanjing. By the end of 2006, the amount of foreign investment in Chinese banks was around 19 billion US dollars, accounting for 0.3% of the total assets of the whole banking sector, and 14% of the total assets of the foreign banks in China.^[The data come from the CBIRC annual report in 2006 and manual computation.]
+
+In terms of banking regulation, on the basis of the adoption of Basel I^[See *appendix* @tbl-regulatorydocs for detailed information] (1995 Commercial Bank Law stipulated the capital adequacy). and the incorporation of Basel II, the CBRC issued the regulation of ‘Measures of the Capital Adequacy Ratio of Commercial Banks’ in 2004 and its amendment in 2006. This regulation can be regarded as the China version of Basel II. 
+
+Corresponding to the rapid transformation of commercial banks and aiming at corporate risk management, the CBRC issued a regulatory document ‘Regulatory Guidelines of Corporate Governance in State-owned Commercial Banks’ in 2006. 
+
+Marketization was a distinctive feature of this reform period. This period is a crucial stage of China’s financial reform during which almost all influential events and policies concerning regulation and supervision, ownership structures, corporate governance, among others, happened. 
+
+With regard to ownership structure, the establishment of Central Huijin is one of the crucial milestones in China’s reform of state-owned financial enterprises. Since the end of 2003, Central Huijin, as a shareholder, has gradually replaced the direct role of the State government in those state-owned financial firms. Central Huijin acts as a representative of the State government which is the shareholder of the state-owned firms. The momentum of this fundamental change could stem from China’s commitment to the WTO and the upcoming pressure of the competition with foreign financial firms. In 2007, the founding of China’s sovereign wealth fund – China Investment Corporation (CIC) took the abovementioned reform a step forward. Central Huijin became a wholly-controlled subsidiary of CIC. The establishment of Central Huijin played a crucial role in reforming state-owned financial enterprises, representing a shift from direct government intervention to indirect control through shareholding.
+
+Getting listed is also an imperative strategy in China’s financial reforms.  It dramatically enriches the shareholder profiles: transforming government shareholding, accepting private enterprises, embracing foreign investors, and partially privatizing (individual investors). More importantly, it promotes the establishment of modern corporate governance frameworks in banks, both listed and non-listed; which reciprocally validates and strengthen the reform. It was in this period that multiple categories of banks’ ownership structure rose and became the foundation and the consensus in the future development of China’s banking sector. 
+
+
+[^chapter00-landscape-07]: In 2018, the China Banking Regulatory Commission (CBRC) consolidated the China Insurance Regulatory Commission (CIRC) into a new regulatory authority - The China Banking and Insurance Regulatory Commission (CBIRC).
+
+[^chapter00-landscape-08]: For detailed information, see Central Huijin website <http://www.huijin-inv.cn/huijineng/About_Us/index.shtml>
+
+[^chapter00-landscape-09]: A rural cooperative bank is a transitional structure of a rural financial institution which are smaller than a rural commercial bank in size and has the similar membership feature as a rural credit cooperative.
+
+[^chapter00-landscape-10]: Foreign banking entities entail foreign bank branches, foreign bank subsidiaries and foreign joint-stock banks. 
+
+
+### 2010 onward
+
+The literature does not, generally, define the time since 2010 as part of the ‘reform period’. This may be because: 1) during 1990s and 2009, substantial and fundamental reforms were successfully performed and the infrastructure of financial industry in terms of legislation, regulation, and corporate governance were founded; 2) 2007-2008 the worldwide financial crisis drastically changed the landscape of the financial industry; 3) reforms implemented after 2010 are usually considered as improvements or advanced changes on the basis of the achievements of the previous reforms. Nonetheless, there are still important changes in China’s banking sector during this period. 
+
+Since 2009, further changes concerning the corporate governance framework were implemented in state-owned banks including policy banks and state-owned commercial banks. Notably, in 2010, Agricultural Bank of China listed on both Shanghai Stock Exchange and Hong Kong Stock Exchange. After the introduction of 10 foreign and domestic strategic investors including UBS Group AG, JP Morgan Chase, Temasek Holdings Private Ltd., China Life Insurance Group, and etc. in 2015, Post Savings Bank of China finished its Initial Public Offering (IPO) on Hong Kong Stock Exchange in 2016, and also listed on Shanghai Stock Exchange at the end of 2019. 
+
+From 2010 onward, comprehensive reforms targeted city banks, or more generally, small-middle sized banks, focusing on ownership structures and target markets. Regulatory measures were introduced to diversify ownership profiles. In 2010, the CBRC issued the regulatory document ‘Notice on the Examination of Qualification of Major Shareholders of Small and Medium-sized Commercial Banks’ to restrain the share of a single major shareholder (the shareholder which have controlling shares or voting rights) within 20% of  the shares of a small and medium-sized commercial bank. This regulatory document aims at constructing city banks as the financial institutions jointly owned by shareholders with a diversified ownership profile. In 2019, the China Banking and Insurance Regulatory Commission (CBIRC) issued a regulatory document ‘Measures of License Issues in Rural Small and Medium-sized Banking institutions’, stipulating that non-financial institutions and their related parties as shareholders are not allowed to hold more than 10% of the total shares of a rural commercial bank. Since 2013, private enterprises have been permitted to invest in small and medium-sized commercial banks as founding shareholders. In 2014, 5 private joint-stock commercial banks were founded.[^chapter00-landscape-11] By 2017, private institutional shareholding accounted for 43% in national banks, 55% in city banks, and 87% in rural financial institutions. In 2016, 7 city banks got listed in Shanghai or Shenzhen Stock Exchange, and 8 city banks finished their IPO in Hong Kong Stock Exchange. By the end of 2019, there a total of 20 city banks listed. Regarding the target market, in 2011, the CBRC issued guidance documents to encourage small and medium-sized banks to target small and micro enterprises[^chapter00-landscape-12] as their clientele. 
+
+Qualified rural credit cooperatives have continued to be transformed into rural commercial banks and the modern corporate governance framework was established as early as 2010. Those unqualified were designated as town-village banks or credit cooperatives as supplemental financial organizations to serve their local rural community. By the end of 2017, there have been in total 1351 rural commercial banks. As an example of the success in the ownership structure reforms, Chongqing Rural Bank completed its IPO in the Hong Kong Stock Exchange in 2010. There were 10 listed rural commercial banks by the end of 2019. 
+
+Foreign banking entities continue to increase by volume and by total assets year on year since 2009, given that the Chinese government took the opening-strategy a step further. In 2014, the State Council issued the amendment of the 2006 ‘Regulation of the People’s Republic of China governing foreign financial institutions’,[^chapter00-landscape-13] lifting more restrictions regarding founding and operating foreign banking entities in China’s domestic financial markets.  Since 2009, new foreign banking entities began emerging in the north-east and the central-west provinces and medium-to-small sized cities where the economy is rather under-developed. By the end of 2016, 1031 foreign banking entities have been founded and are operating in over 70 cities in 27 provinces (including the province-level municipalities). 
+
+A parallel strategy to opening financial markets and embracing foreign companies is known as ‘going-abroad’ strategy. Those qualified commercial banks and policy banks have started to go abroad and set up branches and/or subsidiaries in foreign countries after they established the corporate governance frameworks and control systems. By 2017, 23 banks (commercial banks and policy banks) have set up 238 subsidiaries/branches/representatives in 65 foreign countries (regions). 
+
+Aligning with the Basel III framework, the CBRC issued ‘Commercial Bank Capital Management Measures’, – the China version of Basel III  in 2012. China’s regulatory authorities fully adopted Basel III ^[See appendix @tbl-regulatorydocs for detailed information], incorporating it into the domestic regulations and setting up the transition period matching the requirement of Basel Committee. Targeting regulatory arbitrage and shadow banking, the CBRC issued regulatory documents to rule and rectify the thriving wealth management products and inter-bank market in 2014 and 2015. Also as a complement to corporate governance guidance, the regulatory document ‘Guidelines of Administration and Supervision on Consolidation of Commercial Banks’ requires commercial banks to consolidate domestic and foreign subsidiaries and conduct comprehensive risk management. 
+
+More nuanced improvements and adjustments have also taken place since 2010 based on the implementation in previous stages. The ownership structure evolved, with diversified models becoming mainstream including state-owned, joint-stock with local government holding, joint-stock with private company shareholders in China’s financial institutions. Among others, establishment of a modern corporate governance framework is considered as a safeguard against direct government interference in banks’ decision-making; although the evidence of the recedes of direct government in practice need to be investigated further. The last forty years’ reform substantially changed the role that the State government and local government played in the economy: from directly designing economic development plans and managing enterprises to fostering a conducive market environment for competition and upholding macroeconomic stability [@ATHERTON2016].
+
+One of the most salient reforms in banking regulation is the issuance of ‘Commercial Bank Capital Management Measures’ – the China version of Basel III by the CBRC in 2012. It not only changes the way of China’s regulatory authorities regulating and supervising banks, but also requires commercial banks to be accountable for their business decisions. To some extent, this new regulation also can be viewed as the withdrawal of implicit government resort as presented in the early years of the financial reforms. 
+
+As part of the significant systemic industrial Reform in China’s economy, the financial reform in the banking sector transformed the landscape forstering marketization, securitization, and globalization. The reform and development in legislation and transformation resulted in diversified ownership structures, modern corporate governance, and market competition. From the perspective of corporate governance, the direct government intervenes can be considered receding step by step in rounds of the reform. The further deepening overhaul, taking the global financial crisis as an opportunity, is taking place in a fast pace and contributes to the further growth of China’s financial system. 
+
+
+[^chapter00-landscape-11]: Five private joint-stock commercial banks: Kincheng Bank of Tianjin Co., Ltd., Shanghai Huarui Bank Co., Ltd., Zhejiang E-Commerce Bank Co., Ltd., Myshare Bank of Wenzhou Co., Ltd., Shenzhen Qianhai WeBank Co., Ltd.
+
+[^chapter00-landscape-12]: According to ‘the Law of the People’s Republic of China on the Promotion of Small and Medium Enterprises’, small and medium enterprises should submit application to the government to define whether they are small and medium enterprises. Generally, enterprises which have revenue under USD70,000 (RMB 500,000 Yuan) can be defined as micro enterprises. Enterprises which have revenue between USD70,000 - USD700,000 can be defined as Small enterprises.
+
+[^chapter00-landscape-13]: The 2006 ‘Regulation of the People’s Republic of China governing foreign financial institutions’ itself was an amended version of the original 1994 ‘Regulation of the People’s Republic of China governing foreign financial institutions.
+
+
+
+## Part II: the Chinese banking regulatory framework 
+
+Along with the overall banking sector reforms, the banking regulatory framework has also experienced considerable changes. In this section, we will briefly review the evolution of the banking regulatory framework, then introduce the main factors of the framework as follows: the regulatory authorities, the regulated institutions, and the regulated fields. 
+
+
+### Historical overview of the Chinese banking regulators
+
+We begin with a brief history of the evolution of banking regulators in China. 
+
+Until 1978, the Chinese banking system was following the mono-bank model. The only bank, - the People’s Bank of China (PBOC), which acted as a unit of the State Council and was appointed as ‘a National Bank’, undertook functions including ‘issuing national currency, managing national treasury, managing national finance, stabilizing financial markets and supporting economic recovery’^[See the website of the People’s Bank of China <http://www.pbc.gov.cn/rmyh/105226/105433/index.html>] following its establishment. Following the incorporation of private financial institutions into the financial system, the PBOC played a dual role in the financial system: a central bank as well as a commercial bank. The PBOC performed its supervisory function through directly controlling permission for the establishment of financial institutions, approval of their key operational decisions, and senior management appointments in financial institutions. 
+
+The national economic reform began in 1979, which necessitated the function transformation of the PBOC and establishment of a diverse financial system. Since 1984, the PBOC performs solely as a central bank, which was decided by the State Council the year before. In 1995, ‘the People’s Bank of China Law of the People’s Republic of China’ reinforced the PBOC’s status as a central bank through legislation. 
+
+In 2003 the regulatory function was officially separated from the PBOC and transferred to the newly founded supervisory body, - the China Banking Regulatory Commission (CBRC). Since then, the CBRC has been regulating banks and financial institutions other than insurance companies and securities firms.  In 2018, the CBRC was merged with the China Insurance Regulatory Commission into a new regulatory body, - the China Banking and Insurance Regulatory Commission (CBIRC) which is responsible for regulating banking and insurance sectors.[^chapter00-landscape-14]  
+
+
+[^chapter00-landscape-14]: See the official document of the Chinese Government ‘The Central Committee of the Communist Party of China issued the ‘Deepening Party and State Institution Reform Plan' <http://www.gov.cn/zhengce/2018-03/21/content_5276191.htm#2>.
+
+
+### The current main regulators in banking regulation and supervision
+
+Authorized by its founding laws, the China Banking and Insurance Regulatory Commission (CBIRC) and the People’s Bank of China (PBOC) are the two main regulators in bank regulation and supervision in China. These two regulators have the authority to issue regulatory documents in forms of rules, decrees, notices, etc. to regulate and oversee financial institutions. A chart of the structure of the framework of regulation and supervision in China can be found in @fig-regulators. 
+
+![The Structure of The Banking Regulatory and Supervisory Framework in China](chapter00-landscape-regulators.png){#fig-regulators}
+
+#### The China Banking and Insurance Regulatory Commission (CBIRC)
+
+The China Banking and Insurance Regulatory Commission (CBIRC) was established in 2018 combining two previously separated regulatory commissions, – the China Banking Regulatory Commission (CBRC) and the China Insurance Regulatory Commission (CIRC). The motivation behind combining these two regulatory commissions is that there were supervision gaps between banking and insurance sectors as well as the imbalance of supervisory resource. The aims of the merger are to eliminate the supervisory gaps and to clarify the supervisory responsibilities as well as optimizing allocation of supervisory resource.[^chapter00-landscape-15]
+
+
+
+[^chapter00-landscape-15]: See the official document of the Chinese Government ‘The Central Committee of the Communist Party of China issued the ‘Deepening Party and State Institution Reform Plan’ <http://www.gov.cn/zhengce/2018-03/21/content_5276191.htm#2>. 
+
+The CBIRC is the major player in the Chinese banking regulatory framework. Besides the official document issued by the Chinese Government, the CBIRC is empowered by the Law of the People’s Republic of China on Banking Supervision, the Law of the People’s Republic of China on Commercial Banks, and other relevant laws and administrative documents such as the Law of the People’s Republic of China on the People’s Bank of China and the state government document ‘China Banking Insurance Regulatory Commission’s functional configuration, internal institutions and staffing regulations’. 
+
+The mandates listed in the above central document and its official website of the CBIRC include:
+
+  I) Rule-making and enforcement
+
+The CBIRC is authorized by the People’s Congress to issue two types of regulatory rules: regulations and regulatory documents.^[According to CBIRC, the regulations have more powerful authority than regulatory documents.] Most of these rules are issued in the forms of Notices or Decrees by the CBIRC. The regulatory rules are legally bound and the breaches would be subject to the commensurate legal punishment according to the legal force of the regulations or the regulatory documents. 
+
+  II) Oversight and supervision
+
+The CBIRC ensures that the regulatory rules are adhered through their oversight and supervision on financial institutions’ behavior and disclosure. The CBIRC may conduct on-site inspection and compliance assessments as well as supervise banks (and insurance companies) on corporate governance, risk management and internal control. The CBIRC also establishes risk monitoring and evaluation systems on banks (and insurance companies) in terms of capital adequacy, solvency and other stability and soundness requirements. 
+
+  III) Licensing, chartering, and registration
+
+The CBIRC issues licenses and charters to banks (and insurance companies) in terms of the access to financial markets and the business scopes. It also has the authority to influence the appointment of senior management in the regulated financial institutions. 
+
+The banking regulatory framework in China is a ‘CBIRC centric’ framework. The CBIRC has established its dispatched agencies and affiliates in all provinces and eight key cities such as Beijing, Shanghai, and Shenzhen on the mainland. These affiliates in different regions are called ‘Supervision Bureaus’ which directly report to the CBIRC headquarter. This two-tier structure facilitates the effective execution of regulations and supervision. 
+
+#### The central bank – the People’s Bank of China (PBOC)
+    
+Most of regulatory duties performed by the People’s Bank of China (PBOC) during the initial stages of the economic recovery and reform has been transferred to the CBRC since 2003. The legal status of the PBOC as the central bank of the People’s Republic of China was established by the Law of the People’s Republic of China on the People’s Bank of China in 2003. As the central bank, the PBOC conducts monetary policies, targeting short-term interest rates through open market operations.[^chapter00-landscape-16] The PBOC also may provide loans to commercial banks, acting as a ‘lender of last resort’. 
+
+The PBOC is still closely tied to the stability and soundness of the financial system in China. The regulatory functions of the PBOC focus on regulating bank behavior in interbank markets involving repurchase agreements (Repo), interbank foreign exchanges, and interbank bonds. The PBOC also issues regulatory rules on the payment system cooperating with the CBIRC. 
+
+China takes the form of the dual-regulator architecture on banking supervision. The PBOC acts as the monetary authority of China, and performs supervisory responsibility on payment systems. The CBIRC acts as the primary regulatory authority of the banking sector. The adoption of a single regulator has been a common feature of banking during the last three decades [@HERRING2008]. For example, the European Central Bank has direct supervisory responsibilities over banks in the Eurozone and the Federal Reserve in the United States strengthened its supervisory power by Dodd-Frank Act. The advantages of the single regulator structure include economies of scale and scope, reduction of potential regulatory arbitrage, the ability to supervise the complicated financial conglomerates, among others [@DOUMPOS2015]. Internationally, the Reserve Bank of Australia and the Bank of Japan do not perform the direct supervision over the domestic banking sectors (Berger et al., 2017). China takes the dual-regulator architecture which might avoid the disadvantages of the single-regulator structure, such as potential conflict within a single regulator, the monopoly power and the moral hazard issues, as reported in [@DOUMPOS2015]. 
+
+
+[^chapter00-landscape-16]: Open market operations refer to the PBOC buys and sell Treasury Bonds on the open market in order to control the money supply. 
+
+
+### Other relevant regulators
+
+Chinese banks are also subject to regulators other than the two aforementioned major players. These regulators, as components of the whole regulatory framework, have specific regulatory functions and regulatory objectives. The following regulators involved in banking regulation and supervision usually do not issue specific regulatory documents targeting financial institutions; rather, financial institutions are required to comply with the regulation issued by these regulators. Therefore, the duties of the following regulators complement the regulation and supervision performed by the two major regulators.
+
+***The China Securities Regulatory Commission (CSRC)*** was founded to regulate the areas over the following: (i) participants in securities markets; (ii) securities markets; and (iii) securities products. The CSRC is primarily concerned with transparency and fairness of the securities markets and investor protection. According to the CSRC, by the end of 2019 there were 37 banking firms[^chapter00-landscape-17] publicly traded in the domestic market and they are subject to supervision by the CSRC in terms of financial information disclosures, securities issuance, and other publicly trading information. 
+
+Unlike banking regulators, the CSRC does not have regulatory force directly on banking firms and may not be able to intervene or prevent banks from taking excessive risks. However, under the supervision of the CSRC, listed banking firms are required to truthfully and thoroughly disclose their financial information which may indicate potential risks to investors. Banks that intend to list in the near future must submit their financial and internal control reports to the CSRC. 
+
+***The National Audit Office of the People’s Republic of China (NAO)*** is a department of the State Council and has the authorized duty to audit the firms controlled or dominated by the State-owned capital.[^chapter00-landscape-18] Differing from banking firms in most advanced countries, the five biggest banks in China are controlled or dominated by either Central Huijin Investment Co., Ltd or directly by the Ministry of Finance of the People’s Republic of China. These State-owned banks are also under the supervision of the NAO in terms of financial information and corporate governance. Similar to the CSRC, bank stability and soundness might be an indirect concern of the NAO over banking firms. As an auditor recruited by the State government, the NAO mainly concerns about the truthful disclosure of the employment of the state capital and there are no illegal activities that may harm the state capital in banks. However, banks are bound by the regular reports and inspections by the NAO and need to present their safety and soundness. 
+
+
+[^chapter00-landscape-17]: See ‘Industry classification results of listed companies in the fourth quarter of 2019’ by the CSRC <http://www.csrc.gov.cn/csrc/c100103/c1451996/content.shtml>. 
+
+[^chapter00-landscape-18]: See the website of the National Audit Office of the People’s Republic of China <https://www.audit.gov.cn/en/n744/index.html>. 
+
+
+### Regulated financial institutions and regulated businesses
+
+According to its founding laws, the CBRC has the authority to regulate and supervise all institutions in the financial sector including ‘commercial banks, urban credit cooperatives, rural credit cooperatives and other financial institutions and policy banks that absorb public deposits’. Besides these depository institutions, the CBRC extends its regulatory authority to asset management companies, trust and investment companies, internal financial intermediaries in corporations, financial lease companies, and other financial institutions permitted by law. These financial institutions are also legally bound by the Law of the People’s Republic of China on Banking Supervision. After the combination of the CBRC and the CIRC, the regulatory authority of the CBIRC extends to all insurance companies including insurance brokers. 
+
+Foreign banks (including Chinese-foreign joint-stock banks) are also subject to the regulation and supervision of the authorized regulators such as the CBIRC and the People’s Bank of China. The ‘Regulation of the People’s Republic of China on the Administration of Foreign Banks’, which has the highest legal force on foreign banks’ operating in financial markets in China, was issued in 2008 as a decree of the State Council and has been revised twice since then.[^chapter00-landscape-19] Responding to this legal document, the CBIRC issued ‘People’s Republic of China Foreign Banks Regulations Implementation Rules’ in 2015.[^chapter00-landscape-20] This implementation document provides more detailed guidance to foreign banks in all aspects of their operation in China.   
+
+It is noticeable that in the 2nd amendment of the ‘Regulation of the People’s Republic of China on the Administration of Foreign Banks’, the requirements on the regulatory capital adequacy ratio has been underlined and included into legal articles. 
+
+According to the statistics from the CBIRC, by October 2019, the six largest banks[^chapter00-landscape-21] have a combined share of about 47.9% of the total assets of commercial banks. Four of these six largest banks (the Industrial and Commercial Bank of China, China Construction Bank, Agricultural Bank of China, Bank of China) have been listed as Global Systemically Important Banks (G-SIBs) by the Financial Stability Broad (FSB) in 2019.[^chapter00-landscape-22] 
+
+
+[^chapter00-landscape-19]: See the website of the central government, <https://www.gov.cn/zhengce/content/2008-03/28/content_1958.htm>. 
+
+[^chapter00-landscape-20]: See the website of the CBIRC <http://www.cbirc.gov.cn/cn/doc/9103/910303/91030302/020943393088424EBD4670788398111B.html>. 
+
+[^chapter00-landscape-21]: The six largest banks, also called the State-controlled large commercial banks, include the Industrial and Commercial Bank of China, China Construction Bank, Agricultural Bank of China, Bank of China, Bank of Communications, and Postal Savings Bank of China. 
+
+[^chapter00-landscape-22]: See the FSB website <https://www.fsb.org/2019/11/2019-list-of-global-systemically-important-banks-g-sibs/>. 
+
+
+There two main areas of banking business are under the oversight of the CBIRC and the central bank. Apart from the expansion of regular banking business, the rapid growth of shadow banking has become a new concern and a key area that attracts regulation and supervision. 
+
+  a) Regular banking business
+  
+According to the ‘Law of the People’s Republic of China on Banking Supervision’ and the ‘Commercial Bank Law of the People’s Republic of China’, all businesses and products within the business scopes of the domestic and foreign commercial banks should be either approved by or filed to the CBIRC and/or the People’s Bank of China. The regular banking business encompasses a broad range of products and transactions such as absorbing deposits and issuing loans, issuing financial bonds, interbank lending, buying, and selling bonds, credit/debit card business, among others. 
+
+  b) Shadow banking
+  
+It is believed that the emergence of a large amount of Wealth Management Products (WMPs) indicates the rapid rise of shadow banking in China. As it is shown in @fig-shadowbanking, China’s other financial institution (OFI) assets have increased to 11.8 trillion US dollars in 2017, accounting for 10% of the global OFI asset shares and becoming the third-largest jurisdiction(FSB, 2019). FSB also reported that the shares of China’s shadow banking have been monotonously increasing from 2011 to 2017 (as shown in the right histogram of @fig-shadowbanking). 
+
+![China's Other Financial Institution Assets Share](chapter00-landscape-shadowbanking.png){#fig-shadowbanking}
+
+Banks dominate the Chinese financial sector. It is understandable that commercial banks act as the largest and direct intermediaries in shadow banking in China [@BERGER2019]. Banks participating in shadow banking could be considered as a way of regulatory arbitrage. The risks involved in shadow banking such as liquidity risk, high leverage, and operational risk might also be imposed on the whole financial system and the real economy and cause the systematic breakdown. Shadow banking now has become one of the key areas which needs to be supervised by the national regulators through stricter regulatory initiatives. 
+
+
+### Adoption of Basel III framework and rules issued to regulate the shadow-banking system
+
+As a member of the G20[^chapter00-landscape-23] and Basel Committee on Banking Supervision (BCBS, or Basel Committee), China has been fully supporting and participating in the global regulatory reform after the Great Financial Crisis^[the financial crisis from 2007 to 2009]. In June 2012, the CBRC^[The CBRC and the CIRC were combined into the CBIRC in 2018.] issued the regulation ‘Commercial Bank Capital Management Measure (Trial)’, which means that the Basel III framework has been adopted and incorporated into the banking regulatory framework in China.^[China also adopted and implemented Basel II and Basel II.5 in previous years.] The BCBS also assessed the adoption as ‘compliant’ and ‘largely compliant’ in their assessment report in the Regulatory Consistency Assessment Program (RCAP) in 2013 [@BCBS2013]. 
+
+Following 2012, the CBRC issued or updated supplementary regulatory documents involving requirements covering all aspects of Basel III framework to improve the banking regulatory framework in China. Key regulatory documents can be found in the Appendix @tbl-regulatorydocs. 
+
+Besides the full adoption of Basel III framework, the Chinese banking regulatory authorities have noticed the rapid growth of shadow banking (as shown in @fig-shadowbanking). As a member of G20, China commits to the annual monitoring exercise conducted by the Financial Stability Board (FSB). The authorities also have started taking initiatives in order to regulate this particular area to avoid the damage it could possibly cause. As early as in 2011, the CBRC issued the regulatory document ‘Measures for the Administration of Sales of Wealth Management Products (WMPs) of Commercial Banks’, requiring commercial banks to reveal the risk associated with the WMPs which they are selling to their customers. Also, in the same year, the CBRC issued a notice which is linked to a regulatory document targeted at the joint Wealth Management Products between banks and trusts. In this notice the CBRC further required that the amount of the WMPs should be reduced gradually. In 2017, the CBRC announced another notice addressing to stricter regulation on the WMPs joint business between banks and trusts. 
+
+In 2018, the CBIRC issued the regulation ‘Measures for the Supervision and Administration of Wealth Management Business of Commercial Banks’ which particularly addresses to commercial banks, the largest and direct intermediaries in shadow banking. As to those Special Purpose Vehicles (SPVs) founded by commercial banks to buying and selling WMPs, the CBIRC issued regulations ‘Measures for the Management of Wealth Management Subsidiaries of Commercial Banks’ and ‘Measures for the Management of Net Capital of Wealth Management Subsidiaries of Commercial Banks ’ in 2018 and 2019 respectively. These regulations intend to impose more stringent regulation and supervision on the business line of WMPs. 
+
+Under the oversight of the two main regulators – the CBIRC and the PBOC, supplemented by other related regulated bodies such as the China Securities Regulatory Commission (CSRC), the banking regulatory framework was established and evolved in the past four decades. Financial institutions involved with banking business, not only banks, are monitored and supervised under this regulatory framework. The full adoption of Basel III framework not only symbolizes China’s support for the global regulatory reform, but also represents the further growth of China’s banking sector in terms of regulation and supervision. After the adoption of Basel III framework, China’s two main regulators the CBIRC and the PBOC have switched their focus to macroprudential supervision, as instructed by the Bank for International Settlement (BIS). Because of the rapid growth of shadow banking globally as well as domestically and its potential influence on the stability of the whole banking system, shadow banking has become a focusing regulated area in China’s banking sector. As shown in [@FSB2020], the growth rate and the value of shadow banking already started to decelerate in terms of total financial assets, compared to 2019. 
+
+
+[^chapter00-landscape-23]: G20: An international forum for the governments and central bank governors from 19 countries and the European Union (EU) in order to promote international cooperation. 
+
+
+
+## Part III: Ratio analysis
+
+### Data
+
+We use the SNL database (a service provided by S&P Global Inc.) as our main data source. Our sample is unbalanced. In the analysis of total assets, our sample entails the data of 5 banking sub-sectors - banks, insurance companies, securities firms (broker-dealers), trust companies and specialty lending companies- in total 342 financial institutions over the period 2010-2019. In the CAMELS system[^chapter00-landscape-24] ratio analysis, we use the data of 231 commercial banks over the period 2010-2019, totaling 2097 observations. In case the SNL database does not provide enough information or has doubtful values, we hand-collect data from other official sources including the annual issues of China’s Statistical Yearbook, press releases and the annual reports of the China Banking and Insurance Regulatory Commission (CBIRC), and the annual reports of individual banks and other types of financial institutions. The categories of financial institutions of the banking sector and their ownership structures can be found in @tbl-allownership. 
+
+[^chapter00-landscape-24]: The CAMELS rating system evaluates a bank's strength across six key categories: capital adequacy, assets, management capability, earnings, liquidity, and sensitivity. For more detailed information, see Federal Reserve website and the Commercial Bank Examination Manual <https://www.federalreserve.gov/publications/files/cbem.pdf>.
+
+
+
+
+```{r}
+#| label: tbl-allownership
+#| tbl-cap: "Ownership structure information of the banking sector"
+
+Subsector <- c(rep("Banks", 18), rep("Insurance Companies", 4), rep("Securities Firms", 5), rep("Trust Companies", 6), rep("Specialty Lending Companies", 3))
+
+Category <- c(rep("Boarder", 3), rep("Public Offering", 2), rep("Listed", 2), rep("Ownership Structure", 6), rep("Bank Type", 5), rep("Ownership Structure", 18))
+
+Category_detail <- c("")
+
+Description <- c("Total number", "Chinese banks", "Foreign bank subsidiaries", "Listed banks", "Non-listed banks", "Listed-Mainland", "Listed-Hong Kong", "State-owned_Big Six", "State-owned_Non-BigSix", "Local government-holding", "Joint-stock", "Foreign joint-stock", "Foreign-owned", "Big Six", "National bank", "City bank", "Rural commercial", "Foreign-owned", "Total number", "State-owned", "Joint-stock", "Foreign joint-stock", "Total number", "State-owned", "Local government-holding", "Joint-stock", "Foreign joint-stock", "Total number", "State-owned", "Local government-holding", "Joint-stock", "Foreign joint-stock", "Foreign-owned", "Total number", "State-owned", "Joint-stock")
+
+Number <- c(231,198,33,50,148,36,15,6,8,58,114,12,33,6,12,110,70,33,37,19,14,4,44,7,15,20,2,23,5,7,7,3,1,6,2,4)
+
+df_ownership <- tibble(Description, Number)
+
+colnames(df_ownership)[colnames(df_ownership)=="Number"] <- "Number of Institutions(by 2019)"
+
+#df_ownership
+
+kbl_ownership <- kbl(df_ownership,
+                     booktabs = TRUE, 
+                     longtable = TRUE) |> 
+  kable_styling(latex_options = c("repeat_header"), 
+                position = "center", 
+                font_size = 8) |> 
+  row_spec(0, bold = TRUE) |>
+  column_spec(1, bold = TRUE) |> 
+  group_rows(index = c(" "= 1, 
+                       "Banks-Border" = 2, 
+                       "Public Offering(Chinese Banks)" = 2, 
+                       "Place Listed(Chinese Banks)" = 2, 
+                       "Bank Ownership" = 6, 
+                       "Bank Type" = 5, 
+                       "Insurance Companies" = 4, 
+                       "Securities Firms" = 5, 
+                       "Trust Companies" = 6, 
+                       "Specialty Lending Companies" = 3)) |>
+  kableExtra::footnote(general = "the SNL database, the China Banking and Insurance Regulatory Commission (CBIRC) and manual calculation.", 
+                       general_title = "Data source:")
+ 
+  
+kbl_ownership
+
+
+```
+
+
+### Total Assets
+
+```{r}
+#| label: fig-TotalAssets
+#| fig-cap: "Banking Sector Assets Total Shares - Overview(2010-2018)"
+
+df_TAOverview_owernship <- read_excel(path = "2020-06-12 Landscape_Banking_Sector_TotalAssets_Shares_Ownership.xlsx", 
+                            sheet = 3, 
+                            col_names = TRUE)
+
+df_TAOverview_owernship1 <- df_TAOverview_owernship |> 
+  pivot_longer(cols = c("2018":"2010"), 
+               names_to = "Year", 
+               values_to = "Assets_ratio") |> 
+  filter(SubsectorAssets!= "Total") |> 
+  mutate(Assets_pct = 100*Assets_ratio)
+
+df_TAOverview_owernship1$SubsectorAssets <- factor(df_TAOverview_owernship1$SubsectorAssets, 
+                                                   levels = c("Trust Companies (23)", "Specialty Lending Companies (6)", 
+                                                              "Securities Companies (45)", "Insurance Companies (37)", 
+                                                              "Banks (232)"))
+
+df_TAOverview_owernship1$Year <- as.factor(df_TAOverview_owernship1$Year)
+
+p_TAOverview <- ggplot(data = df_TAOverview_owernship1) +
+  geom_bar(mapping = aes(x = Year, 
+                         y = Assets_pct, 
+                         fill = SubsectorAssets), 
+           stat = "identity", 
+           position = "fill", 
+           width = 0.5) +
+  scale_y_continuous(name = "Subsector Assets in Total Sector Assets") +
+  labs (fill = "Subsectors(number)") +
+  theme_gray() +
+  theme(legend.title = element_text(color = "darkblue", 
+                                    face = "italic")) +
+  scale_fill_brewer(palette = "Set1")
+
+p_TAOverview
+
+```
+
+@fig-TotalAssets shows the shares of the total assets of the subsectors (including banks, insurance companies, securities companies, trust companies and special lending companies) to the total assets of banking sector between 2010-2018, based on the categories by the China Banking and Insurance Regulatory Commission (CBIRC). 
+
+The total assets of the whole banking sector (including banking and non-banking financial institutions) and of the banking institutions have been increasing between 2010-2019. The total assets of the whole banking sector amount to RMB 2,825 trillion (approximate USD 403.5 trillion) at the end of 2019. @fig-TotalAssets shows that the banks are the biggest subsector of the banking sector, in terms of the numbers of the institutions and their total assets. It also shows that the proportion of the total assets of the bank subsector have been decreasing between 2010 to 2018, whereas other subsectors increased. The reasons that the shares of the banks remained stable or even decreasing in the recent three or four years could be the rising of the shares of other financial institutions, including securities firms, insurance companies, FinTech companies etc., which also are incorporated into the whole banking sector [see @BERGER2019]. This trend represents that more financial services and functions have been put into China’s financial service system.  
+
+From the perspective of ownership structure, the total assets of the state-owned banks, although there are only 14 of them out of total 231 banks, account for over 50% of the total assets of the subsector. This means that the state-owned, big banks dominate the subsector. However, it is not the case in other subsectors. The state-owned insurance companies account for over 70% of total assets of the subsector and over 50% of total number of the institutions, which might be considered roughly proportionate. In the subsectors of securities companies and trust companies, the total assets of the state-owned institutions do not outnumber other ownership structures. 
+
+```{r}
+#| label: fig-AssetsOwnership
+#| fig-cap: "Banks' Total Assets - by Ownership Structure (2010-2019)"
+
+df_TAOwnership <- read_excel(path = "2020-06-12 Landscape_Banking_Sector_TotalAssets_Shares_Ownership.xlsx",
+                             sheet = "df_Ownership", 
+                             col_names = TRUE)
+
+df_TAOwnership_1 <- df_TAOwnership |> 
+  pivot_longer(cols = c("2019":"2010"), 
+               names_to = "Year", 
+               values_to = "TotalAssets_share") |> 
+  filter(Industry == "Banks")
+
+df_TAOwnership_1$Ownership <- factor(df_TAOwnership_1$Ownership, 
+                                     levels = c("Total_Banks (231)", "State-owned", "Local government holding", "Joint-stock", "Foreign Joint-Stock", "Foreign Owned"))
+
+p_TAOwnership <- ggplot(data = df_TAOwnership_1, 
+                        mapping = aes(x = Year, 
+                                      y = TotalAssets_share, 
+                                      group = Ownership)) +
+  geom_line(mapping = aes(color = Ownership)) +
+  labs(y = "TotalAssets_share in the financial sector", 
+       color = "Bank Ownership Structure") +
+  theme_gray() +
+  theme(legend.title = element_text(color = "darkblue", face = "italic"))
+
+p_TAOwnership
+
+
+```
+
+
+
+In the appendix (@tbl-appendixAssets), the total assets of the state-owned banks show the absolute decrease pattern (from 67.18% to 51.99%); in other subsectors, due to their overall increase in the total assets, the state-owned institutions in those subsectors exhibit a relative decrease. The same descending tendency can be found in @HSIAO2015 where the share of total assets of the biggest five banks (the state-owned banks) decreased from 61.83% to 52.76% during 2007-2012; and the joint-stock banks increased gradually. Other ownership structures, especially local-government holding, joint-stock and foreign joint-stock, all reveal an obvious increase trend. For example, the total assets of the joint-stock insurance companies have leaped from 0.45% in 2010 to 1.7% in 2019. 
+
+@fig-AssetsOwnership demonstrates the change of the banks' total assets by different ownership structures. Apart from the clear decrease of the portion of the state-owned, the total assets of the joint-stock and the local-government holding banks gradually increased. Another type of ownership structure – foreign joint-stock banks show similar tendency to the local-government holding banks, with the share going up from 3.26%% in 2010 to 4.27% in 2015 and remaining steady since then. However, the foreign-owned banks’ share has slightly dropped from 1.38% in 2010 to 0.92%% in 2019. The reasons behind the patterns exhibited in @fig-AssetsOwnership might be closely related to a series of strategies of Chinese government and the regulatory authorities after China’s accession to the WTO in 2001 such as regulations concerning the diversifying the shareholders of commercial banks.  
+
+
+
+###	Financial Ratios of CAMELS rating system
+
+Following the ratio classification used by the CAMELS rating system, we analyze the financial ratios of 233 sample banks, in terms of their ownership structures and the bank types.  CAMELS rating system is the common name for the Uniform Financial Institutions Rating System (UFIRS) which was first adopted by the Federal Reserve U.S. in 1979 as a methodology to evaluate the soundness and safety of depository institutions. The ‘CAMELS’ is an acronym of the six assessment components: Capital adequacy, Asset quality, Management, Earnings, Liquidity and Sensitivity to Market Risk. The Sensitivity to Market Risk was added into the UFIRS in 1996 as an evaluation component.[^chapter00-landscape-24]  In this sector, we use the CAMEL ratios to assess the safety and soundness of the sample banks on the ground that the Sensitivity component requires market data which are not available for those non-listed banks.  Due to the fact that the CAMELS rating system guidance only gives the principle guidelines of the above assessment factors instead of the exact financial ratios, we take the following financial ratios as the factors for evaluating the safety and soundness of the sample banks, by reference to the relevant literature such as @GUNTHER2003, @ARENA2008, and @BITAR2018. Variable definitions and the definition source are listed in appendix @tbl-CAMELvariables. 
+
+[^chapter00-landscape-24]: The CAMELS rating system evaluates a bank's strength across six key categories: capital adequacy, assets, management capability, earnings, liquidity, and sensitivity. For more detailed information, see Federal Reserve website and the Commercial Bank Examination Manual <https://www.federalreserve.gov/publications/files/cbem.pdf>.
+
+
+#### *CAMEL Ratios of Commercial banks – Capital Adequacy*
+
+![CAMEL Ratios-Capital Adequacy](chapter00-landscape-capital_statistics.png){#fig-CAMELcapital width=70%}
+
+![The Yearly Mean of Tier1 Capital Ratios (Ownership Structure)](chapter00-landscape-Tier1.png){#fig-CAMELTier1 width=70%}
+
+We examine two capital adequacy ratios: Tier 1 capital ratio and Total equity to total assets ratio. Except for the foreign banks, the means of Tier 1 capital ratio of other different types of banks are quite close, from 10.64% to 12.21%. The state-owned banks have the mean of 10.65%. The joint-stock banks have the highest mean of Tier 1 capital ratio which is 12.21% and have the highest standard deviation of 15.51%. This might be due to that joint-stock banks are quite different from each other in sizes, performance, and risk management competence, as well as the abnormal maximum value of 447.46%. These results are corroborated by the Table 3-2 categorized by bank types. Apart from the state-owned Big Six being consistent with the mean of the state-owned banks, national banks show a mean of the state-owned banks, the local government holding banks, and the joint-stock banks, since there are 12 national banks and comprised with the abovementioned ownership structure. Most regional banks are involved with local government shareholders, city banks and rural commercial banks are mostly joint-stock banks, therefore their means are close to the means of those ownership structures. Corporation banks [^chapter00-landscape-25] are the banks which were funded initially by some corporations or companies in order to provide financial services for the specific industries, and emerged after 2015. Therefore, these banks are similar to the joint-stock banks in terms of sizes and geographic areas. There are 13 corporation banks by the end of 2019, including those founded by the private companies. The China Banking Regulatory Commission (CBRC)  issued ‘Commercial Bank Capital Management Measures (Trial)’ in 2012, which is the sign of the adoption of Basel III, demanding that all commercial banks in China would have to apply the new capital adequacy requirements under Basel III since 2013. As a result, the value of Tier 1 ratio of all ownership structure decreased compared to the previous year. As shown in @fig-CAMELTier1, since 2013, the Tier 1 capital ratio of all types of banks have been increasing gradually. 
+
+[^chapter00-landscape-25]: Regional banks and Corporation banks will be combined with the category of "City bank" in the following capters because of their similar sizes, business lines, and the places where the banks operate. 
+
+The ratio of total equity/total assets represents the book value leverage of a bank. The majority of means of total equity/total assets of banks with different ownership are below 8% yet over 6.50%, such as local government holding banks at 7.08%, slightly higher than the state-owned banks (6.76%). However, the mean of the ratio of joint-stock banks are almost 13% higher than other types of banks. A higher of standard deviation of the ratio (4.51%) might reveal the cause of a higher mean of the joint-stock banks. The peer group of Bank Types provides the corresponding results. As presented in @fig-CAMELTE, The yearly mean of the ratio of total equity/total assets have shown different trends between different types of ownership. Except that the state-owned banks have been following gradual growth year by year, other bank types have exhibited the tendency of increase-decrease-increase again. The yearly mean of the ratio of all banks are over 7% in 2019. 
+
+The foreign-owned banks have displayed abnormally high capital adequacy ratios. We cannot trace the values back to its sources due to the data availability. Speculatively, this might be caused by a relatively small size of the assets of the foreign-owned banks in China. 
+
+![The Yearly Mean of Total Equity/Total Assets (Ownership Structure)](chapter00-landscape-TEtoTA.png){#fig-CAMELTE width=70%}
+
+![CAMEL Ratios-Asset Quality (Ownership Structure)](chapter00-landscape-asset_quality.png){#fig-CAMELAQ width=70%}
+
+![CAMEL Ratios-Asset Quality (Bank Type)](chapter00-landscape-asset_quality_1.png){#fig-CAMELAQ1 width=70%}
+
+![The Yearly Means of ROAA (Ownership Structure)](chapter00-landscape-ROAA.png){#fig-ROAA width=70%}
+
+The ratio of return on average assets (ROAA), the ratios associated with Non-performing Loans (NPLs to total loans, problem loans/total loans, loan loss reserves/problem loans and loan loss reserves/gross loans) and the ratio of net loans/total assets constitute the assessment of asset quality of banks. 
+
+The means and medians of ROAA of different ownership structure are centered around 1%, with the exception of the foreign owned banks at 0.48%, almost only as half of the other types of banks. This might be due to the high costs of the foreign-owned banks’ operation in China’s financial markets and could also collaborate with the ratio of Cost to Income in the later part of analysis. In the peer group of Bank Types, the Big Six has the highest ROAA ratio, which might reveal the economies of scale. @fig-ROAA displays that the yearly means have a trend of decline since 2012/2013, which could reveal the disproportionate growth of return and the total assets of banks in recent years and could also reveal the competition rising in the banking industry. 
+
+The ratios associated with Non-Performing Loans (NPLs) can be divided into two groups with regards to their indications, like two sides of a coin. The group of the ratio of NPLs to total loans and the ratio of problem loans/total loans indicates the issue of problematic loans. Intuitively the lower the ratios are, the better the asset quality is. The group of the ratios of loan loss reserves/problem loans and loan loss reserves/gross loans means the safeguards a bank puts into its dubious loans, the higher the better. The results are consistent with the country NPL results from the IMF Financial Soundness Indicators for Global Financial Stability Report (2019) that China’s commercial banks have a relatively low rate of NPL. The reason attributed will be explained later. In the above table, the state-owned banks exhibit the lowest means of NPLs to total loans and problem loans/total loans (1.28% and 1.27%, respectively) amongst all ownership structures. In terms of bank types, the rural commercial banks have the highest NPL to Gross Loan rate and the ratio of Problem Loans/Gross Total Loans, being 1.96% and 1.9% respectively, which is consistent with the higher credit risk that small and medium banks are facing. Although rural commercial banks also have the highest Loan Loss Reserves/Gross Loans rate as 4.51%, the relatively low ratio of Loan Loss Reserves/Problem Loans, being 258.65%, potentially means that rural commercial banks might not have enough safeguards against the default risk. The yearly mean of NPLs to total loans (@fig-NPL) exhibit total increase during 2010-2018 in all ownership structures except for foreign-owned banks, revealing the highest mean of NPLs to total loans by 2.44% of the joint-stock banks. The foreign owned banks demonstrate the descending trend since 2013, the reason possibly relates to their business focus differing from other domestic banks.  
+
+![The Yearly Means of NPL/Total Gross Loans (Ownership Structure)](chapter00-landscape-NPL.png){#fig-NPL width=70%}
+
+The IMF Financial Soundness Indicators for Global Financial Stability Report (2019) reveals that China has a relatively lower NPL ratio (NPLs to total loans) than most members of G20 countries, especially lower than those developing countries, despite increasing overall since 2010 (See Part II, @fig-shadowbanking). One reason could be attributed to China’s financial reform. During the transformations of the Big Six and the city banks, the asset management companies, including the four national ones and those local asset management institutions bought a great amount of NPLs of banks and move them off the banks’ balance sheets. Another effective solution is that the mergers and consolidations of formal city cooperatives after China’s accession to the WTO in 2001. The NPLs which might have been held by city cooperative reciprocally could been restructured and deducted from the consolidated balance sheets when the new city banks were established. Besides, the NPLs might have been reduced or restructured in the process of introducing new non-financial institutional shareholders such as private companies. Along with the business solutions for NPLs, the stringent regulation and supervision upon the NPLs quotas by the CBIRC also help restraining the ratio under limits. The Law of the People’s Republic of China on Banking Supervision and Administration stipulates that banks’ violation by covering up NPLs or inaccurate classification of NPLs would face official censure. @ZHANG2016 provides evidence that the restrictions on NPLs by the CBIRC and the capital injection by the government in order to control the NPL level. 
+
+![The Yearly Means of Total Net Loans/Total Assets (Ownership Structure)](chapter00-landscape-NLtoTA.png){#fig-NLtoTA width=70%}
+
+The last ratio in assessing asset quality is net loans/total assets. The state-owned banks and the joint-stock banks have the close means of this ratio at 46.79% and 46.63% respectively; while the similar means are held by the local government holding banks and the foreign joint-stock banks around 42%. The foreign owned banks, however, have a lower mean of net loans/total assets by 37.33%, which is probably due to the smaller size of loans of the foreign owned banks compared to domestic banks, although the restriction upon local currency banking business had been lifted entirely since 2006. @fig-NLtoTA discloses that the yearly variance of net loans/total assets of all ownership structures are not significant from a long-term perspective, which might indicate that the relatively proportional changes between net loans and the total assets of banks. 
+
+
+
+#### *CAMEL Ratios of commercial banks – Management Quality*
+
+![CAMEL Ratios – Management Quality ](chapter00-landscape-management_quality.png){#fig-CAMELMQ width=70%}
+
+![The Yearly Means of Cost/Income (Ownership Structure)](chapter00-landscape-Cost.png){#fig-Cost width=70%}
+
+In the CAMEL rating system, management quality is evaluated by the ratio of cost-to-income. Domestic banks have the similar cost-to-income ratios in the range of over 37.9% to nearly 40%, with the state-owned banks having the lowest at 37.97% and the joint-stock banks having the highest at 39.97%. However, the foreign owned banks have almost twice cost-to-income ratio as the domestic banks, presenting the number as 70.17%. @BITAR2018 examine 1992 banks in 39 OECD countries and found the mean of cost-to-income ratio as 70.8%. Comparing the value of the cost-to-income ratio with the existing literature, it may imply that the Chinese banks have a lower cost while the foreign owned banks have the normal cost in their business. The results of the peer group of Bank Types are consistent with that of Ownership Structures. The corporation banks have the highest mean of this ratio as 43.51%, which might due to the facts that most of these banks are relatively new banks and have specific geographic and/or industrial focuses. Apart from the foreign-owned banks, the overall decreasing tendency of the movement of the ratio has been displayed for all ownership structures through the past 10 years (@fig-Cost). The fact that Chinese banks have a lower cost might due to two main reasons. First, interest rates including deposit and loan interest rates have been under the stringent guidance, to a great extent, by the regulatory authorities (mainly the central bank) for many years. This almost secures a certain amount of cost and income of banks. Only by the recent years, the financial reform initiatives concerning interest rates have been taking steps. It was only since 2013 that the Loan Prime Rate (LPR)[^chapter00-landscape-26]  has been set up and since 2019 put into effect. Second, the increase of income, including interest income and non-interest income, is faster than the increase of costs of banks through the past 10 years, which matches the fast pace of China’s economic development.
+
+[^chapter00-landscape-26]: Loan Prime Rate (LPR) is one of the essential initiatives of interest rate reform in China's financial markets. It resembles the Libor, as a basic interest rate in loan markets, quoted by 18 major commercial banks on monthly basis. 
+
+#### *CAMEL Ratios of commercial banks  – Earnings*
+
+![CAMEL Ratios – Earnings](chapter00-landscape-earnings.png){#fig-CAMELearnings width=70%}
+
+Usually Return on Average Equity (ROAE) and net interest margin are used to measure the quality of banks’ earnings. The ratios are expected to be positively associated with banks’ profitability, as the higher the better, intuitively. 
+
+The means of ROAE of the state-owned banks and the local-government holding banks are higher, being 15.85% and 14.81% respectively; while the joint-stock banks are 2% lower than their aforementioned counterparties. The foreign owned banks have a mean of 4.02% of ROAE. Although the state-owned banks have the highest ROAE, their net interest margin is not the highest. The local government holding and the joint-stock banks have the highest means of net interest margin at 2.63%. As for the bank types, the Big Six definitely have the highest ROAE rate as 16.9%, while a relatively lower net interest margin ratio as 2.36% than regional banks, city banks, and rural commercial banks. 
+Considering these two ratios together, the reason that the foreign owned banks are lagged by the domestic banks could be due to the small size of their interest-bearing business in China’s financial markets. The fact that the state-owned banks have a higher ROAE and a lower net interest margin could be attributed to their clientele and business diversification. Most state-owned banks are national banks which target national state-owned and private corporations and conglomerates as their clientele. However, local government holding banks, joint-stock banks and foreign joint-stock banks are mostly regional banks, city banks or rural commercial banks which act as the major finance provider for the regional, small and medium sized business and individuals within their local communities. It is a consensus opinion that big companies usually have more power in negotiation with banks than those small and medium sized companies and individuals. Therefore, the (loan) interest income of the state-owned banks probably could be lower than those local community banks. Business diversification of Chinese banks emerged around the end of the last century when China was making progress on the commitment to the WTO agreement. The People’s Bank of China (PBOC) issued regulatory documents lifting the restrictions on market entry for domestic banks in 2002. @BERGER2010 illustrate Big Six established their branches across all the regions in China during this period. Alongside with the regional expansion, non-interest-bearing business started to be prospective during this period in China’s financial reform. The PBOC also released regulatory documents about easing the restriction on fee-based banking business and allowed banks to cooperate with insurance companies and other banking institutions such as trust companies. @YUAN2006 and @BERGER2010 both mentioned national banks embarked on non-interest bearing business including cash management, wealth management, trading services etc. Business diversification of those state-owned, national banks caused the proportion of interest-bearing business to assets relatively to decrease, which can explain why the state-owned banks have a lower net interest margin compared to their peers. As for local banks including local government holding, joint-stock and foreign joint-stock banks, their business diversification started later than the national banks. Taking account of their clientele and their service region, it might be reasonable to assume that their business still relies more on interest-bearing assets than the state-owned banks.
+
+
+
+#### *CAMEL Ratios of commercial banks – Liquidity*
+
+![CAMEL Ratios – Liquidity](chapter00-landscape-liquidity.png){#fig-CAMELliquidity width=70%}
+
+The CAMELS rating system concerning liquidity evaluates the competence of banks in asset and liability management (ALM) which encompasses interest rate risk and liquidity risk. Here we choose to focus on liquidity risk since interest rate risk of China’s banks might be relatively under control guided by the regulatory authorities. The ratios of wholesale funding/total liabilities and retail deposits/total deposits can represent the current level of liquidity and the volatility of the funding sources. @DEMIRGUC-KUNT2010 present evidence that wholesale funding may increase banks’ risk, such as stock volatility, although it supports large banks’ fast expansion. As to retail deposits, @HIRTLE2007 state that retail deposits may provide a more stale business line for banks, although they may have lower returns. 
+
+The state-owned banks, foreign joint-stock banks and foreign owned banks have higher means of the ratio of wholesale funding/total liabilities, with 24.59%, 27.54% and 24.88% respectively. While the means of the local government holding banks and the joint-stock banks are almost 3-4% lower than the state-owned banks, with 20.83% and 19.34% respectively. The lower means mostly belong to those city banks and rural commercial banks whose ownership structure are local government holding and joint-stock. These small and medium sized banks, consistent with the statement of the existing literature, focus on serving their local communities and might have more conservative strategy of business expansion. The results presented in Table 7-2 confirmed this assumption. The city banks and the rural commercial banks have the means of the ratio of wholesale funding/total liabilities of 15.28% and 21.31% respectively, the lowest value in the peers. On the other hand, the national banks and regional banks have the highest values of 31.83% and 24.74% respectively, which means that these banks might face more liquidity risk than the rest of their peers. 
+
+The ratio of retail deposits/total deposits might be less indicative of banks’ funding source reliance due to the fact that there are less observations available on this variable. However, the results may still corroborate the means of wholesale funding/total liabilities to the great extent. The local government holding banks and the joint-stock banks have a relatively high ratio of retail deposit/total deposit at 35.74% and 32.20%; while foreign joint-stock and foreign owned banks have a ratio of 5-10% lower. Foreign owned banks have the lowest ratio of 13.56%, which could imply that foreign owned banks might not take retail deposit strategy in China’s financial markets. The state-owned banks, however, have the highest ratio of 36.12%; and the Big Six have the consistent value of 50.12%. The reasons could be traced to historical and diversification rationales. First, the state-owned banks, especially the Big Four, were the earliest commercial banks in China and entirely owned and controlled by the state government. Before legislation of deposit insurance was implemented in 2015, the state government in fact took the role of the implicit deposit insurer. As a long-term habit and due to trust, Chinese individuals, especially residents in cities, still consider these state-owned, large banks as their first choice for deposits and wealth management, even though there are numerous commercial banks. Second, the state-owned banks achieved more in geographical expansion and business diversification than city banks, in relation to time, scope and depth. Combined with the first reason, it is understandable that the state-owned banks have a higher ratio. The rural commercial banks have a rather higher ratio of 54.63% than the Big Six, which is in accordance with their lower reliability to the wholesale funding. 
+
+
+
+#### *Conclusion*
+
+The CAMELS rating system is a popular methodology to assess the safety and soundness of individual banks in the banking industry. Guided by the CAMELS framework, this section presents an overview of China’s banking industry a quantitative perspective. Commercial banks have a capital adequacy ratio over 10% which is higher than the standard of Basel III framework. The state-owned banks do not display the highest ratios. China’s banking industry has a lower average NPL ratio than other members of G20 and has its own reasons. However, our analysis shows that those small and medium banks might not have enough safeguards against the relatively higher credit risk they are facing. China’s commercial banks have a lower cost to income ratio than foreign banks and the average value in literature, mainly because of the stringent guidance on interest rates in China’s financial markets. The slow progress of the reforms on market rates also have ensured, to a large degree of extent, commercial banks have the ratio of return on equity over 14% on average. As for liquidity risk, the biggest and the smaller commercial banks averagely do not highly rely on wholesale funding. Nevertheless, the medium banks, especially those involved with local government shareholders in history, might have higher liquidity risk because they rely on wholesale funding channels more heavily. 
+
+\newpage
+
+## Appendices{.appendix}
+
+### Key regulation and regulatory documents in the adoption of Basel III framework
+
+```{r}
+#| label: tbl-regulatorydocs
+#| tbl-cap: "Key regulation and regulatory documents in the adoption of Basel III framework"
+
+df_reglist <- read_excel(path = "2020-07-06 Landscape_Appendix_Tables.xlsx", 
+                         sheet = 1, 
+                         col_names = TRUE)
+
+colnames(df_reglist) <- c("Date", "Regulation Documents", "Regulatory Objectives")
+
+kbl_reglist <- kbl(df_reglist, 
+                   booktabs = TRUE, 
+                   longtable = TRUE) |> 
+  kable_styling(latex_options = c("repeat_header", "striped"), 
+                full_width = FALSE, 
+                position = "center", 
+                font_size = 8) |> 
+  column_spec(2:3, width = "6.5cm") |> 
+  row_spec(0, bold = TRUE)
+
+kbl_reglist
+
+
+```
+
+
+
+### CAMEL variable definition and data source
+
+```{r}
+#| label: tbl-CAMELvariables
+#| tbl-cap: "Summary of CAMEL Variable Definitions and Source"
+
+df_CAMELvars <- read_excel(path = "2020-07-06 Landscape_Appendix_Tables.xlsx",
+                           sheet = 2, 
+                           col_names = TRUE)
+
+kbl_CAMELvars <- kbl(df_CAMELvars[,-1], 
+                     booktabs = TRUE, 
+                     longtable = TRUE) |> 
+  kable_styling(latex_options = c("striped", "repeat_header"), 
+                full_width = FALSE, 
+                position = "center", 
+                font_size = 8) |> 
+  row_spec(0, bold = TRUE) |> 
+  column_spec(2, width = "8cm") |>
+  column_spec(1, width = "5cm") |> 
+  group_rows(index = c("Capital Adequacy" = 2, 
+                       "Asset Quality" = 6, 
+                       "Management Quality" = 1, 
+                       "Earnings" = 2, 
+                       "Liquidity" = 2))
+
+
+kbl_CAMELvars
+
+```
+
+
+
+### Total Assets of the Banking Sector  
+
+```{r}
+#| label: tbl-appendixAssets
+#| tbl-cap: "Total Assets Shares in the Financial Sector - detailed by Ownership Structure (2010-2019)"
+
+df_TAOwnership <- read_excel(path = "2020-06-12 Landscape_Banking_Sector_TotalAssets_Shares_Ownership.xlsx",
+                             sheet = "df_Ownership", 
+                             col_names = TRUE)
+
+
+kbl_TAOwnership <- kbl(df_TAOwnership[,-1], 
+                       booktabs = TRUE, 
+                       longtable = TRUE, 
+                       digits = 4) |> 
+  kable_styling(latex_options = c("repeat_header"), 
+                full_width = FALSE, 
+                position = "center", 
+                font_size = 8) |> 
+  group_rows(index = c("Banks" = 6, 
+                       "Insurance Companies" = 5, 
+                       "Securities Companies" = 6, 
+                       "Trust Companies" = 6, 
+                       "Specialty Lending Companies" = 4)) |> 
+  kableExtra::footnote(general = "the SNL database, the release of the China Banking and Insurance Regulatory Commission (CBIRC) and manual calculation", 
+           general_title = "Data source: ")
+
+
+kbl_TAOwnership
+
+
+```
+
+
+\newpage
+
+### Information of Basel Accords
+
+***Abstract and outlines***:
+
+This appendix is a description of relevant information about Basel Accords (or Basel Framework). This appendix includes five sections. Section I is the definition of Basel Accords and Basel Committee. Section II briefly describes the development of Basel Framework chronologically. Section III introduces the evolution of main parts of Basel Framework from the perspective of risk-based categories. Section IV describes the way of how Basel Framework functions. And section V is to look ahead. 
+
+
+#### What are Basel Accords?
+
+Basel Accords are a series of financial regulations (including Basel I, II and III) for the banking sector set by Basel Committee on Bank Supervision (BCBS). Basel Accords, the prudential regulations reached by the consensus of the worldwide central banks and bank supervisors, aim to enhance the stability of the financial system as a whole. The risk spectrum covered by Basel Accords concerns credit risk, market risk, operational risk and other risks in banks and bank groups. 
+
+* Basel Committee on Bank Supervision (BCBS)
+
+Basel Committee on Bank Supervision (thereafter BCBS, or Basel Committee), founded in 1974, is one of the standard-setting committees of the Bank for International Settlements (BIS). The BIS was established in 1930 and owned by 60 central banks worldwide. The BIS has missions to foster international cooperation in area of monetary and financial stability and ‘act as a bank for central banks’[@BCBS2018_about].
+
+Under this premise, the BCBS was established to act as an international financial standard setter, as well as a provider of the forum for communication and cooperation on banking supervision between its 45 member institutions from 28 jurisdictions [@BCBS2018_about].
+
+
+#### The brief history of Basel Accords
+
+Banks are highly leveraged institutions, which means that the banking industry is borne to be highly profitable at the same time highly fragile. The bank regulations have been existed since banks have been in their current institutional forms [@BARTH2004]. For example, in the United States, the 1933 Banking Act not only imposed federal oversight on commercial banks for the first time, but also established a government corporation, the Federal Deposit Insurance Corporation (FDIC) to protect the benefits of depositors in the U.S. commercial banks and other saving institutions. 
+
+* Basel I
+
+The highly unrestricted business expansion and the debacle of Latin American debt crisis in the early 1980’s highlighted the necessity of building up a multinational accord to provide a ‘level playing field’ (Bank of England, 2001) for internationally active banks as well as to prevent bank capital adequacy condition deterioration. Endorsed and approved by the G10 Governors, Basel Capital Accord, also known as Basel I, was released in 1988. 
+
+The 1988 Basel Accord was ‘a major milestone in the history of bank regulation.’ (Bank of England, 2001) Basel I set the minimum capital standards for internationally active banks, using the approach that incorporates risk into the calculation of capital requirements. The minimum capital requirement in Basel I, which has been evolved and kept as the core value of Basel Accords, was that banks hold a capital equal to 8% of Risk-Weighted Assets (RWA). Basel I addressed to credit risk only. 
+
+In 1996, Basel Committee issued the Amendment to the Capital Accord to incorporate market risk. This Market Risk Amendment was designed to regulate the banks’ trading-book activities which induced the rapid accumulation of risk exposure. In the 1996 Amendment, the internal models using the Value at Risk (VaR) methodology were allowed to measure the capital charges for the first time. The 1996 Amendment also set up a category of capital (Tier 3 capital) for mitigating only for market risk.
+
+
+* Basel II
+
+Basel I had been seen to lead the rebuilding of banks’ capital adequacy standards. However, over time Basel I received more and more criticism due to its significant weaknesses. Basel I was criticized that it only differentiates credit risk based on the types of loans instead of the actual risk of the counterparties [@JACKSON2001]; and that it ignores other types of risks. The 1996 Amendment also was accused that banks used the Internal Model Approach (IMA) to perform the regulatory capital arbitrage which might have been part of momentum of securitization boom at the end of 1990’s [@JACKSON2001].
+
+In 2006, Basel Committee issued a comprehensive version of ‘International Convergence of Capital Measurement and Capital Standards: A Revised Framework’. The documentation is usually called ‘Basel II’. It is also called ‘the new accord’ [@JACKSON2001]. Several key features about Basel II might be worth to notify:  
+
+First, the capital accords which were built up by 1988 Basel Accord and the 1996 Amendment has been developed to a framework which aims at the stability and soundness of international banking system. This revised framework is comprised of three pillars – Pillar 1: Minimum Capital Requirements, Pillar 2: Supervisory Review, and Pillar 3: Market Discipline. The three-pillar approach has become the cornerstone of Basel Accords including Basel II and the sequent accords. 
+
+Second, Basel Committee stressed that the revised Framework was designed to establish minimum capital requirements for ‘internationally active banks’. Basel Committee encouraged national supervisory authorities to use their discretion to set supplementary requirements for other banking institutions they chartered. 
+
+Third, Basel II was deemed to be more risk sensitive than previous accords, which was addressed to the risk insensitivity of the 1988 Accord. Under the revised Framework, banks were allowed to use their own models to quantify and manage credit risk in the calculation of minimum capital requirements. This approach is called Internal Rating-Based (IRB) Approach which is definitely a conceptual leap in regulatory capital adequacy determination. 
+
+The operational risk capital charge was also introduced into Basel II Framework. The key elements of the least capital requirements (8%) of the 1988 Basel capital framework and the treatments of capital charge of market risk of 1996 Amendment were retained in this revised Framework. 
+
+
+* Basel II.5
+
+It might be a misfortune for Basel II that its implementation date had hit the 2007-2009 financial crisis. Basel II had even been blamed for the crisis because it allowed banks to use internal risk assessments as inputs in the calculation of capital adequacy ratios. 
+
+In February 2011, the Basel Committee released a formal document ‘Revisions to the Basel II Market Risk Framework’ which was a series updates of changes to the Basel II Framework in terms of market risk. This documentation is often called Basel II.5.
+
+Under the Basel II.5 Framework, the Basel Committee made several changes about market risk capital charge to the 1996 Amendment. 
+
+First, the Basel Committee introduced the stressed VaR measure into market risk capital charge calculation. Stressed VaR is calculated where the volatility of market variables is high, in other words, during a period of stressed market condition. As a result, two VaR were required in the calculation of market risk capital charge under the Basel II.5 Framework, one is usual VaR, the other is Stressed VaR. 
+
+Second, for banks that were allowed to use their internal models to assess market risk, the Basel Committee required an Incremental Risk Charge alongside the general market risk capital charge (and a Specific Risk Charge).   The Incremental Risk Charge was used to capture both default risk and migration risk of certain securitization exposures due to the fact that most losses during the 2007-2009 financial crisis were from the slump of credit rating. 
+
+Third, the Comprehensive Risk Measure (CRM) also had been introduced by the Basel Committee to measure the risk of trenched securitized products such as Asset-Backed Securities (ABSs) and Collateralized Debt Obligations (CDOs). Yet the Basel Committee ‘had not agreed that currently existing methodologies used by banks adequately capture incremental risks of all securitized products.’ (BCBS, 2011)
+
+
+* Basel III
+
+The 2007-2009 financial crisis had revealed the weaknesses of the existing Basel II Framework. After the crisis, the Basel Committee realized that an overhaul of the existing regulation architecture was necessary. Since the end of 2010, the Basel Committee started a set of phase-in arrangements to review and revise the Basel II Framework. 
+
+In December 2017, the Basel Committee released the document ‘Basel III: Finalizing post-crisis reforms’ summarizing the main features of the changed Basel Framework. In 2019, the Basel Committee issued ‘Full Version of the Basel Framework’, a document which includes regulation versions effective as of January 1, 2019. Most regulations are now still under the transition arrangements and will have further changes. 
+
+Basel III is usually called ‘Reforms’. The Basel Committee aims to build up resilience in the banking sector and avoid the systemic vulnerabilities through the regulatory reforms. According to the 2017 document ‘Basel III: Finalising post-crisis reforms’, the main features of the Basel III Framework, addressing the aspects of quality of total capital, risk sensitivity, and liquidity requirements, can be detailed as follows:
+
+i) The quality of the regulatory capital
+
+The Basel Committee requires banks to maintain higher quality of capital to absorb the unexpected losses. The Tier 1 Capital (mainly comprised of common equity) requirement has risen from 4% to 6% of Risk-Weighted Assets at the minimum.
+
+In additional to the risen Tier 1 capital requirement, the Basel Committee introduced a Capital Conservation Buffer requirement which comprises 2.5% of common equity to ensure that banks build up capital during normal times and have the capability to absorb losses during the difficult times. As a result of the Capital Conservation Buffer (CCB), the total common equity capital requirement has been brought up to 7%. 
+
+A Countercyclical Buffer has also been introduced by the Basel Committee for the similar aim of limiting pro-cyclicality. This buffer can be set to between 0%-2.5% at the discretion of national supervisory authorities in its implementation.  
+
+For those internationally ‘Too Big to Fail’ banks which caused financial market turmoil during the 2007-2009 crisis, the Basel Committee defines them as ‘Global Systemically Important Banks (G-SIBs)’ and requires 1%-3.5% extra Tier 1 equity capital charge to reflect the greater risk that those banks pose in the global financial system. 
+
+ii) Risk sensitivity
+
+The regulatory capital is the cornerstone of the Basel Framework. As an integrate part of Risk-based regulatory capital ratio, the Risk-Weighted Assets (RWAs) have attracted most attention in Basel III Reforms to reflect greater risk sensitivity and reduce the variability between RWAs calculated by banks. 
+
+The Standardized Approaches for calculating the credit risk, market risk and operational risk have been revised. And the internal models used by banks to calculate the RWAs subject to credit risk have been put on strains to eliminate the possibility of regulatory arbitrage; those internal model approaches used to calculate the RWAs of operational risk have been removed from the Basel III Reforms. 
+
+The requirement of taking account of the counterparty risk was introduced into the framework in 2010 and was revised in 2017 reforms. The Credit Value Adjustment (CVA), which is the expected loss due to the possibility of default of a counterparty has been required and become more stringent to strengthen the resilience of financial system. 
+
+In addition to the Risk-based regulatory capital ratio, a non-risk-based Leverage Ratio has been introduced into the Basel III Reforms to constrain banks’ leverage. Global Systemically Important Banks (G-SIBs) are subject to higher Leverage Ratio standards on the ground that they should maintain higher loss absorbing capacity. 
+
+iii) Improvement of liquidity
+
+The 2007-2009 financial crisis proved that it is not enough to focus on sufficient capital holding by banks. It turned out that many collapses of big institutions during the crisis were induced by severe liquidity risk. The Basel Committee introduced two Liquidity Ratios into the Basel III Reforms to ensure that banks can survive liquidity pressure. The Liquidity Coverage Ratio (LCR) focuses on banks’ ability to withstand a 30-day liquidity stress. The Net Stable Funding Ratio (NSFR) focuses on a longer term (over 1 year) liquidity management and to encourage banks to use a stable source of funding. 
+
+
+#### The evolving framework
+
+Basel Accords are a prudential regulation framework which is closely tied to global economic developments. By going through the brief history of Basel Accords, we can find that almost every aspect in the Basel Framework has been changed and the Framework has evolved into a more advanced place. The Basel Framework is still evolving. 
+
+In this section, changes in Basel Accords will be categorized and presented according to their features and aims, in order to reveal the trajectory of the development of the Basel Framework. 
+
+i) The regulatory capital requirements
+
+The regulatory capital requirements can be considered as the soul of the Basel Framework. The 1988 Basel Accord set international risk-based standards for capital adequacy for the first time. The capital adequacy was measured by the ratio of the total regulatory capital to the Risk-Weighted Assets (RWAs), which should be at least 8%. This ratio is known as ‘the Cooke Ratio’ which was named after Peter Cooke, the Chairman of the Basel Committee at that time. In the following years, the spirit of supervision of the financial system through risk-based capital requirements has never changed and been defended by constant progress. 
+
+In Basel I, the regulatory capital had two constituents: Tier 1 capital and Tier 2 capital. Tier 1 capital is the core capital which is mainly comprised of the common equity of a bank. Tier 2 capital is the supplemental capital, including reserves and hybrid instruments and other elements. Goodwill has been deducted from Tier 1 capital. The Basel Committee also required that Tier 1 capital should be at least 50% of the total capital, which equals to 4% of the RWAs. 
+
+In the 1996 Amendment, some short-term subordinated debt was added into the regulatory capital as ‘Tier 3 capital’ to meet part of banks’ market risk mitigation requirements only. Tier 1 and Tier 2 capital remained unchanged. 
+
+The Basel II Framework remained the capital framework stated in the 1988 Basel Accord and the 1996 Amendment unchanged. 
+
+The Basel III Reforms have not only detailed every constituent included in the regulatory capital, but also changed the capital structure and requirements for specific components. The regulatory capital in the Basel III Reforms consists of two tiers of capital: Tier 1 capital (common equity Tier 1 and additional Tier 1 capital) and Tier 2 capital. Tier 3 capital stipulated in the Basel II Framework has been removed. 
+
+The Basel Committee has set three independent minimum capital requirements within the total capital requirements. Common equity Tier 1 capital must be at least 4.5% of the Risk-Weighted Assets (RWAs); total Tier 1 capital must be least 6% of RWAs; total capital must be at least 8% of RWAs. Through the above setting, the total Tier 1 capital has increased from 4% to 6%. The total regulatory capital requirement remained changed. 
+
+Capital buffers have been established above the minimum capital requirements to ensure that banks have the capability to survive stressful times. A Capital Conservation Buffer is set as 2.5% which is comprised of Common Equity Tier 1 capital. The Counter-cyclical Buffer varies from 0%-2.5% which is decided at the national authorities’ discretion. 
+
+For those Global Systemically Important Banks (G-SIBs), the Basel Committee has set G-SIB Buffer to require G-SIBs to have higher loss absorbency ability. G-SIBs Buffer varies between 1% and 3.5%, which is met with Common Equity Tier 1 Capital only. 
+
+ii) The calculation of RWAs
+
+As an integrating part of regulatory capital adequacy requirements, Risk-Weighted Assets have been through great changes in terms of risk profiles, methodologies and categories. 
+
+    a) The treatment of credit risk
+  
+In the 1988 Basel Accord, the capital framework was mainly directed to assess the credit risk banks faced. The credit risk exposures were categorized as: those arising from on-balance-sheet assets, those arising from off-balance-sheet assets and those arising from Over-the Counter (OTC) derivatives. These exposures (loans) were put into different risk-weight bands according to the types of loans such as loans to Organization for Economic Co-operation and Development (OECD) sovereigns, loans to banks, and loans to private sectors, etc. The RWAs of credit risk were the total amount of exposures taking into account of these conditions and prerequisites. This approach is called Standardized Approach in calculation of the RWAs for credit risk in the Basel II Framework. Nonetheless, the methodologies to give the weighting bands had been changed a lot. 
+
+In the Basel II Framework, two approaches were provided by the Basel Committee for the treatment of credit risk: The Standardized Approach (SA) and the Internal Ratings Based (IRB) Approach. 
+
+Under the Standardized Approach (SA), credit exposures were still slotted into weighting bands. However, the weight bands were given based on ratings by the eligible external rating agencies permitted by national supervisory authorities.  The Internal Ratings Based (IRB) Approach allowed banks to categorize credit exposures using their internal risk assessments.  The Internal Ratings Based (IRB) framework was further divided into two approaches: The Foundation Internal Ratings Based (F-IRB) Approach which only allowed banks to estimate the Probability of Default (PD), and the Advanced Internal Ratings Based (A-IRB) Approach which allowed banks to provide their own estimates of PD, LGD (Loss Given Default), and EAD (Exposure at Default). 
+
+Under the Basel III Reforms, the above two approaches have been greatly changed. Under the Standardized Approach, The Basel Committee has provided an approach to give more detailed weight bands to exposures to increase the risk sensitivity. And the Basel Committee also provided approaches for national authorities in decision making process to reduce the rely on the external rating agencies. 
+
+Due to regulatory arbitrage and other issues caused by the Internal Ratings Based (IRB) Approach, the Basel Committee introduced more constraints on the use of the Internal Ratings Based (IRB) Approach. In some certain exposure classes, such as exposure to banks and other financial institutions, the Advanced Internal Ratings Based (A-IRB) Approach has been removed. In the exposure of class of equity, the two Internal Ratings Based Approaches have both been removed. 
+
+Under the Basel III Reforms, the capital requirement for Credit Valuation Adjustment (CVA) risk is required to cover the default risk of counterparties due to the adjustments of derivative valuation.  
+
+    b) The treatment of market risk
+
+The treatment of market risk was provided in the 1996 Amendment due to the insufficiency that the Basel I was seen when risk was assessed in banks’ trading book. Two approaches were provided in the 1996 Amendment: The Standardized Approach (SA) and the Internal Model Approach (IMA). The Standardized Approach (SA) assigned market risk capital charge to each type of instruments such as debt, equity, foreign exchanges, commodities and options, then add those separate capital charges together. The Internal Model Approach (IMA) allowed banks to use their internal Value-at Risk (VaR) models to calculate the market risk capital charge as long as they got permission from the national supervisory authorities. Under these two approaches, a Specific Risk Charge (SCR) was calculated in the total market risk capital charge to avoid what banks used the trading book as a tool for regulatory arbitrage. 
+
+The Basel II Framework retained the treatment of market risk presented in the 1996 Amendment. It was until Basel II.5: Revisions to the Basel II Market Risk Framework that the treatment was developed to cope with the stress scenarios. The Basel II.5 Revisions refined and strengthened the capital requirements on Specific Risk Charge (SCR) under both approaches. 
+
+Specifically, under the Internal Model Approach (IMA), the Basel Committee required banks to calculate a Stressed Value at Risk (SVaR) to be added in the calculation of total market risk capital charge, which assessed the capital adequacy in a period of stress.  The Basel Committee also required banks to calculate Incremental Capital Charge (IRC) to capture default risk and migration risk of certain securitization exposures. The ‘Comprehensive Risk Measure (CRM)’ was introduced, which was intended to capture all price risks, but was still subject to national supervisory approval. 
+
+The Basel III Reforms have phase-in arrangements for treatment of market risk. From January 1, 2022, the current approaches (SA, IMA) will be replaced by the new Standardized Approach and the new Internal Model Approach to assess the market risk under the Basel Framework. 
+
+Under the new Standardized Approach (SA), the market risk capital charge is composed of three components: the capital charge calculated by the sensitivity-based method, the Default Risk Capital (DRC) charge, and the Residual Risk Add-On (RRAO). For those banks using the new Internal Model Approach (IMA), the Basel Committee require banks to use Expected Shortfall (ES) models or Stressed Expected Shortfall (SES) Models to capture all modellable market risk factors. All non-modellable risk factors are required to be captured using a stress scenario. 
+
+    c) The treatment of operational risk
+  
+It is under the Basel II Framework that regulatory capital requirements for operational risk were considered for the first time. The Basel II Framework allowed three methods in calculation of operational risk capital charge: The Basic Indicator Approach (BIA), the Standardized Approach (SA) and the Advanced Measurement Approach (AMA).  
+
+Under the Basic Indicator Approach (BIA), a fixed percentage (15%) indicator was given, multiplied by the average over the positive annual gross income over the previous three years in order to meet the operational risk capital charge. In the Standardized Approach (SA), banks’ activities were divided into eight business lines, each of lines was given a fixed percentage indicator to calculate the operational risk capital charge. 
+
+The Advanced Measurement Approach (AMA) allowed banks to assess the expected losses for operational risk through the frequency and the severity risk factors by using internal and external data. 
+
+The Basel III Reforms will replace the current methodologies under the Basel II Framework by a single Standardized Approach (SA) from January 1, 2022. Under this Standardized Approach (SA), the operational risk capital charge is calculated by multiplying the Business Indicator Component (BIC) and the Internal Loss Multiplier (ILM). The Business Indicator Component (BIC) and the Internal Loss Multiplier (ILM) can be calculated through the business indicators in banks’ financial statements and internal loss data. 
+
+iii) Development of other aspects of the Basel Framework
+
+The center of the Basel Framework – the minimum regulatory capital requirement has experienced great changes in the past decades. In recent years, the Basel Framework also has developed and reformed other aspects in the framework. 
+
+Liquidity standards - The Liquidity Coverage Ratio (LCR) focuses on banks’ ability to withstand a 30-day liquidity stress. The Net Stable Funding Ratio (NSFR) focuses on a longer term (over 1 year) liquidity management. 
+
+Leverage management – Leverage Ratio (3%) has been placed restraints on banks’ on-and-off balance-sheet exposures and acts as supplementary measure to the regulatory capital requirements. A Leverage Ratio Buffer has been introduced for the Global Systemically Important Banks (G-SIBs) to ensure that those banks maintain higher absorbency capability.
+
+
+#### How do the Basel Accords work?
+
+The Basel Accords are a financial supervisory framework built up by the Basel Committee which, as stated in its charter, has no formal supranational authority on the implementation of, or the compliance with, the standards under the Basel Framework. The functions of the Basel Framework rely on communication and cooperation between national supervisory authorities which are the members of the BCBS. The national supervisory authorities have the discretion to go beyond the minimum requirements stipulated under the Basel Framework. 
+
+The Basel Committee monitors the adoption of regulations and standards under the Basel Framework by banks in its member countries through the Regulatory Consistency Assessment Programme (RCAP). 
+
+
+#### What is next?
+
+The Basel III Reforms are responses to the global financial crises and the rebuilding of the post-crisis global financial system. Besides the imperative Pillar one – the minimum capital requirements, Pillar two – Supervisory Review and Pillar three – Market Discipline also are indispensable parts of the Basel Framework. Especially, Pillar two and Pillar three can be testaments of communication and cooperation between related stakeholders to the Basel Framework. 
+
+The Basel Committee has already started to conduct work programs on evaluation of the impact and effectiveness of its post-crisis reform framework. Financial innovation and the changes in the structure of the financial system will never stop.  There will be another financial crisis and there will be a ‘Basel IV’ or whatever it is called in the future.
+
+
+
+
+
+
+
+

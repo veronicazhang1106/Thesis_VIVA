@@ -1,0 +1,683 @@
+---
+title: "Does stringent capital regulation affect persistent or transient Chinese bank efficiency-A four-component model analysis"
+---
+
+```{r}
+#| label: loading libraries
+#| output: false
+#| include: false
+
+library(tidyverse)
+library(readxl)
+library(knitr)
+library(frontier)
+library(gtsummary)
+library(gt)
+library(stargazer)
+library(tinytex)
+library(rmarkdown)
+library(rstatix)
+library(papeR)
+library(plm)
+library(ggcorrplot)
+library(bookdown)
+library(npsf)
+library(scales)
+library(pglm)
+library(formattable)
+library(kableExtra)
+library(gridExtra)
+library(sjPlot)
+library(janitor)
+
+
+options(knitr.kable.NA = '')
+
+```
+
+## Introduction
+
+Since the first Basel Accord (Basel I) in 1988, followed by Basel II in 2004 and Basel III in 2010, capital regulation has been put at the front and center to regulate banks' behavior and maintain well-functioning banking systems. Over the last few decades, regulatory capital requirements have been refined and broadened to cover increasing types of risk and keep up with the growing complexity of banking. The 2007-2009 global financial crisis uncovers that capital regulations which were implemented before the crisis were inadequate to prevent a financial panic and cover unexpected losses. After the crisis, the Basel Committee on Banking Regulation and Supervision (BCBS) developed a consolidated framework (Basel III) for more stringent capital adequacy regulations and liquidity assessment, in recognition of the need for banks to be subject to more stringent capital regulations. Following the goals set by the BCBS, member countries including China have established legislation and regulatory frameworks.
+
+China’s banking sector plays an essential role in the country’s economic development. China’s banking sector has started a fundamental reform since 1978, as an integrate part of China’s overall economic reform. Since 2001 when China got accession to the World Trade Organization (WTO), the reform of China’s banking system has stepped up its pace and the whole banking sector has been dramatically reshaped. The reform has transformed Chinese banks into market-oriented enterprises, changed ownership structure of Chinese banks, established modern corporate governance mechanisms, and introduced legislation and regulatory framework. Since 2010, improvements and refinements have happened in China’s banking sector as an advanced stage of the reform. China’s financial authority fully accepted the Basel III framework and started the implementation in 2013. 
+
+While regulatory consensus has been reached that more stringent capital requirements maintain an essential role in the Basel III framework, there has been less agreement among academics on debates regarding whether capital regulation influences financial stability through the impact it has on bank efficiency. From the perspective of the role of government, "the public interest" approach holds that bank regulation enhances social welfare therefore improve efficiency [see @BARTH2005]. The conflicting approach "the private interest" view argues that regulation only benefits political patronage [see @STIGLER1971] and impedes bank efficiency. From the perspective of corporate governance, literature provides two main hypotheses to explain the relationship between capital and efficiency. The conflict between shareholders and creditors ["asset substitution" hypothesis, see @SMITH1979] favors that high capital reserve leads to better bank performance. In contrast, the conflict between shareholders and managers ["control" hypothesis, see @JENSEN1986] asserts that high regulatory capital holding harms bank efficiency.      
+
+In this paper, we evaluate the impact of the capital regulation on bank's cost efficiency in China's banking industry. Given these opposing views and previous empirical studies with conflicting results based on various theoretical models, we believe that our empirical research could be important for policy decision making. 
+
+A second question that we address in this paper is relationship between ownership and bank efficiency. China's financial reform has dramatically transformed bank ownership which could be important implication for bank efficiency [@BERGER2009]. Along with embracing privatization and establishment modern corporate governance, China's financial reform has evolved state ownership into a large-investor shareholding type with significant cash flow rights. Theory offers two opposing views on the nexus between state ownership and bank efficiency: the public view holds that state ownership improves bank efficiency [see @ATKINSON1980; @STIGLITZ1993]; while the political view claims that state ownership jeopardizes bank performance [see @SHLEIFER1997; @SHLEIFER1994]. Therefore, these theoretical keystones provide the foundation for us to examine bank efficiency associated with ownership structure of Chinese banks. 
+
+Our empirical research provides evidence using a four-component panel stochastic frontier cost model on an unbalanced panel of 233 China's commercial banks over the period 2010-2020. To perform our analysis, we hand collect the ownership structure information of these 233 China’s commercial banks and categorize them into 5 ownership identities: State-owned (Big Six and other than Big Six), Local government-holding, Joint-stock, foreign joint-stock, and Foreign-owned banks, referencing the definitions by China Banking and Insurance Regulatory Commission(CBIRC) (see @tbl-ownership). We employ the total regulatory capital ratio (TC/RWA) defined by the Basel III to investigate impact of capital regulation on bank cost efficiency and the relationship between ownership and bank cost efficiency. 
+
+The key findings are as follows: first, we do not find statistically significant relation between the regulatory capital requirements and bank persistent(time-invariant) cost efficiency, but a negative associtation between Basel III regulatory capital and transient(time-varying) efficiency. This result supports the results by @BARTH2004, @LEE2013, @DJALILOV2019 and @LESANOVSKA2016, but differ from other previous studies. 
+
+Second, the estimate of state ownership shows statistically significant relation with bank cost efficiency. The results provide that state-owned banks have higher transient efficiency and much lower persistent efficiency compared with other ownership types. This finding collaborate the findings by @FUNGACOVA2020. By decomposing the overall efficiency into transient and persistent efficiency, we also provide explanations for different ownership types with similar efficiency patterns. 
+
+This paper contributes to the literature in several ways. First, this study assesses the impact of risk-based capital regulation on Chinese banks' cost efficiency following the global financial crisis, using the definition of capital from Basel III framework. The BCBS first released Basel III framework in 2010. The Chair of the BCBS addressed that evaluating the regulation effects is part of the BCBS post-crisis reform in the current macroeconomic environment. In addition, China’s banking industry achieved extensive transformation before 2010 and the Chinese case provides uniqueness in terms of ownership structure. 
+
+Second, despite the extensive literature on bank efficiency, the literature falls short of explaining low efficiency. This gap may be due to limitation on methodologies. In this paper, we apply the most recent four-component SFA cost model developed by @COLOMBI2011, @COLOMBI2014, @FILIPPINI2016, and @KUMBHAKAR2015. It enables us to decompose the overall efficiency into transient and persistent components. The transient inefficiency is time-varying and may stem from short-run moral hazard such as non-optimal resource allocation and changes to adapt new economic environment. The persistent inefficiency may be due to regulations, infrastructure, investments or lasting management habits (of wasting inputs) such as poor organization or private incentives of preventing cost minimization. By using the new model we disentangle transient and persistent (in)efficiencies and provide important empirical evidence for efficiency literature. 
+
+Third, we use a bespoke dataset of 233 Chinese commercial banks over a relatively long period (2010-2020) to study China’s banking sector. These 233 banks account for over 91% of China’s banking sector in terms of total assets. Apart from employing the data provided by the SNL database, we hand collected the missing values of the data set from the original annual reports of individual bank, which makes our data set extremely comprehensive. 
+
+The remainders of this paper proceeds as follows. Section II reviews the related literature, as well as information of China's financial reform and the evolution of ownership structure of commercial banks in China. Section III presents the data set and the empirical model specification. The empirical results are presented in section IV. And section V concludes. 
+
+
+## Literature review
+
+In this section, we review the theoretical and empirical literature pertaining to the effect of capital regulation on bank efficiency, and provide information of China's financial reform as well as the evolution of ownership structure in China's banking industry. 
+
+### Two approaches to bank regulation
+
+Regarding the role of government in regulating economic activities, there are two main approaches to bank regulation and supervision: the public interest view and the private interest view. The public interest approach to bank regulation and supervision emphasizes that governments regulate banks thereby safeguarding the interest of the public and enhancing social welfare [@BARTH2005]. @CANNAN1921 and @ATKINSON1980 are in favor of government intervention in bank regulating and supervising which can be traced back to welfare economics. They argue that there are important reasons for government intervention including failure of perfect competition, external shocks, public goods, among others. According to the public interest view, bank regulation may reduce unnecessary risk in lending and boost competition, leading to great bank efficiency[@BARTH2005]. 
+
+ON the other hand, the private interest view (the "capture" theory, see @JENSEN1986) argues that regulation only benefits specific groups because it is sabotaged by the political process. Applied to banking industry, bank regulations are captured to enhance the well-being of bankers and closely connected to the political parties. The private interest view can be considered to share the similar viewpoint with the political view regarding state ownership in the economy. Governments have agendas which are other than social welfare and dominated by their own political interests. Governments use their control only to transfer wealth to their supporters, leading low efficiency of state firms [@SHLEIFER1997; @SHLEIFER1998]. Accordingly, the private view criticizes that stringent bank regulations may reduce bank efficiency and exacerbate corruption in lending. The private interest view also advocates extensive reliance on market discipline, voluntary disclosure and private sector initiatives [@SHLEIFER2005].     
+
+Given that the theories provide conflicting prediction about the impact of bank regulation policies on efficiency, the empirical literature gives mixed findings related to the above theoretical models. @BARTH2004 investigate the relationship between regulatory and supervisory practices and bank performance and stability of banking sector using the World Bank survey data for a sample of 107 countries. The empirical results suggest that there is no statistically significant relation between official supervisory power and bank performance. However, they find private monitoring is positively related to bank development and negatively associated with overhead costs. They also report that countries facilitating strong market discipline system have better preformed banks. @BECK2006 examine the impact of bank supervision on lending across 37 countries employing firm data of the World Business Environment Survey (WBES) and the bank supervisory data of @BARTH2004. The results suggest that strengthening official supervisory power increases the corruption in lending which may result in lower efficient credit allocation. The results also advocate that supervisory policies enforcing accurate information disclosure facilitate integrity in lending with implication of higher efficient credit allocation. Being consistent with the public interest view, @PASIOURAS2008 finds powerful supervisory agencies have positive impact on banks' technical efficiency in several cases of Tobit regression. @PASIOURAS2009 also report that banks' cost and profit efficiency are influenced positively by strong official supervisory power. Nevertheless, @PASIOURAS2008 and @PASIOURAS2009 also find empirical evidence supporting the view that creating and strengthening market discipline mechanism are associated with higher bank efficiency. @BARTH2013 study the impact of bank regulation and supervision on bank efficiency using the previous bank supervisory database[@BARTH2004;@BARTH2005;@BARTH2008] and firm-level data for a sample of 72 countries over the period 1999-2007. They find that enhancing official supervisory power has positive impact on bank efficiency in those countries where supervisory authorities are more independent. The results also suggest that market-based monitoring with more financial transparency is positively related to bank efficiency. 
+
+Regionally, @CHORTAREAS2012 examine the relationship between the supervisory policies and bank efficiency employing a sample of banks in 22 European Union countries. They find that both strengthening official supervisory powers and private sector monitoring can improve bank efficiency levels. @LEE2013 study how bank regulation affect banks' cost efficiency and risk in China. They report empirical results that different regulatory ratios have different impact on efficiency of big banks and small banks. They also suggest that policymakers in China face a trade-off between risk and efficiency. @HAQUE2017 examine the effects of bank regulation and ownership on bank efficiency in Middle East and North Africa (MENA) region and find evidence supporting the public view that official power has positive impact on cost efficiency. @DJALILOV2019 investigate the relationship between bank regulation and bank efficiency in 21 transition countries for the period 2002-2014 and find that neither official supervisory power nor market discipline have statistically significant effects on bank efficiency. 
+
+
+### Bank Capital and Efficiency
+
+Capital adequacy requirements, as one of the main regulatory tools, are of the essence of the Basel III framework. Regulatory capital provides a potential buffer in absorbing liquidity and economic shocks during the time of stress and thereby improve stability of the financial system [@REPULLO2004; @ANGINER2021]. Based on the public interest view, a powerful regulatory agency can improve bank operations by requiring higher regulatory capital which aligns the incentives of bank owners and creditors [@BARTH2005; @BARTH2013]. In contrast, the private interest approach holds that strong official regulatory agencies cannot rectify market failures. Rather, the potential benefit from higher capital adequacy requirements might be offset by increased regulatory costs including a higher entry barrier and a greater government rent [@BARTH2005; @BARTH2013].
+
+Besides the above two approaches to bank regulation and supervision, the theory literature provides the theories of agency, information asymmetry, and capital structure to explain the relationship between bank capital and efficiency. Based on agency theory and information asymmetry, @JENSEN1976 argue that asymmetric information problems may create the conflict between shareholders and creditors. This may lead to a moral hazard opportunity for shareholders to shift wealth from creditors to themselves. For example, shareholders may invest in  high-risk assets to substitute lower/safer ones ["asset substitution", see @SMITH1979], which increases the risks faced by creditors whereas shareholders are protected by the limited liability condition. Shareholders may also have the incentives to reject a project or lack motivation to fund investments which have postie net present values if the benefits would accrue to creditors [@MYERS1977]. This may cause creditors to suffer opportunity loss. According to these arguments, higher regulatory capital holding can curtail the shareholders incentives in risk-taking and risk-shifting, which may result in more prudent lending and better bank performance [@KEELEY_FURLONG1990; @BERGER1995]. These arguments show that incentive effects are consistent with the theoretical grounds of the public interest view mentioned in @BARTH2005. In fact, the risk-shifting incentive and potential external shocks have been strongly justified bank capital regulation [@SANTOS2001].
+
+However, agency theory also analyzes the conflict between shareholders and managers arising from managers' control over free cash flows ["control hypothesis", see @JENSEN1986]. Managers, with divergent interest from shareholders, have discretion over how to use the future cash flows. Managers may lower their effort or waste resources rather than maximize the firm value. By issuing debt, managers are bonding themselves to act in the interest of shareholders [@GROSSMAN1982]. 
+Because managers are held to promise to repay the interests, which reduces the free cash flow available to management's control [@JENSEN1986]; and the potential threat from bankruptcy may effectively motivate management to improve the firm's efficiency to avoid personal costs due to bankruptcy [@JENSEN1986; @GROSSMAN1982]. Based on these arguments, higher regulatory capital holding can impede bank efficiency, as it may exacerbate the conflict between shareholders and management. 
+
+Most of the aforementioned empirical research regarding the impact of bank regulation and supervision on bank performance report that stringent capital regulation improve bank performance. @BARTH2004 state that capital stringency may prevent non-performing loans. @BARTH2013 find more stringent capital regulation is positively associated with bank efficiency. Empirical results provide evidence that the adoption of stringent capital adequacy standards has an positive impact on technical efficiency [@PASIOURAS2008] and cost efficiency [@PASIOURAS2009], but a negative impact on profit efficiency [@PASIOURAS2009]. Similarly, @CHORTAREAS2012 and @HAQUE2017 also report that strict capital requirements increase bank efficiency in EU and MENA countries, respectively. However, capital regulation (regulatory ratio and stringency) does not appear to have a significant effect on bank efficiency in China [@LEE2013] and transition countries [@DJALILOV2019], respectively. In addition to the above research, @LESANOVSKA2016 analyze the relation between regulatory capital and bank efficiency in Czech's banking industry and find no relation. @BITAR2018 investigate the effect of capital ratios on bank risk, efficiency and profitability in 39 OECD countries and they state that risk-based capital ratio improve banks' efficiency and profitability. 
+
+Although there is a growing empirical literature concerning bank efficiency in China's banking industry, the research focusing on the impact of regulatory capital and bank efficiency is still sparse. Most research papers concentrate on investigating Chinese banks' efficiency of different ownership types and sizes [for example, @FU2007; @BERGER2009; @HUANG2017]. @TAN2013 assess the relationship between bank capital, risk and efficiency in China's banking industry using non-risk based capital (equity to total assets ratio) and the empirical results show that bank capital enters with a positive but not statistically significant coefficient. @PESSAROSSI2015 study the effect of capital requirements on cost efficiency of Chinese banks over 2004-2009 and they find that capital adequacy requirements have a positive effect on cost efficiency. 
+
+
+### Ownership Structure and bank efficiency
+
+The theory of ownership stems from the pioneering work of the property rights theory by @COASE1937, @ALCHIAN1965, @DEMSETZ1966, and @ALCHIAN1972; has been extended by @GROSSMAN1986 and @HART1990, and integrated with the agency theory by @JENSEN1976, @FAMA1980, and @FAMA1983. The property rights theory defines ownership as residual right to income [@ALCHIAN1972] and residual right to control [@HART1990]; and states that the owners' property rights have been attenuated by managers' diverting the firm's resources to their own ends [@FURUBOTN1972]. The property rights theory allows the prediction of behavioral consequences of individuals in the contractual relations [@DE-ALESSI1980]. Therefore, according to the  theory literature, the issue of ownership and efficiency should be considered in the context of principal-agent framework and public choice theory [@ALTUNBAS2001]. In the following subsections, we review the theoretical and empirical literature of ownership from two dimensions: the degree of ownership concentration (shareholder rights) and the nature of the shareholders [see @SHLEIFER1997]. 
+
+#### The degree of ownership concentration
+
+The separation of ownership and control in modern corporations, emphasized by @BERLE1932, retains a central position in the literature of the theory of the firm. From the agency perspective, shareholder rights and ownership concentration are two common approaches to influence managerial behavior and thereby impact corporate performance. It is often believed that the diffused ownership would increase the power of managers and reduce their dependence on the owners [@BERLE1932]. @ALCHIAN1972 argue that, in a corporation with dispersion of shareholding, control may be facilitated by turning shareholders' votes into voting blocs, which strengthens shareholders' power. @AMIHUD1981 and @HIRSHLEIFER1992 argue that better investor protection (shareholder rights) constrain managers' conservative (sub-optimal) risk-taking choices and may lead to the enhanced firm value. @JOHN2008 conduct a cross-country study and support this view. They find the positive relationship between investor protection and firm growth rates. However, @BURKART2003 present a model arguing that great protection of shareholder rights reduces the need for dominant shareholders which may prevent managers' shirking behavior [@SHLEIFER1986]. Therefore, dispersed shareholding with unrestricted salability may keep a long-lived management team [@ALCHIAN1972], and may result in greater managerial discretion in forgoing value-enhancing investment projects [@BEBCHUK1999;@BURKART2003]. 
+
+Voting blocs are a transient reformation of the ownership structure, converting the diffused ownership into decisive power [@ALCHIAN1972] which is one of the characteristics of large shareholders. Ownership concentration, or large shareholders, is defined as shareholders having concentrated control rights with significant cash flow rights [@SHLEIFER1997]. The model presented by @SHLEIFER1986 to estimate the value of ownership concentration. They propose that a presence of a large shareholder may lead to value-increasing takeovers. However, @GROSSMAN1988 argue that large shareholders might try to maximize their private benefit at the expense of other small shareholders if their high control rights are not associated with high cash flow rights. The model employed by @GROSSMAN1988 shows that this happens if there is a substantial departure from one share-one vote structure. @DEMSETZ1985 find no linear relationship between ownership concentration and firm profit rate. @MORCK1988 only get significant statistical result of profit rates rising in the range of ownership between 0 to 5%. Based on their finding, as ownership concentration increases beyond a certain point, large shareholders expropriate the firm resource to generate private benefits of control and dampen the interests of other investors and the firm. 
+
+#### State ownership
+
+From the perspective of corporate governance, state firms are defined as being “controlled by the public; and the de facto control rights usually belong to bureaucrat shareholders with highly concentrated control rights and no significant cash flow rights” [@SHLEIFER1997]. Based on this definition, state shareholders can be considered as a special form of the large shareholders with highly concentrated control rights and lack of cash flow rights. 
+
+The property rights theory suggests that the difference between public ownership and private ownership is that public ownership can not be transferred; and public ownership arrangements have higher costs (lower efficiency) compared to private property agencies [@ALCHIAN1965]. @DE-ALESSI1974 states that due to the inability of transferring his share, the owners of government firms have lower incentives to monitor managerial behavior. This may imply that a greater attenuation in owners' rights in government (political) firms, which may lead to less efficient operations, compared to private firms [@DE-ALESSI1974].
+
+Associated with the theorem of welfare economics and the property rights theory, there are two alternative views of government participation in financial markets: the social view and the political view. The social view suggests that state ownership is a form of government intervention which addresses to market failures and improves market functions and economic performance [@ATKINSON1980; @STIGLITZ1993]. According to this view, state-owned banks may finance those projects which might not be profitable but might have high value of social welfare. Therefore, state-owned banks may have poorer performance in profitability along with higher default risk compared to their counterparties in the private sector. In contrast, the political view claims that state ownership creates sources of political benefits for politicians rather than social welfare. For example, excessive employment of state firms only benefits those who support government politically [@SHLEIFER1994]. According to the political view, state-owned firms are inefficient because the state shareholders, with highly concentrated control rights and no cash flow rights, only maximize their political goals which may jeopardize social welfare [@SHLEIFER1997]. 
+
+A growing literature has examined the impact of state ownership of banks, from both the macroeconomic angle and the perspective of individual banks, on economic growth and bank performance. @ANDRIANOVA2012 find that government-owned banks have higher growth rates and contribute to countries’ long-run economic growth. However, @LA-PORTA2002 find that higher government ownership is related to lower economic growth. @BECK2002 find no supporting evidence for either the social view or the political view. Employing a data set of banks in 74 countries, @IANNOTA2007 argue that state ownership intensifies bank concentration and exacerbate financing obstacles. @BERGER2005 and @IANNOTA2007 find that state-owned banks have lower profitability and poor long-term performance, compared to private-owned banks. 
+
+As part of the results of the financial reform in China, the evolved ownership structure of banks in China has attracted academic attention after China’s accession to the WTO in 2001. Studies focusing on bank efficiency report that state-owned banks exhibit lower efficiency compare to joint-stock banks and foreign banks [@BERGER2009; @SHLEIFER2005]. @TAN2013 argue that state-owned banks have higher volume of non-performing loans and lower profitability. @ZHU2016 report that state-owned banks take higher risk than foreign banks in China. Using the four-component efficiency model [see @TSIONAS2014], @FUNGACOVA2020 analyze the overall efficiency of Chinese banks and find state-owned banks (the Big Five) suffer low efficiency because of the low persistent efficiency. 
+
+#### The evolution of ownership structure of commercial banks in China
+
+The dramatic changes regarding the ownership structure of commercial banks in China are the essential part of every stage in China’s financial reform. The four largest state-owned banks ^[They are the “Big Four”: Bank of China, China Construction Bank, Agricultural Bank of China, and Industrial and Commercial Bank of China.]  were founded during the first stage of the financial reform (1978-early 1990s), alongside with other national banks ^[National banks: commercial banks which operate nationwide]. These large banks, at this stage, were owned by Finance Ministry and state-owned enterprises. The lower level of financial institutions, known as city credit cooperatives, were controlled by local Bureau of Finance when established. Foreign banks were operating in Special Economic Zones ^[Special Economic Zones: a form of Free Ports in China where companies may benefit from tariff allowances and exemption. Chinese government designated the first four Special Economic Zones – Shenzhen, Xiamen, Shantou, and Hainan Province – in order to encourage foreign investments and improve economy and technology by the end of 1980’s. More details may be found [here]( http://www.npc.gov.cn/npc/c9757/200904/8e461e2ba405480697185186122812d4.shtml)] [@BERGER2009].  
+During the second stage (early 1990s-2001), most ‘policy-lending’ business of the four largest state-owned banks was released to three policy banks founded during this period. Private enterprises and individuals began entering different levels of financial institutions as shareholders. Local Bureau of Finance began to exit city banks by transferring their shareholding to local business enterprises.  
+The biggest change to the ownership structure happened at the third stage of the financial reform (2001-2010). An investment enterprise , Central Huijin Investment Ltd. (hereafter CH), was established by the state government acting as a designated shareholder of those state-owned banks, in order to fulfill the corporate governance requirements set by laws and regulations. Direct government shareholding has sharply decreased due to the share transfer to CH and state-owned banks going public. Foreign financial institutions such as RBS Group and Bank of America invested in all levels of Chinese banks including state-owned banks, national banks and city banks, as strategic investors. The majority of state-owned banks and several city banks went public at this stage, introducing more diversified shareholders. After 2010, more detailed improvements happened regarding ownership structure. Private-owned banks were established. Local government shareholders become minority shareholders in city banks. Over 50% of shareholding in city banks and over 87% of shareholding in rural commercial banks are private enterprises by 2017. In total 57 commercial banks are listed by 2020.
+
+After the financial reform, both of shareholding by the state government and local governments in commercial banks have decreased. Different from that state-owned banks have Finance Ministry or CH as their controlling shareholder; ownership structure of local government-holding banks evolved to government-private "Mixed" ownership. In these banks, local Bureau of Finance is not the controlling shareholder. Local government-holding banks usually are medium sized banks and provide financial services in cities and nearby areas. 
+
+## Data and methodology
+
+### Data
+
+Our sample is an unbalanced panel composed of financial and ownership data of 233 Chinese banks during the period of 2010-2020, giving in total 2574 observations. Our data includes all major commercial banks and covers over 91% of the Chinese commercial banks in terms of the total assets. The composition of the sample banks and the information of their ownership structure are listed in @tbl-ownership. 
+
+We use the SNL database (provided by S&P Global Market Intelligence) as our main data source. The data is expressed in real (2010) term using China GDP deflator. Whenever the SNL does not provide enough information or has doubtful values, we manually collect or correct the data from the annual reports released by the individual banks on their official websites or mandatory disclosure on the website of [China Central Depository & Clearing Co., Ltd](https://www.chinabond.com.cn). We also obtain regulatory and macroeconomic data and information from the following official sources including China Banking and Insurance Regulatory Commission (CBIRC), the World Bank, the Basel Committee (BCBS), the National Bureau of Statistics of China, and the International Monetary Fund (IMF). 
+
+
+```{r}
+#| label: tbl-ownership
+#| tbl-align: center
+#| tbl-cap: "Ownership structure in Chinese banking industry"
+
+
+banks <- read_excel("2022-02-20 Efficiency_Observations-All Variables.xlsx")
+
+N <- banks %>%
+  filter(Year == 2020) |> 
+  tabyl(Ownership, Type)%>%
+  adorn_totals(where = c("row", "col")) %>%
+  adorn_percentages(denominator = "col") %>%
+  adorn_pct_formatting(digits = 1, rounding = "half to even") %>%
+  adorn_ns(position = "front") %>%
+  adorn_title(placement = "combined", row_name = "Ownership", col_name = "Type")
+
+N_kbl <- kbl(N, format = "latex", 
+             booktabs = TRUE,
+             escape = TRUE) %>%
+  kable_styling(latex_options = c("scale_down")) %>%
+  column_spec(column = 1, bold = TRUE) %>%
+  row_spec(row = 0, bold = TRUE) %>%
+  kableExtra::footnote(alphabet_title = "Bank Types:", 
+    alphabet =c("Big Six: The biggest six banks, all state-owned;", 
+                "City bank: Branches usually cover a city and the near cities within the province where the bank headquarter is located;", 
+                "Foreign bank subsidiary: Foreign bank branches and subsidiaries;", 
+                "National bank: Branches cover the whole country and based on the CBIRC's categorization;", 
+                "Rural commercial: Branches usually cover local communities and rural area within a province where the bank headquarter is located."), 
+    number_title = "Ownership Structure:", 
+    number = c("Foreign-owned: Foreign bank operating in China;", 
+               "Foreign Joint-stock: Joint-stock Banks having foreign strategic investors (usually shareholding over 15%);", 
+               "Joint-stock: Banks' share held by mixed-ownership insitutions and individuals; if shareholding involves indirect local government holding, the stake is less than 10%;", 
+               "Local government-holding: Banks'share either held by local Treasury Bureau (no matter how much of the stake), or indirectly held by local government over 10%;", 
+               "State-owned: Bank directly controled by Central Huijin, Finance Ministry or state-owned enterprises."), 
+    title_format = c("italic", "underline"), 
+    threeparttable = TRUE)
+
+N_kbl
+
+```
+
+
+### Methodology
+
+#### Efficiency estimtation 
+
+In this paper, we focus on Chinese banks' cost efficiency. Cost frontier efficiency, or how close a bank (firm) is to a "best practice" cost frontier, can be measured using nonparametric approaches such as Data Envelopment Analysis (DEA) or parametric approaches such as Stochastic Frontier Approach (SFA). 
+
+The stochastic frontier (SF) model, originally proposed by @AIGNER1977 and @MEEUSEN1977, has considerably been researched, extended and applied. A typical SF model splits the error term into two random components: a normally distributed noise term (for exogenous random shocks and measurement errors) and a non-negative inefficiency term. In 1990s, the inefficiency term is decomposed into two components: persistent and time-varying components in several papers by Kumbhakar and co-authors [@KUMBHAKAR1991; @KUMBHAKAR1995; and @HESHMATI1994]. The persistent inefficiency term is consistent with the models developed by @BATTESE1988 and @SCHMIDT1984; and the time-varying component is consistent with the model developed by @CORNWELL1990 and @BATTESE1992. In the recent advances in the SF model, researchers pay special attention to separation of firm heterogeneity, persistent and time-varying inefficiency terms. Early literature such as @MUNDLAK1961 states that empirical production function should include management variables which do not change greatly over time. @MESTER1997 finds that estimates of cost efficiency can be biased without accounting for bank heterogeneity in the U.S. bank data. To address this issue, a four-component SF model has been introduced and developed by @COLOMBI2011, @COLOMBI2014, @FILIPPINI2016, and @KUMBHAKAR2015. The four-component model splits the error term into four components. The first component captures firms' latent heterogeneity [see @GREENE2005]; the second component captures random shocks and measurement errors. The third component captures the persistent (long-run) inefficiency [see @KUMBHAKAR1995]; and the forth component captures time-varying (transient/short-run) inefficiency. The model disentangles the firms' unobserved heterogeneity which may represent different types of firms, from inefficiency. The persistent inefficiency may be due to regulations, infrastructure, investments or lasting management habits (of wasting inputs). Both of the first two components are time-invariant. The transient (time-varying) part of inefficiency may stem from short-run moral hazard such as non-optimal resource allocation. The time-varying component and the noise component are both vary across firms and over time. Following @KUMBHAKAR2015, the model is specified as: 
+
+
+\begin{equation}
+y_{it} = \alpha_{0} + f(x_{it}; \beta) + \mu_{i} + v_{it} - \eta_{i} - u_{it}
+\end{equation}
+
+
+where \mu_{i} is random firm effects that capture unobserved inputs (time-invariant). The two of the components ($\eta{i}>0$ and $u_{it}>0$) are inefficiency terms and the other two components ($\mu_{i}$ and $v_{it}$) are firm effects and random noise. 
+
+The above model can be called as the homoscedastic four-component model [see @BADUNENKO2017]. All the four-components are in the assumption of independently and identically distributed (i.i.d) random variables. We choose to follow this model because this relative new SF model fills the gaps in the current SF literature. First, the current literature (such as @GREENE2005) allows time-invariant firm effects but does not allow them as inefficiency. The above four-component model takes into account the possible presence of some inputs that might have time-invariant effects on firms' inefficiency. Second, the current SF models have the assumption that inefficiency as a product of a deterministic function of time (such as @KUMBHAKAR1991 and @BATTESE1992); or assume that a firm's inefficiency at time t is independent of previous level inefficiency [see @KUMBHAKAR2015]. The above four-component model splits persistent and time-varying inefficiency effects, by assuming that some sources of inefficiency can be removed by the short-run adjustments, while others may stay over time. Finally, current SF models proposed by @GREENE2005 and @WANG2010, for example, do not take into account the effect of unobserved firm effects, although these models include permanent inefficiency effects. The time-invariant inefficiency is conflated with firms' latent heterogeneity. The above four-component model makes an argument that there are unobserved firms' time-invariant effects  that are not efficiency by disentangling firm heterogeneity from inefficiency. 
+
+To examine Chinese banks' cost efficiency, we follow @KUMBHAKAR2015 and @BADUNENKO2017 and specify the four-component cost function as follows: 
+
+
+\begin{equation}
+logC_{it} = h(y_{it}, w_{it}; \beta) + \mu_{i} + v_{it} + \eta_{i} + u_{it}
+\end{equation}
+
+
+where $\eta_{i}>0$ represents persistent inefficiency and $u_{it}>0$ represents time-varying (transient) inefficiency. $\mu_{i}$ represents unobserved firm heterogeneity; and $v_{it}$ captures random noise. 
+
+The above model can be estimated employing a single-stage Maximum Likelihood estimation method based on the assumptions of the distributions regarding the four components [see @COLOMBI2014]. However, as one of the features of banking datasets, the large outliers in our data sample may disproportionately influence the estimation process, leading to non-existence of the Likelihood Function. Therefore, here we follow @KUMBHAKAR2015 and employ a multi-step procedure to estimate the model. For this, we rewrite the model as: 
+
+
+\begin{equation}
+logC_{it} = h(y_{it}; w_{it}; \beta) + \alpha_{i} + \epsilon_{it}
+\end{equation}
+
+
+
+Where $\alpha_{i}=\mu_{i}+\eta_{i}-E(\eta_{i})$ is the time-invariant part of the error term; $\epsilon_{it}=v_{it}+u_{it}-E(u_{it})$ is the random component of the error term. With this specification, $\alpha_{i}$ and $\epsilon_{it}$ have zero mean and constant variance [@KUMBHAKAR2015]. 
+
+Following the three-step approach developed by @KUMBHAKAR2015, in step 1 the random-effect panel data regression model is used to estimate $\hat{\beta}$. This procedure also gives the predicted values of $\alpha_{i}$ (by employing the best linear unbiased prediction(BLUP) method) and $\epsilon_{it}$, respectively. 
+
+In step 2 we use the predicted values of $\epsilon_{it}$ obtained from step 1 to estimate the time-varying inefficiency $u_{it}$, since
+
+\begin{equation}
+\epsilon_{it}=v_{it}+u_{it}-E(u_{it})
+\end{equation}
+
+We assume that $v_{it}$, a random noise, is i.i.d. $\mathcal{N}(0,\sigma_{v}^{2})$; and $u_{it}$ follows a half_normal distribution $\mathcal{N}^{+}(0,\sigma_{u}^{2})$. Using a standard stochastic-frontier technique, we estimate $u_{it}$ by following @BATTESE1992 and calculate $\hat u_{it}$ = exp($u_{it}|\epsilon_{it}$). 
+
+In step 3 we estimate persistent inefficiency $\eta_{i}$ following a similar procedure as in step 2. We use the predictor of $\alpha_{i}$ from step 1, since 
+
+\begin{equation}
+\alpha_{i}=\mu_{i}+\eta_{i}-E(\eta_{i})
+\end{equation}
+
+Again, we assume that $\mu_{i}$ is i.i.d. with a distribution $\mathcal{N}(0,\sigma_{\mu}^{2})$; and $\eta_{i}$ follows a half_normal distribution $\mathcal{N}^{+}(0,\sigma_{\eta}^{2})$. We employ the method in @BATTESE1992 and estimate $\hat \eta_{i}$ = exp($\eta_{i}$). 
+
+Finally, following @KUMBHAKAR2015, the overall cost (in)efficiency (OCE) is obtained as OCE = $\hat u_{it}$*$\hat \eta_{i}$. 
+
+Following @FUNGACOVA2020, @BERGER2009, @PASIOURAS2009, @FUNGACOVA2013, and others, we employ a translog model to picture the cost efficiency of Chinese banks. The price homogeneity restriction has been built into the model by normalizing the total costs and all the input prices by the price of funds. We include year dummies in the cost function to account for technology changes over time.
+
+In terms of specification of inputs and outputs, we follow the intermediation approach which defines banks as the primary intermediary of funds between depositors and debtors. We also use a dual approach employed by @BERGER1991 and @BAUER1993 which takes the amount of deposits as an output and the interest paid as part of the costs (the rate paid as an input price). This empirical approach takes into consideration both input and output characteristics of deposits [@BERGER1997]. We choose two outputs to be included in the cost function, total loans and total deposits. Three input prices are employed: price of funds (interest expense/total deposits), price of labor (personnel expense/total assets), and price of physical capital (other operating expense/fixed assets). The dependent variable - total costs is calculated as the sum of the interest expense and non-interest expense. The cost function is given by:
+
+
+\begin{equation}
+\begin{aligned}
+ln(TC/w_{1}) 
+&= \beta_{0} + \beta_{1}lny_{1} + \beta_{2}lny_{2} + \beta_{3}ln(w_{2}/w_{1}) + \beta_{4}ln(w_{3}/w_{1}) \\
+&+ \beta_{5}\frac{1}{2}(lny_{1})^2 + \beta_{6}lny_{1}lny_{2} + \beta_{7}\frac{1}{2}(lny_{2})^2 \\ &+ \beta_{8}\frac{1}{2}(ln(w_{2}/w_{1}))^2 + \beta_{9}ln(w_{2}/w_{1})ln(w_{3}/w_{1}) \\
+&+ \beta_{10}\frac{1}{2}(ln(w_{3}/w_{1}))^2 + \beta_{11}lny_{1}ln(w_{2}/w_{1}) \\
+&+ \beta_{12}lny_{1}ln(w_{3}/w_{1}) + \beta_{13}lny_{2}ln(w_{2}/w_{1}) \\
+&+ \beta_{14}lny_{2}ln(w_{3}/w_{1}) + \sum_{t}\theta_{t}Year_{t} + \alpha_{i} + \epsilon_{it}
+\end{aligned}
+\end{equation}
+
+
+Where TC is total costs (the sum of interest expense, personnel expense and other operating expenses); $y_{m}$ is the $m$th output ($m$=1,2): total loans ($y_{1}$) and total deposits ($y_{2}$); $w_{n}$ is the $n$th input prices ($n$=2,3): price of funds ($w_{1}$), price of labor ($w_{2}$), and price of physical capital ($w_{3}$). $Year_{t}$ is the year dummies. 
+
+To examine the impact of the Basel III regulation and ownership structure on (in)efficiency, the Basel III total regulatory capital ratio calculated as the total regulatory capital divided by risk weighted assets (TC/RWA). Ownership is a categorical variable indicating the ownership structure of individual banks. The ownership categories and definitions are listed in tbl-ownership. The main variables used in the analysis are provided in @tbl-variablesEff in Appendix. 
+
+
+
+## Results
+
+### Descriptive statistics and variable correlations
+
+```{r export the descriptive statistics of all variables, results='asis', eval=FALSE}
+df <- read_excel(path = "2022-02-28 Observations-Deflated.xlsx")
+
+df %>%
+  select(-Institution_Name, -Ownership, -Type, -Year) %>%
+  tbl_summary(type = all_continuous() ~ "continuous2", 
+    statistic = all_continuous() ~ c("{mean}","{sd}", "{min}", "{max}"), 
+              missing = "no") %>%
+  add_n() %>%
+  modify_header(label = "**Variable**")
+```
+
+```{r}
+#| label: tbl-statisticsEff
+#| tbl-align: center
+#| tbl-cap: "Descriptive Statistics"
+
+
+df <- read_excel(path = "2022-02-28 Efficiency_Observations-Deflated.xlsx")
+
+stats <- df %>%
+  get_summary_stats(Total_Loans, Total_Deposits, w_Fund, w_Personnel, w_Fixed, 
+                    TC_RWA, BCapital, Total_Costs,
+                    type = "full", 
+                    show = c("n", "mean", "sd", "median", "min", "max")) |> 
+  kbl(digits = 3,
+      booktabs = TRUE, 
+      col.names = c("", "N", "Mean", "SD", "Median", "Min", "Max"), 
+      format.args = list(scientific = FALSE, big.mark = ",")) |> 
+  kable_styling(full_width = FALSE, 
+                position = "center", 
+                latex_options = "scale_down") |> 
+  row_spec(0, bold = TRUE,
+           align = "c") |> 
+  column_spec(1, bold = TRUE)
+
+stats
+
+
+
+```
+
+
+@tbl-statisticsEff provides the descriptive statistics for our sample data. We compare the statistics to @BERGER2009, since @PESSAROSSI2015 only provides value in RMB and @FUNGACOVA2020 presents statistics by ownership categories. The mean of total costs of Chinese banks is 2.765 billion US dollars and the standard deviation is 9.332 billion US dollars, both are slightly higher than the value reported by @BERGER2009 where they take the sample over 1994-2003. This might mean that the total costs have been increasing steadily over the last two decades. The means of the two outputs - total loans and total deposits - are reported as 68.104 billion US dollars and 50.183 billion US dollars, which indicates that Chinese banks have expanded dramatically in size by around two times as the figures presented in @BERGER2009. 
+
+The mean of total regulatory capital ratio (TC_RWA) reports the mean of 13.646% with a sample of 2206 observations. The disclosure of regulatory capital information is mandatory for commercial banks in China as ‘Commercial Bank Capital Management Measures’ – the China version of Basel III has become effective since 2013. The mean value is a little lower than the results of European banks reported by @BITAR2018 (18.18%). 
+
+
+```{r generate visualization of correlation matrix}
+#| label: fig-correlationEff
+#| fig-align: center
+#| fig-cap: "Correlation Matrix"
+#| fig-pos: H
+
+df_matrix <- read_excel(path = "2022-02-28 Efficiency_Observations-Deflated.xlsx") %>%
+  select(c(Total_Loans:TC_RWA))
+
+corr <- round(cor(df_matrix, use = "complete.obs"), digits = 3)
+
+
+ggcorrplot(corr = corr, method = "square", 
+           type = "upper", 
+           digits = 3, 
+           ggtheme = ggplot2::theme_gray(), 
+           lab = TRUE)
+
+```
+
+
+@fig-correlationEff reports the Pearson correlation matrix between the predictor variables. All correlation coefficients of the variables are lower than 0.6, except for the correlation between total deposits and total loans due to the fact that we choose to follow the intermediation approach and a dual approach employed by @BERGER1991 and @BAUER1993 in our analysis. 
+
+
+### Main results
+
+
+```{r}
+#| label: Error component SFA cost function using the package 'frontier'
+#| output: asis
+#| eval: false
+
+df <- read_excel(path = "2022-05-19 df_rescaled(Vs+TC_RWA).xlsx")
+
+# Generate the panel data frame
+pdf <- pdata.frame(df, index = c("Institution_Name", "Year"))
+
+# Translog cost function
+cost <- sfa(TC ~ ly1 + ly2 + lx2 + lx3 + I(0.5*ly1^2) + I(ly1*ly2) 
++ I(0.5*ly2^2) + I(0.5*lx2^2) + I(lx2*lx3) + I(0.5*lx3^2) + I(ly1*lx2) 
++ I(ly1*lx3) + I(ly2*lx2) + I(ly2*lx3) + Year, data = pdf, timeEffect = TRUE, 
+ineffDecrease = FALSE, truncNorm = TRUE)
+
+
+
+```
+
+
+```{r standard panel regression using package plm}
+#| label: tbl-translog
+#| tbl-cap: Translog cost frontier
+
+
+df <- read_excel(path = "2022-05-19 Efficiency_df_rescaled(Vs+TC_RWA).xlsx")
+
+df$Year <- as.factor(df$Year)
+df$Ownership <- as.factor(df$Ownership)
+df$Type <- as.factor(df$Type)
+
+
+# Generate the panel data frame
+pdf <- pdata.frame(df, index = c("Institution_Name", "Year"))
+
+cost <- plm(TC ~ ly1 + ly2 + lx2 + lx3 + I(0.5*ly1^2) + I(ly1*ly2) 
++ I(0.5*ly2^2) + I(0.5*lx2^2) + I(lx2*lx3) + I(0.5*lx3^2) + I(ly1*lx2) 
++ I(ly1*lx3) + I(ly2*lx2) + I(ly2*lx3) + Year, data = pdf, model = "random", 
+random.method = "swar")
+
+
+#Generate regression table using tab_model from sjPlot package
+
+tab_model(cost, auto.label = FALSE, 
+          show.ci = FALSE,
+          show.se = TRUE,
+          string.pred = "Variable", 
+          string.p = "p-value", 
+          digits = 3, 
+          p.style = "star",
+          dv.labels = "Translog Cost")
+
+
+#Extract pseudo residuals r_it from the GLS regression
+r_it <- residuals(cost)
+
+#Convert r_it to data frame
+residuals <- as.data.frame(r_it)
+
+#Separate row names into columns
+tidy_residuals <- residuals %>%
+  rownames_to_column(var = "row_name") %>%
+  separate(row_name, into = c("Institution_Name", "Year"), sep = "-")
+
+tidy_residuals$Year <- as.factor(tidy_residuals$Year)
+
+#Join the residuals to pdf
+r_pdf <- pdf %>%
+  full_join(tidy_residuals, by = c("Institution_Name", "Year"))
+
+#Extract the individual component from the GLS regression
+alpha_star <- ranef(cost, effect = "individual")
+
+#Convert alpha_star to a data frame
+alpha <- as.data.frame(alpha_star)
+
+#Tidy alpha data frame
+tidy_alpha <- alpha %>%
+  rownames_to_column(var = "Institution_Name")
+
+#Join the alphas to pdf and calculate e_it
+alpha_pdf <- r_pdf %>%
+  full_join(tidy_alpha, by = "Institution_Name") %>%
+  mutate(e_it = r_it - alpha_star)
+
+```
+
+
+```{r generate regression table using tbl-regression}
+#| label: regression
+#| eval: false 
+
+cost %>%
+  tbl_regression(intercept = TRUE, 
+                 estimate_fun = purrr::partial(style_ratio, digits = 3), 
+                 pvalue_fun = purrr::partial(style_pvalue, digits = 3)) %>%
+  modify_header(label = "**Variable**") %>%
+  modify_caption(caption = "**Translog Cost Function**") %>%
+  add_significance_stars()
+
+
+```
+
+
+
+```{r}
+#| label: try maximum likelihood estimate using pglm package
+#| output: asis
+#| eval: false
+
+library(pglm)
+
+m_df <- read_excel(path = "2022-05-19 df_rescaled(Vs+TC_RWA).xlsx")
+
+# Generate the panel data frame
+m_pdf <- pdata.frame(df, index = c("Institution_Name", "Year"))
+
+m_cost <- pglm(TC ~ ly1 + ly2 + lx2 + lx3 + I(0.5*ly1^2) + I(ly1*ly2) 
++ I(0.5*ly2^2) + I(0.5*lx2^2) + I(lx2*lx3) + I(0.5*lx3^2) + I(ly1*lx2) 
++ I(ly1*lx3) + I(ly2*lx2) + I(ly2*lx3) + factor(Year), data = m_pdf, model = "random", 
+effect = "twoways", family = gaussian)
+
+summary(m_cost)
+
+
+# The ML estimators are similar to the GLS estimators in step 1. 
+ 
+```
+
+
+
+```{r}
+#| label: step 2 - estimate u_it using SF model by frontier package
+#| include: false
+
+
+u_it <- sfa(e_it ~ 1, data = alpha_pdf, ineffDecrease = TRUE, 
+            truncNorm = FALSE, timeEffect = TRUE)
+
+alpha_pdf$u_it <- efficiencies(u_it, asInData = TRUE)
+
+```
+
+
+
+```{r}
+#| label: step 3 - using SF model to estimate eta_i (by frontier package)
+#| include: false
+
+
+# using SF to estimate u_0i(time-invariant) by frontier package
+
+eta_i <- sfa(alpha_star ~ 1, data = alpha_pdf, ineffDecrease = TRUE, 
+            truncNorm = TRUE, timeEffect = FALSE)
+
+alpha_pdf$eta_i <- efficiencies(eta_i, asInData = TRUE)
+
+#Calculate the overall efficiency OCE
+overall <- alpha_pdf %>%
+  mutate(OCE = eta_i*u_it) # Overall Cost Efficiency = \eta_i*u_it
+
+library(writexl)
+writexl::write_xlsx(overall, path = "overall.xlsx", col_names = TRUE, 
+                    format_headers = TRUE)
+
+```
+
+```{r summarize efficiency scores by ownership}
+#| label: tbl-scores
+#| tbl-align: center
+#| tbl-cap: Efficiency Measures by Ownership Structure
+
+scores <- overall %>%
+  group_by(Ownership, Year)%>%
+  dplyr::summarize(Transient = mean(u_it, na.rm = TRUE), 
+            Persistent = mean(eta_i, na.rm = TRUE), 
+            Overall = mean(OCE, na.rm = TRUE))
+  
+
+scores$Transient <- formattable::percent(scores$Transient, 3)
+scores$Persistent <- formattable::percent(scores$Persistent, 3)
+scores$Overall <- formattable::percent(scores$Overall, 3)
+
+
+kbl(scores, longtable = TRUE,
+    booktabs = TRUE) |> 
+  kable_styling(full_width = FALSE, 
+    latex_options = c("repeat_header", "scale_down")) |> 
+  pack_rows("Foreign-owned", 1, 11) |> 
+  pack_rows("Foreign Joint-stock", 12,22) |> 
+  pack_rows("Joint-stock", 23,33) |> 
+  pack_rows("Local government-holding", 34, 44) |> 
+  pack_rows("State-owned", 45, 55)
+
+```
+
+
+The means of efficiency scores by year and by ownership structure are presented in @tbl-scores. In almost all earlier banking efficiency studies, time-varying (transient) (in)efficiency is the only source of inefficiency. Using the above 3-step method, we report higher average scores than what has been found in the previous studies such as @FUNGACOVA2013, @PESSAROSSI2015 and @DONG2016. 
+
+The decomposition of the overall efficiency has been presented in @tbl-scores. We observe that transient efficiency and persistent efficiency show every similar values and overall efficiency ranging between 95%-97% across all ownership types.This result collaborate what has been reported in @FUNGACOVA2020.  
+
+
+
+```{r figures of overall, transient and persistent efficiency changes}
+#| label: fig-decomposition
+#| fig-cap: "Changes of efficiencies by ownership"
+#| fig-width: 8
+#| fig-height: 8
+#| message: false
+
+
+p1 <- ggplot(data = scores) +
+  geom_line(mapping = aes(x = Year, y = Overall, group = Ownership, 
+                          color = Ownership, linetype = Ownership)) +
+  labs(x = "Year", y = "Overall Efficiency", title = "Trends of overall efficiency") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
+
+
+p2 <- ggplot(data = scores) +
+  geom_line(mapping = aes(x = Year, y = Transient, group = Ownership, 
+                          color = Ownership, linetype = Ownership)) +
+  labs(x = "Year", y = "Transient Efficiency", title = "Trends of transient efficiency") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
+
+
+p3 <- ggplot(data = scores) +
+  geom_line(mapping = aes(x = Year, y = Persistent, group = Ownership, 
+                          color = Ownership, linetype = Ownership)) +
+  labs(x = "Year", y = "Persistent Efficiency", title = "Persistent efficiency") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.5))
+
+
+decom <- grid.arrange(p1, p2, p3, ncol=1)
+
+decom
+
+```
+
+@fig-decomposition are the visualization of @tbl-scores, from which we may draw some conclusions about efficiency of Chinese banks. We notice that the evolution of both overall efficiency and transient efficiency do not show high volatility over time. This result is also in line with @FUNGACOVA2020.  
+
+In terms of overall efficiency depending on ownership structure, we report that state-owned banks have relatively low level of efficiency. The trends show that the state-owned banks' overall efficiency level is lower than foreign joint-stock banks, foreign-owned banks, and local government-holding banks; it is also lower than (domestic) joint-stock banks before the mid-2012. This result partially collaborates the trends presented in the previous studies including @FUNGACOVA2013, @DONG2016, @FUNGACOVA2020 and @BERGER2009, where they find the state-owned banks are less efficient than joint-stock banks and foreign banks. In the above figures, the foreign-owned banks have lower efficiency than other joint-stock types before 2011 (except for the state-owned banks). However, the increasing trends in overall and transient efficiency of foreign-owned banks are clearly shown. The reasons that our results differ from the previous study might due to the different sample periods and sample banks. Furthermore, our study also select 12 state-owned banks based on CBIRC definition instead of the Big five (the biggest 5 state-owned banks in size).
+
+By decomposing overall efficiency to transient and persistent parts, @fig-decomposition reveals the sources which may result in the efficiency pattern shown in fig-trends. The state-owned banks have higher transient efficiency than other ownership types. However, the state-owned banks have lower time-invariant efficiency than most of other ownership banks, which can be considered as the main cause of the medium level of overall efficiency. This finding support the results reported by @IANNOTA2007 and @BERGER2005. The joint-stock banks show similar pattern of relatively high transient efficiency and the lowest persistent efficiency compared to other ownership types. 
+
+According to @COLOMBI2011, @FILIPPINI2016, @KUMBHAKAR2015, transient (in)efficiency component has the feature of time-varying which captures the short-term pattern of (in)efficiency. Transient inefficiencies might be attributed to short-term management moral hazard and/or adverse selecting problem. Firms can take some time to solve short-term deviation from expected operating behavior. Time-invariant inefficiency, on the other hand, captures persistent inefficiency which stems from structural rigidities of the organization and the production process, as well as regulatory constrains on the firm. It is reasonable to assume that these sources of inefficiency remain constant and stay with the firm over time. The joint-stock banks have relatively high transient efficiency level which may reveal those banks are more flexible and efficient in dealing with short-term sub-optimal resource allocation and adjusting costs. However, the low persistent efficiency could indicate these banks may have long-run moral hazard problems and/or respond negative to regulatory constrains. 
+
+The similar pattern has been revealed in the state-owned banks. However, due to the sizes and ownership structure of the state-owned banks are quite different from the joint-stock banks, the interpretation could be different. Over 50% of shareholding in city banks and over 87% of shareholding in rural commercial banks (most of these banks have the join-stock ownership structure) are private enterprises which can be considered as small and medium businesses (SMEs) by 2017. The state-owned banks are much larger than the joint-stock banks in assets. The high transient efficiency may demonstrate that the state-owned banks have benefit of economies of scale. @BADUNENKO2017 state that the state-owned banks have a larger portion operating under scale economies than other ownership types in the post re-regulation period, using the empirical data in Indian banking. The results reveal that the state-owned banks have lower persistent efficiency than almost all other ownership types. Instead of structural problems, we suggest that the low persistent efficiency might be attributed to the characteristics of business of the state-owned banks in China's banking industry. This finding, to some extent, supports the viewpoint that state-owned banks would be involved in policy-guided credit activities instead of profit-centered ones [@PESSAROSSI2015]. The social lending theory of state ownership [see @ATKINSON1980] suggests that state-owned enterprises contribute to “correcting the ‘failure’ of market economy” due to imperfect competition, inefficiency and public good. According to this view, government-owned enterprises may help improve the overall economy performance [@STIGLITZ1993]. In China’s banking context, the biggest four commercial banks were founded and conducted a large amount of government lending in the early 1990’s, before national banks and city banks were established. Within a relatively long period, the state-owned banks (including local government-holding banks founded later in the end of 1990’s) played a role of ‘government agencies’ to pursue the broader social welfare objectives rather than profit maximizing, for example, the projects of the nationwide High-speed Rail network. Since 2001, the ownership structure has been dramatically transformed, due to China’s overall industrial reforms and the commitments to the WTO agreement. The state shareholder was replaced by Central Huijin Investment Ltd. The state-owned banks are still the main funding providers for nationwide infrastructure projects focusing on social welfare due to the huge amount of financing required and the complexity of structure of financing. Since the state-owned banks target multiple welfare objectives which might not be measurable, it is reasonable to draw a conclusion that the state-owned banks suffer low persistent efficiency over time.
+
+
+### Inefficiency effects
+
+```{r linear models for inefficiency effects}
+#| label: tbl-effects
+#| tbl-cap: "Inefficiency effects"
+
+
+
+effects <- overall %>%
+  dplyr::mutate(var_uit = log(u_it), 
+                var_etai = log(eta_i))
+
+d1 <- lm(u_it ~ Ownership + TC_RWA, data = effects)
+#summary(d1)
+
+d2 <- lm(eta_i ~ Ownership + TC_RWA, data = effects)
+#summary(d2)
+
+#d3 <- lm(u_it ~ Ownership + BCapital, data = effects)
+#summary(d3)
+
+#d4 <- lm(eta_i ~ Ownership + BCapital, data = effects)
+#summary(d4)
+
+
+tab_model(d1, d2, 
+          auto.label = FALSE,
+          show.ci = FALSE, 
+          string.pred = "Variable",
+          string.p = "p-value", 
+          title = "Inefficiency Effects", 
+          dv.labels = c("Transient Efficiency", "Persistent Efficiency"), 
+          p.style = "stars", 
+          digits = 3)
+
+
+```
+
+
+Following @COLOMBI2017 and @FUNGACOVA2020, we parametize the inefficiency terms through linear models in "Methodology" section. The estimates are presented in @tbl-effects. The estimates suggest a statistically significant negative relationship between regulatory capital requirements and transient (time-varying) efficiency, but no significant relationship between capital adequacy and persistent (time-invariant) efficiency. This finding partially supports the results in @BARTH2004 where they find capital stringency is not strongly linked with bank efficiency where they use different measure of bank efficiency. Similarly, @LEE2013, @DJALILOV2019, and @LESANOVSKA2016 also do not find sufficient evidence to support a statistically significant relationship between capital regulation and bank efficiency. However, @BARTH2013 find that greater capital regulation stringency is negatively associated with bank efficiency. Our finding shows that that Basel III capital regulation can influence commercial banks' decisions and perspectives on cost constainment strategies which are closely associated time. This can be provided as part of research evidence of the development of the Basel framework.  
+
+From the agency theory perspective, this finding may support the viewpoint provided in @LESANOVSKA2016: the two agency costs caused by "asset substitution" [see @SMITH1979] and "control hypothesis" [see @JENSEN1986], respectively, may have the effect of offsetting each other. The reforms in China's banking industry took further steps following the WTO agreement in 2001. The joint-stock banks (including local government-holding banks, city banks, and rural commercial banks) have become the mainstream of Chinese banks. The modern corporate governance framework has been established in banks. Transformation in ownership structure has accelerated development of banks regarding assets growing and branch expansion; and has also raised the conflict between shareholders and managers over the free cash flow ("control hypothesis"). On the other hand, the rapid development of capital markets provides more funding channels for banks such as public offering and inter-bank funding. The changes make banks less dependent on debt financing, which may lessen the conflict between shareholders and creditors. Therefore, the impact of capital reserve on efficiency could reflect the result of the offset of these two agency costs. 
+
+In terms of the impact of ownership structure on bank cost efficiency, the state-owned ownership type shows a statistically significant result, however, inconclusive. Combining with the results presented in tbl-scores, we believe that it could be reasonable to assume lower cost efficiency of state-owned banks. Since 2001, direct state-stakes in state-owned banks has been replaced by a Central Huijin shareholder-stake, along with the establishment of modern corporate governance system. We argue that the direct state intervention has transformed, instead of state ownership, but into state concentrated ownership which is an ownership type similar to the one of large investors with significant control rights and cash flow rights ["large investors", see @SHLEIFER1997]. From this perspective, concentrated ownership puts pressure on management decision making [@SHLEIFER1997] and therefore bank performance. Justified by the theory of property rights [see @BERLE1932] and the theory of agency [see @JENSEN1976], state concentrated ownership could create decisive power and may favor particular projects. @SAPIENZA2004 finds that state-owned banks favor large firms and charge lower interest rates than other types of banks in Italy. Rather than political patronage [see @SAPIENZA2004], China's state-owned banks support projects with potential of social-benefits rather than those with target of profit-maximizing. Therefore, state-owned banks suffer lower cost efficiency thank other ownership types. 
+
+
+## Conclusion
+
+This study aims to analyze cost efficiency of commercial banks in China's banking industry and explore the impact of regulatory capital and ownership structure on banks' cost efficiency in Basel III era following 2007-2009 global financial crisis. This period we choose (2010-2020) coincides with the fourth stage of China’s financial reform and the implementation of Basel III framework in China. We analyze cost efficiency using in total 2574 annual observations over the period 2010-2020 on 233 commercial banks in China with 5 types of ownership structure - state-owned, local government holding, joint-stock, foreign joint-stock, and foreign owned. Our data covers over 91% of total assets in China's banking industry. We employ a four-component panel stochastic cost frontier model developed by  @COLOMBI2011, @COLOMBI2014, @FILIPPINI2016 and @KUMBHAKAR2015 in the most recent years, decomposing the cost inefficiency into transient and persistent components, to investigate bank cost efficiency and inefficiency effects. In addition, we provide background information on China's financial reform regarding evolution of ownership structure. 
+
+Our empirical results show that transient efficiency and persistent efficiency have very similar values which suggest that overall inefficiency decomposes almost equally between these two components. The state-owned banks have the overall efficiency ranking in the middle across the ownership types, with higher transient efficiency and much lower persistent efficiency. This finding collaborates the findings by @FUNGACOVA2020. 
+
+Our investigation to the impact of regulatory capital requirements on bank cost efficiency reveals that Basel III capital regulation is negatively associated with transient(time-varying) (in)efficiency but shows no statistically relation to persistent(time-invariant) (in)efficiency. Our findings partially support the results by @BARTH2004, @LEE2013, @DJALILOV2019 and @LESANOVSKA2016, but differ from other previous studies. We provide the explanation for the different efficiency level between different ownership structure and the reason why the state-owned banks suffers low efficiency over time based on historical and theory perspectives. Based on the findings outlined above, the study proposes several policy recommendations. Firstly, because Basel III capital adequacy requirements have a negative impact on banks' transient (in)efficiency, China's regulatory authorities may set up a well-established, dynamic framework to address banks' cost containment strategies as well as control the risk-taking behaviors. Secondly, Chinese regulators may leverage the insights and methodology of this study. With more complete data sets, regulators can establish further detailed analysis on the determinants of banks' (in)efiiciency. Internationally, regulators may also conduct similar analyses using local bank-level data to ascertain the Basel III framework's approporiateness within their respective jurisdictions. Lastly, the study reinforce the necessity of consolidation of the Basel III regulatory framework by revealing the diversed relation between capital regulation and bank transient /persistent efficiency. Regulators may compelate employing the mix of Basel III variables not only to sheild banks from potential economic and financial turbulence but also uphold banks' efficiency.
+
+### Bias and Further Directions
+
+This study employs a four-component SF model that has been introduced and developed by @COLOMBI2011, @COLOMBI2014, @FILIPPINI2016, and @KUMBHAKAR2015, and separates the random firm effects from banks' persistent(time-invariant) inefficiency and transient(time-varying) inefficiency. The model has the assumption that all the error components are independently and identically distributed (i.i.d.) random variables. Estimation of the model can be conducted in a single stag Maximum Likelihood method based on distributional assumptions on the four components [@COLOMBI2011]. In consideration of our data availability, we conduct a three-step method to estimate the model. According to @BATTESE1995, a multi-step method where the final stage involves the specification of a regression model for the predicted inefficiency effects may contradict the distributional assumption of i.i.d., thereby causing the biased estimation. 
+
+Regarding further direction of our research, we intend to explore the heteroskedastic four-component model [see @BADUNENKO2017] in which error component variances are functions of covariates that are determinants of inefficiency and try the single step Maximum Likelihood mothod in estimation. We will also consider conducting comparative analyses with banking sectors in other emerging markets undergoing similar regulatory changes, such as Brazil. The comparative analyses can offer valuable insights. Countries experiencing analogous shifts in regulatory frameworks may provide useful comparative data to assess the generalizability and robustness of our findings. Exploring how different regulatory environments impact banking practices and performance metrics across diverse emerging economies could enrich our understanding of the broader implications of regulatory reforms.
+
+\newpage
+
+## Appendix{.appendix}
+
+### The Variable Definition Table for Efficiency Analysis
+
+```{r}
+#| label: tbl-variablesEff
+#| tbl-cap: "Variable Definition"
+
+
+df_variables <- read_excel(path = "2022-02-16 Efficiency_Variable_Definitions.xlsx", 
+                           sheet = 2, 
+                           col_names = TRUE)
+
+kbl_variables <- kbl(df_variables, 
+                     booktabs = TRUE) |> 
+  kable_styling(latex_options = c("striped", "scale_down"), 
+                full_width = FALSE, 
+                position = "center", 
+                font_size = 10) |> 
+  row_spec(0, bold = TRUE) |> 
+  column_spec(3, width = "6cm") |> 
+  column_spec(4, width = "4cm") |> 
+  
+  group_rows(index = c("Cost Frontier Variables_Output" = 2, 
+                       "Cost Frontier Variables_Input Price" = 8, 
+                       "Total Costs" = 1, 
+                       "Determinants of Inefficiency" = 4), 
+             latex_wrap_text = TRUE)
+
+kbl_variables
+
+  
+```
+
+

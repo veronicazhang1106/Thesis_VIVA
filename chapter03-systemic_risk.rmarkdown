@@ -1,0 +1,1000 @@
+---
+title: "Assessing Systemic Risk Dynamics in Chinese Banking: The Impact of Basel III and Ownership Structures"
+---
+
+```{r}
+#| label: Loading liabraries
+#| include: false
+
+library(tidyverse)
+library(scales)
+library(RSQLite)
+library(dbplyr)
+library(RPostgres)
+library(readxl)
+library(writexl)
+library(quantreg)
+library(lubridate)
+library(zoo)
+library(plm)
+library(sjPlot)
+library(rstatix)
+library(corrplot)
+library(janitor)
+library(knitr)
+library(kableExtra)
+library(tinytex)
+library(rmarkdown)
+
+compustat_item_list_vendor <- read_excel("Systemic_CO_data/compustat_item_list_vendor.xlsx", 
+    sheet = "Xpressfeed Items",col_types = "text")
+
+
+```
+
+
+
+
+
+
+
+
+## Introduction
+
+The 2007-2009 Global Financial Crisis (GFC) triggered an overhaul of financial regulation system. Seeking to address structural weaknesses of pre-crisis banking regulation, the Basel III framework (Basel III), based on the regulatory reform agenda endorsed by Group of Twenty (G20) leaders in 2009, was finalized in 2017. Regulatory consensus has focused on increasing capital adequacy requirements and liquidity assessment, in recognition of that banks should be subject to more stringent capital regulation [@DEMIRGUC-KUNT2018]. The updated Basel regulatory framework (Basel III) focuses on systemic risk and macro-prudential regulation designed to enhance the banking sector's resilience and strengthen risk management practices, and mitigate the potential for systemic risk. As one of the member countries of Basel Committee on Banking Regulation and Supervision (BCBS), China has been at the forefront of implementing Basel III framework. 
+
+China's banking sector, marked by its rapid growth and increasing integration into the global financial system, plays a crucial role in sustaining the country's economic development. China's banking sector underwent fundamental changes in 1978, as part of China's overall economic reform. Since 2001, when China got accession to the World Trade Organization (WTO), the reform of China's banking industry has stepped up its pace and the entire banking sector has been dramatically reshaped. The reform has transformed Chinese banks into market-oriented enterprises, changed their ownership structure, established modern corporate governance mechanisms, and introduced legislation and regulatory framework. Since 2010, improvements and refinements have continued in China's banking sector and entered the advanced stage of the reform. In the wake of the GFC, Chinese regulatory authorities have proactively embraced the Basel III framework, aiming to fortify the national financial system against potential shocks. The evolution of China's banking landscape presents a unique context for investigating the implementation of Basel III regulation. A rich body of literature focusing on the previous stages of the reform assesses the relationship between capital requirements and Chinese banks' performance and standalone risk including @PESSAROSSI2015, @TAN2013, and @LEE2013. By exploring the relationship between risk-based regulatory capital requirements and systemic risk in China's banking sector, this study aims to provide insights for regulators, policymakers and market participants in the context of China's financial environment. 
+
+Building upon our previous investigations in Chapter 3, which focused on the influence of Basel III on banks' credit risk-taking, and Chapter 4, which dissected efficiency dynamics within China's banking sector, this chapter further enriches our understanding of financial stability. In this paper, we extend existing empirical research studying the dynamic between Basel III capital adequacy requirements, systemic risk and ownership structure in China's banking sector. Notwithstanding the policy consensus, economic theories are split on the impact of capital on standalone risk. Some theories emphasize that bank capital acts as a buffer to absorb shocks [e.g. @REPULLO2004] and higher capitalization optimize the borrower screening [e.g. @ALLEN2011]. Other theoretical literature claims that capital regulation may exacerbate banks' portfolio risk and reduce bank stability [see @KOEHN1980]. Since the early 2000s, academic literature started to direct its focus towards systemic risk. Systemic risk is defined by @DE-BANDT2019 as "the risk of experiencing systemic events in the strong sense". Pioneering works by @ALLEN2000 study the diffusion of financial contagion via multiple channels in reaction to an initial small chock. After the GFC, the approach to identify the mechanisms of driving systemic risk has been directed to tail interdependences between market indices [see @ADRIAN2016; @ACHARYA2017]. @LAEVEN2016_SYSTEMIC and @DEMIRGUC-KUNT2018 examine the relation between Basel III capital regulation and systemic risk using cross-country data employing the approaches proposed by these two studies. Both of the studies find that there is a negative relationship between capital regulation and systemic risk. The investigation of the relationship between capital and systemic risk in Chinese banking sector is relatively scarce in the current body of research. Recent studies have focused on systemic risk in Chinese financial system. @WANG2018 investigate the systemic risk of China's financial institutions employing tail-event networks.  @HUANG2019 examine systemic risk in Chinese banking system by employing multiple measures to capture different aspects of systemic risk of Chinese banks. 
+
+This paper provides empirical evidence using forensically analysed data on 376 Chinese financial institutions over the period 2010-2022. Because our focus is on the dynamics of systemic risk and Chinese banks, we hand collect the ownership structure information of these 236 Chinese commercial banks and classify them into five categories of ownership identities: State-owned (Big Six and other than Big Six), Local government-holding, Joint-stock, Foreign joint-stock, and Foreign-owned banks (@tbl-banks). We compute conditional value at risk (CoVaR) proposed by @ADRIAN2016. We expect risk-based capital regulation to have a negative impact on the individual banks' contribution to systemic risk. 
+
+Consistent with the theoretical literature that emphasizes bank capital as a buffer in absorbing economic shocks, we find that higher regulatory capital reduces individual banks' contribution to systemic risk. Our results show that systemic risk increased with bank size. We also find evidence that state-ownership make higher contribution to systemic risk compared to joint-stock and local government-holding structure. 
+
+This paper contributes to the literature in several ways. First, our research bridges the global regulatory framework and the localized implementation in the Chinese context. This study provides insights into how global financial regulatory standards interact with the specificity of Chinese national banking system. China has become a major player in the global financial system by internationally integrated and closely interconnected with financial institutions. China fully adopted Basel III framework as part of its "open-door" economic reform. Understanding how Basel III framework interact with the idiosyncrasies of China's banking industry contributes not only to academic research, but also informs policymakers and stakeholders about potential areas of concern or improvement, regarding the challenges of fostering global financial stability. 
+
+Second, our study contributes to the extant literature on systemic risk by analyzing the effect of ownership structure on systemic risk. 
+The study examines the influence of different ownership structures on systemic risk in the Chinese banking sector. Our findings that state ownership influences systemic risk through factors including shareholding concentration, significant cash flow rights, and asset size provide new insights into the determinants of systemic risk; and facilitate the ongoing efforts to design effective and targeted regulatory measures that improve overall financial stability. 
+
+Third, this study fills a gap in the existing literature by focusing on the Chinese banking sector's systemic risk in relation to capital regulation. Most existing literature focus on European and the US banks. Research focusing on the Chinese banks' contribution to systemic risk is still scares. This is a relatively under-explored area in current research, especially post-implementation of the Basel III framework in China. 
+
+Finally, The paper provides empirical evidence using data on 376 Chinese financial institutions over the period 2010-2022. This extensive data allows for a comprehensive analysis of the dynamics between systemic risk and regulatory capital in a unique national implementation context.
+
+The remainder of this paper is organised as follows. Section II reviews related literature, as well as a brief introduction of the evolution of ownership structure of commercial banks in China. Section III presents the data set and the empirical model including the variables considered in our analysis. The empirical results are presented in section IV. And section V concludes.
+
+
+
+## Literature Review
+
+### Capital Regulation and Bank Risk
+
+Bank capital affects individual banks' risk as well as a bank's contribution to systemic stability [@DEMIRGUC-KUNT2018]. Policy makers have consensus on increasing the stringency of capital adequacy requirements. However, economic theories offer split views on the impact of capital on bank risk; and empirical studies provides mixed findings. 
+
+The Basel framework, centered with the strict capital regulation, is designed to reduce bank risk and enhance bank resilience. Theoretical papers such as @REPULLO2004 and @VON-THADDEN2004 support this view that risk-based bank capital is a more efficient regulatory tool and acts as a buffer in absorbing economic shocks and strengthens systemic stability. @DEMIRGUC-KUNT2013 find that a strong capital position helps banks resist earning shocks and have higher probability to survive the crisis. They also find evidence to advocate higher quality capital, i.e., Tier 1 capital, in the regulatory capital requirements. These views are consistent with one of the most important purpose of the strict capital regulation: improving banks' survival probability. Another reason why stringent capital requirements are considered to be effective is that they refine banks' risk management and curb excessive risk-taking incentives. A number of theories highlight that risk-based capital, more effective than interest rate ceilings, boosts banks' "franchise value," improves borrowers screening, and lowers banks' excessive risk-taking incentives [@REPULLO2004; @ALLEN2011; @MEHRAN2011]. Other theories emphasize a moral hazard perspective, arguing that effective regulatory capitalization may offset the excessive risk-taking incentives created by deposit insurance [@KEELEY1990; @DEMIRGUC-KUNT2002,]. In terms of Chinese commercial banks, @TAN2013 find a significant negative relationship between bank capital and risk. @LEE2015 report that bank capital is negatively related to NPL and support theories with the moral hazard view.
+
+On the other hand, some research posit that greater capital regulations may induce higher bank risk. @COOPER2002 extend the research of @DIAMOND1983, stating that the existence of deposit insurance weakens the depositors' incentive to monitor banks and causes them to engage in excessive risk-taking activities. @BLUM1999 suggests that banks may have higher incentives to raise risk due to the binding capital adequacy requirements. @CALEM1999 find a U-shaped relationship between bank capital position and risk. The risk-taking first decreases with the increase of bank capital; then it increases as bank capital increases on its high level. They also argue that the increase in capital adequacy requirements induces banks to take additional portfolio risk even if they are well-capitalized. Using Chinese banking data, @LEE2013 find that the negative relationship between capital and risk only exists in the sub-sample of small banks and is not found in the sub-sample of large banks. 
+
+With regards to systemic risk, individual-bank models are only part of the story. The banking literature has developed theoretical models to explain systemic risk in recent years. Systemic risk may be associated with models of contagion and macroeconomic shocks and endogenous procyclicality [@ADRIAN2016; @ACHARYA2017; @DE-BANDT2019]. @CHEN1999 extends @DIAMOND1983 bank run model with the rational herding approach and claims that failures of few banks can trigger runs on other banks, caused by the first-come, first-serve rule and information externalities. @ROCHET1996 present a model of the interbank market and argue that failures of large insolvent bank could induce contagion risk and propagate through the whole financial system. @KAUFMAN2003 provide one of the definitions of systemic risk focusing on spillovers of an initial external shock which causes fire-sale driven changes both in liquidity and interest rates. @ALLEN2000 set up a model and explain financial contagion by the structure of the banking network. 
+
+Higher capital may absorb unexpected losses from macro-shocks [@KAUFMAN2003]. Capital requirements imposed on the interbank lending may reduce contagious defaults [@ROCHET1996;@DEMIRGUC-KUNT2018]. The joint failure risk of individual banks, arising from the highly correlated asset returns, could cause systemic or aggregate risk [@ACHARYA2009]. Correlated bank failures also produce prohibitive social costs and capital regulation has different effect on bank risk when multiple Nash equilibria are created by the presence of the bail-out or central bank as lender of last resort (LOLR) [@ACHARYA2016]. On one hand, high leverage can reduce the moral hazard caused by managers seeking rent and providing inadequate loan monitoring [@CALOMIRIS1991]. On the other hand, sufficient bank capital ameliorates the asset-substitution moral hazard created by banks taking excessively risk [@BHATTACHARYA1998]; hence decreases systemic risk arising from high correlation of asset returns [@ACHARYA2009]. 
+
+The evidence on the linkage between capital regulation and systemic risk in Chinese banking industry is limited in literature. Not until recent years (after Chinese banking regulatory authority fully adopted the Basel III framework in 2013) that researches of systemic risk in Chinese banking sector emerged. @GANG2015 study the effect of China's monetary policies on systemic risk and find the systemic risk has been increased by monetary policy shocks. @HUANG2019 examine systemic risk in Chinese banking system by employing multiple measures to capture different aspects of systemic risk of Chinese banks. @ZHANG2021 focus on the impact of liquidity creation on systemic risk in Chinese banking industry and report a "U shape" relationship between liquidity creation and systemic risk. They report that systemic risk is positively related to bank liquidity creation when a bank is broadly connected with the entire financial system. @BELLAVITE-PELLEGRINI2022 evaluate the contribution of different financial sectors to systemic risk including traditional banks, shadow banks and real estate financial services. @LIU2021 employ the MIxed DAta Sampling(MIDAS)-Quantile Regression(QR)-CoVaR approach to measure Chinese banks' systemic risk during the financial turmoils in 2010-2020. They find that bank leverage and market risk coefficient(Beta) are positively related to the systemic risk. 
+
+Building on the existing theoretical framework, our paper is related to a number of empirical studies focusing on identifying the drivers of systemic risk after the GFC. @ANGINER2014 investigate the impact of bank capital on systemic risk by employing various definitions of capital. They find that greater capital reduces fragility of finanfical system as a whole. @LAEVEN2016_SYSTEMIC study the individual bank factors that determine systemic risk. They find that systemic risk is positively related to bank size and inversely related to bank capital.  
+
+
+
+### Ownership Structure and Bank Risk
+
+The theory of ownership stems from the pioneering work of the property rights theory by @COASE1937, @ALCHIAN1965, @DEMSETZ1966, and @ALCHIAN1972; was extended by @GROSSMAN1986 and @HART1990, and integrated with the agency theory by @JENSEN1976, @FAMA1980, and @FAMA1983. The property rights theory defines ownership as residual right to income [@ALCHIAN1972] and residual right to control [@BURKART2003]; and states that the owners' property rights have been attenuated by managers' diverting the firm's resources to their own ends [@FURUBOTN1972]. The property rights theory allows the prediction of behavioral consequences of individuals in the contractual relations [@DE-ALESSI1980]. According to the theory literature, the impact of bank ownership structure should be considered in the context of principal-agent framework and public choice theory [@ALTUNBAS2001; @SAPIENZA2004], focusing on shareholder rights (the degree of ownership concentration) and the nature of the shareholders [see @SHLEIFER1997]. 
+
+The separation of ownership and control in modern corporations is an essential part of the theory of the firm [see @BERLE1932]. From the perspective of agency theory, shareholder rights and ownership concentration are two common approaches to influence managerial behavior and thereby impact corporate performance. It is often believed that the diffused ownership would increase the power of managers and reduce their dependence on the owners [@BERLE1932]. @ALCHIAN1972 argue that, in a corporation with dispersion of shareholding, control may be facilitated by turning shareholders' votes into voting blocs, which strengthens shareholders' power. @AMIHUD1981 and @HIRSHLEIFER1992 argue that strong shareholder rights (better investor protection) constrain managers' conservative (sub-optimal) risk-taking choices. @JOHN2008 conduct a cross-country study and support this view. They find the positive relationship between investor protection and corporate risk-taking. However, @BURKART2003 present a model arguing that great protection of shareholder rights constrains managerial discretion, which reduces the need for dominant shareholders in order to prevent managers' shirking behavior [@SHLEIFER1986]. 
+
+@ALCHIAN1972 state that firm control can be facilitated by unrestricted salability of stock. Share trading may temporarily reform the ownership structure, converting the diffused ownership into decisive power blocs. Decisive power is one of the characteristics of large shareholders. Ownership concentration, or large shareholders, is defined as shareholders having concentrated control rights with significant cash flow rights [@SHLEIFER1997]. The model presented by @SHLEIFER1986 to estimate the value of ownership concentration. They propose that a presence of a large shareholder may lead to value-increasing takeovers. However, @GROSSMAN1988 argue that large shareholders might try to maximize their private benefit at the expense of other small shareholders if their high control rights are not associated with high cash flow rights. The model employed by @GROSSMAN1988 shows that this happens if there is a substantial departure from one share-one vote structure. @SAUNDERS1990 argue that stockholder controlled banks have stronger motivation to take higher risks than banks controlled by managers/insiders. @SMITH1979 and @LAEVEN2009 provide empirical evidence supporting banks with concentrated shareholding generally have higher risk. 
+
+
+### State Ownership
+
+State ownership is regarded as one of the special corporate arrangements. In agency theory, state firms are defined as being *"controlled by the public; and the de facto control rights usually belong to bureaucrat shareholders with highly concentrated control rights and no significant cash flow rights"* [@SHLEIFER1997]. According to this view, state shareholders (directly-holding shares) can be considered as a special form of large investors with highly concentrated control rights and lack of cash flow rights.
+
+There are two alternative theories in the literature regarding state ownership in banks: the social view and the political view. The social view, based on the economic theory of institutions, suggests that state ownership is a form of government intervention which addresses market failures and improves market functions and economic performance [@STIGLITZ1993]. According to this view, state-owned banks may finance those projects which might not be profitable but might have a high value of social welfare. Therefore, state-owned banks may have poorer performance in terms of profitability along with higher default risk compared to their counterparties in the private sector. In contrast, the political view claims that state ownership creates sources of political benefits for politicians rather than social welfare. For example, excessive employment of state firms only benefits those who support government politically [@SHLEIFER1994]. @SHLEIFER1997 suggest that state-owned firms are inefficient because the state shareholders, with highly concentrated control rights and no cash flow rights, only maximize their political goals which may jeopardize social welfare.
+
+A body of literature investigate the impact of state ownership of banks, from both the macroeconomic angle and the perspective of individual banks, mostly on economic growth and bank performance. @ANDRIANOVA2012 find that state ownership of banks improves countries' long-run economic growth and make positive contributions to economic growth. On the contrary, @LA-PORTA2002 find that higher government ownership is related to lower economic growth. @BECK2002 find no supporting evidence for either the social view or the political view, regarding the role that state-owned banks played in the economy. @BECK2004 argue that state ownership intensifies bank concentration and exacerbates financing obstacles. @SAPIENZA2004 claims that state-owned banks favor large firms in banking lending, which can be explained by political view. @BERGER2005 and @BERGER2009 find that state-owned banks have lower profitability and poor long-term performance. 
+
+Ownership structure of banks in China's financial markets has attracted academic attention since China obtained accession to the WTO in 2001. Many studies focusing on bank efficiency report that state-owned banks exhibit lower efficiency compared to joint-stock banks and foreign banks [@BERGER2009; @FUNGACOVA2013]. Several research papers focus on ownership structure and standalone bank risk. @TAN2013 argue that state-owned banks have higher volume of non-performing loans and lower profitability. @ZHU2016 report that state-owned banks take higher risk than foreign banks in China. @BAI2020 state that the issues of non-performing loans and moral hazard are increased in state-owned banks due to the implicit government support. However, the evidence on the linkage between ownership structure and systemic risk is still scarce. @MORELLI2020 report that the Chinese banking sector contributes the most to systemic risk among the sectors of insurance, brokerage, and real estate. They also suggest that the reduced level of bank competition due to a strong government role in the banking sector [@JIANG2019] leads to the increase of systemic risk. @BELLAVITE-PELLEGRINI2022 find that systemic risk is positively associated with the size of financial institutions, which supports the empirical results of @LAEVEN2016_SYSTEMIC. 
+
+Our paper extends the empirical literature studying the determinants of systemic risk. Apart from systemic risk is influenced by bank capital, existing literature has found that systemic risk is associated with bank size [@LAEVEN2016_SYSTEMIC], institutional environment [@DEMIRGUC-KUNT2018], bank liquidity creation [@ZHANG2021], and the volatility of market return [@TZOUVANAS2024]. The existing literature highlights the importance of well-designed regulatory context. State-ownership is one of the distinct features of corporate governance in China's banking sector since the assets of the Big Six account for 40.27% of the total assets of the banking sector. Four of the Big Six are defined as Global Systemically Important Banks(G-SIBs) by Financial Stability Board(FSB). Corporate governance in the banking sector, as stated by @MEHRAN2011, diverge from that in non-financial sectors, particularly concerning transparency, business complexity, and regulatory oversight. Our research addresses this issue and extends the empirical literature studying the determinants of systemic risk by exploring the relation between ownership structure and banks' contribution to systemic risk. 
+
+
+### The evolution of ownership structure of commercial banks in China
+
+The dramatic changes regarding the ownership structure happened in Chinese commercial banks at each stage of China's financial reform. The four largest state-owned banks[^chapter03-systemic-01] were founded during the first stage of the financial reform (1978-early 1990s), along with other national banks[^chapter03-systemic-02]. These large banks were owned by the Finance Ministry and state-owned enterprises. The lower level of financial institutions, known as city credit cooperatives (later evolved to city banks), were controlled by the local Bureau of Finance; and foreign banks were operating in Special Economic Zones [@BERGER2009].[^chapter03-systemic-03]
+
+[^chapter03-systemic-01]: They are the "Big Four": Bank of China, China Construction Bank, Agricultural Bank of China, and Industrial and Commercial Bank of China.
+
+[^chapter03-systemic-02]: National banks: commercial banks which operate nationwide.
+
+[^chapter03-systemic-03]: Special Economic Zones: a form of Free Ports in China where companies may benefit from tariff allowances and exemption. Chinese government designated the first four Special Economic Zones -- Shenzhen, Xiamen, Shantou, and Hainan Province -- in order to encourage foreign investments and improve economy and technology by the end of 1980's. More details may be found in <http://www.npc.gov.cn/npc/c9757/200904/8e461e2ba405480697185186122812d4.shtml>.
+
+During the second stage (early 1990s-2001), most of the policy-lending business of the four largest state-owned banks was released to three policy banks founded during this period. Private enterprises and individuals began entering different levels of financial institutions as shareholders. Government shareholders, such as local Bureaus of Finance began to exit city banks by transferring their shareholding to local business enterprises. The biggest change to the ownership structure happened at the third stage of the financial reform (2001-2010). An investment enterprise, Central Huijin Investment Ltd. (hereafter CH), was established by the state government acting as a designated shareholder of those state-owned banks, in order to fulfill the corporate governance requirements set by laws and regulations. Direct government shareholding has sharply decreased. Foreign financial institutions such as RBS Group and Bank of America invested in all levels of Chinese banks including state-owned banks, national banks and city banks, as strategic investors. The majority of state-owned banks and several city banks went public at this stage, introducing more diversified shareholders. After 2010, more detailed improvements occurred regarding ownership structure; and private-owned banks were established. Local government shareholders become minority shareholders in city banks. Over 50% of shareholding in city banks and over 87% of shareholding in rural commercial banks had become private enterprises by 2017. In total 61 commercial banks were listed by the end of 2022.
+
+
+
+## Data and Empirical Methedology
+
+### Data Sample
+
+We obtain financial information at institution level from S&P Capital IQ Pro database (a service provided by S&P Global Inc.) over the period 2010:Q1-2022:Q4. Our sample contains 236 banks, 32 insurance companies, 23 securities, 22 trusts, 40 real estate companies, 4 financial-leasing companies, 15 other-financial companies and 4 policy-finance companies. We use stock market information from Compustats Global for total 133 publicly traded financial institutions in our sample. The Compustats Global provides daily stock price information for all listed financial institutions and the S&P Capital IQ Pro is the main data source of financial indicators. In cases where the S&P Capital IQ Pro does not provide enough information or has doubtful values, we double-check and hand collect data from other official sources including the annual issues of China's Statistical Yearbook, the press release and the annual reports of the China Banking and Insurance Regulatory Commission (CBIRC), and the annual reports of individual financial institutions.
+
+Our empirical analysis focuses on the dynamics between capital adequacy regulation and systemic risk of a panel of 236 Chinese banks. @tbl-banks presents the information of the ownership structure and the types of the commercial banks in China's banking industry. 
+
+
+
+
+
+
+```{r KableExtra-table banks}
+#| label: tbl-banks
+#| tbl-cap: Cross Tabulation of Ownership and Type
+
+banks <- read_excel(path = "Systemic_CO_data/SNL_banks.xlsx", 
+                    sheet = "Sheet1", 
+                    col_names = TRUE)
+
+N <- banks |> 
+  tabyl(Ownership, Type) |> 
+  adorn_totals(where = c("row", "col"))  |> 
+  adorn_percentages(denominator = "col")  |> 
+  adorn_pct_formatting(digits = 1, rounding = "half to even") |> 
+  adorn_ns(position = "front") |> 
+  adorn_title(placement = "combined", row_name = "Ownership", col_name = "Type")
+
+
+N_kbl <- kbl(N, format = "latex", 
+             booktabs = TRUE,
+             escape = TRUE)  |> 
+  kable_styling(latex_options = c("scale_down"))  |> 
+  column_spec(column = 1, bold = TRUE)  |> 
+  row_spec(row = 0, bold = TRUE)  |> 
+  kableExtra::footnote(alphabet_title = "Bank Types:", 
+    alphabet =c("Big Six: The biggest six banks, all state-owned;", 
+                "City bank: Branches usually cover a city and the near cities within the province where the bank headquarter is located;", 
+                "Foreign bank subsidiary: Foreign bank branches and subsidiaries;", 
+                "National bank: Branches cover the whole country and based on the CBIRC's categorization;", 
+                "Rural commercial: Branches usually cover local communities and rural area within a province where the bank headquarter is located."), 
+    number_title = "Ownership Structure:", 
+    number = c("Foreign-owned: Foreign bank operating in China;", 
+               "Foreign Joint-stock: Joint-stock Banks having foreign strategic investors (usually shareholding over 15%);", 
+               "Joint-stock: Banks' share held by mixed-ownership insitutions and individuals; if shareholding involves indirect local government holding, the stake is less than 10%;", 
+               "Local government-holding: Banks'share either held by local Treasury Bureau (no matter how much of the stake), or indirectly held by local government over 10%;", 
+               "State-owned: Bank directly controled by Central Huijin, Finance Ministry or state-owned enterprises."), 
+    title_format = c("italic", "underline"), 
+    threeparttable = TRUE)
+
+N_kbl
+
+
+
+
+```
+
+
+
+
+
+
+
+
+### The Empirical Model
+
+We run the following baseline regression to investigate the relationship between regulatory capital and systemic risk: 
+
+
+\begin{equation}
+\tag{1}
+systemic risk_{it} = \beta_{0} + \beta_{1}*capital_{it-1} + \beta{2}*bankcontrols_{it-1} + \epsilon_{it}
+\end{equation}
+
+
+In Equation (1), the subscripts i and t denote the individual bank and year respectively. The dependent variable is bank i's systemic risk in yeary ($systemic risk_{it}$), quantified using CoVaR following @ADRIAN2016 described in the following section. The main explanatory variable is the risk-based capital ratio in the Basel III framework and CBIRC capital management regulation. In our model, we use the total regulatory capital ratio *TC_to_RWA*. 
+
+As for bank-level control variables, we employ bank size, bank liquidity ratio, reliance on deposit funding, loan loss reserve (indicator of asset quality), and the ratio of net loans to total assets (indicator of business model). All explanatory variables are lagged by one year. In our regression, we employ institution-year fixed model in order to reduce concerns about possible omitted variables, based on the results of Hausman Test. 
+
+
+
+### The Measure of Systemic Stability
+
+We measure systemic risk as an individual bank's contribution to the overall financial system when financial distress is spreading across financial institutions. 
+
+Following @ADRIAN2016, we employ the conditional value-at-risk which is one of the most commonly used measures in the literature [@BIERTH2015]. It is the value-at-risk (VaR) of the overall financial system conditional on an individual institution being under financial distress. It captures both spillover effects and an individual institution's contribution to the overall risk of the system as a whole (@ADRIAN2016,@DEMIRGUC-KUNT2018). We use $\Delta CoVaR$ as our main systemic risk measure, which is "the difference between the CoVaR conditional on the distress of an institution and the CoVaR conditional on the median state of that institution" [@ADRIAN2016]. Following @ADRIAN2016, we compute the forward-$\Delta CoVaR$ using quantile regressions and a set of macro state variables. This method estimates $\Delta CoVaRs$ (and $VaRs$) as a function of a set of state variables, allowing us to capture time-variation in the joint distribution of systemic return and individual institutions' return. The quantile regressions are as follows:
+
+
+\begin{equation}
+\tag{2}
+R^{i}_{t} = \alpha^{i}_{q} + \gamma^{i}_{q}M_{t-1} + \epsilon^{i}_{t}
+\end{equation}
+
+
+
+\begin{equation}
+\tag{3}
+R_{m,t} = \alpha^{system|i}_{q} + \gamma^{system|i}_{q}M_{t-1} + \beta^{system|i}_{q}R^{i}_{t} + \epsilon^{system|i}_{qt}
+\end{equation}
+
+
+Where, $R_{it}$ is the daily equity return for an individual bank i. $M_{t-1}$ are a vector of lagged state variables that are employed to capture time variation in the conditional moments of asset returns.  The state variables include the change in the Chinese Renminbi 3-month SHIBOR rate, the change in the term spread, daily stock index return[^chapter03-systemic-04], and the volatility of the daily stock index return over previous month (22 trading days). $R_{m,t}$ is the daily return of all financial institutions. We employ daily stock returns from Compustats Global and other state variable information from Bloomberg.
+
+[^chapter03-systemic-04]: We collect daily stock index return from Shanghai Index, HangSeng Volatility Index, SSE180 Volatility Weighted Index, CSI Real Estate Index, and Shanghai Shenzhen CSI300 Index based on the exchange where the financial institutions are listed. The mean of the returns is collected if a financial institution is listed on multiple stock exchanges. 
+
+Nest step, we use the predicted values from the above regression models in the quantile regression models to obtain: 
+
+
+\begin{equation}
+\tag{4a}
+VaR^{i}_{qt} = \hat{\alpha}^{i}_{q} + \hat{\gamma}^{i}_{q}M_{t-1}
+\end{equation}
+
+
+
+\begin{equation}
+\tag{4b}
+CoVaR^{i}_{qt} = \hat{\alpha}^{system|i}_{q} + \hat{\gamma}^{system|i}_{q}M_{t-1} + \hat{\beta}^{system|i}_{q}VaR^{i}_{qt}
+\end{equation}
+
+
+Finally, we compute $\Delta CoVaR^{i}_{qt}$ for individual banks using the values from the above regressions which has captured time-variation in the joint distribution of $R^{system}$ and $R^{i}$. 
+
+
+\begin{equation}
+\tag{5}
+\Delta CoVaR^{i}_{qt} = CoVaR^{i}_{qt} - CoVaR^{i}_{50t} = \hat{\beta}^{system|i}_{q}(VaR^{i}_{qt}-VaR^{i}_{50t})
+\end{equation}
+
+
+Here we condition the $VaR$ of the whole financial system on the event that an individual bank's loss changed from its median level (50%) to the $VaR^{i}_{q\%}$. We compute the $CoVaR$ measure when q=5% and q=1% for banks in our sample from 2010-2022.
+
+
+
+### Capital Adequacy Requirement
+
+Regulatory consensus has viewed capital regulation helps curbing bank risk-taking and absorbing losses. However, economic theorists rarely agree on the role of capital. @HOGAN2015 suggests that capital requirements are negatively related to bank risk-taking. @HELLMANN2000 argue that capital regulation induces banks to take excessive risk.After the GFC, there is growing consensus to adjust the capital adequacy requirements to better reflect individual banks' risk contribution to the system-wide fragility [@BRUNNERMEIER2009]. @ANGINER2014, @DEMIRGUC-KUNT2018 and @LAEVEN2016_SYSTEMIC all find that great capital position improves systemic stability. 
+
+Risk-based capital adequacy requirements are deemed as the core of the Basel III framework and CBIRC capital management regulation. Taking into account of the higher accessibility of the data, we use total regulatory capital ratio as the variable of interest in our analysis. The total regulatory capital ratio *TC_to_RWA* is computed as the sum of Tier 1 and Tier 2 capital divided by risk-adjusted assets and off-balance sheet exposures (total regulatory capital/RWA). 
+
+
+
+### Bank-Level Control Variables
+
+In investigating the relationship between regulatory capital and systemic risk, we follow @DEMIRGUC-KUNT2018 and choose a set of bank-level control variables ($BankControl_{i,t}$):
+
+*Size*: we employ the natural logarithm of total assets as the measurement of bank size. Bank size has been considered as one of the determinants of systemic risk due to the GFC [@LAEVEN2016_SYSTEMIC]. Large banks, funded by unstable funding, tend to take excessive risks which might cause liquidity shocks and market failures, and generate systemic risk [@GENNAIOLI2013;@SHLEIFER2010]. @LAEVEN2007 argue that large banks engage in multiple (and risky) activities which induce high agency costs and corporate governance problems, and generate systemic risk.
+
+*Liquidity*: we compute liquidity assets divided by total assets (liquidity assets/total assets) to measure bank liquidity. Bank liquidity is closely related to system-wide fragility. Liquidity crunches can quickly propagate within the whole financial system and induce systemic instability [@DAVYDOV2021]. However, there is no consensus on the relationship between bank liquidity creation[^chapter03-systemic-05] and systemic risk. @DAVYDOV2021 find that liquidity creation decrease systemic risk. @ZHANG2021 find liquidity creation increases systemic risk with a "U" shape relationship. 
+
+[^chapter03-systemic-05]: banks create liquidity by transforming liquid/short-term liabilities (e.g. deposits) into illiquid assets/investments [see @BHATTACHARYA1993; @BERGER2009]. 
+
+*Funding*: reliance on deposit funding is measured by deposits divided by total assets (total deposits/total assets).
+
+*LLR*: for asset quality, loan loss provision divided by total assets (loan loss provision/gross loan) is employed as the proxy, representing the proportion of the loan book a bank expects to be written-off.
+
+*NL_to_TA*: we use the ratio of the total net loan divided by total assets (total net loan/total assets) as a proxy for an individual banks' business model. The existing literature shows that banks with traditional loan portfolios may be exposed to lower risk than those investing in derivatives [@BITAR2018].
+
+
+
+## Empirical Results
+
+### Descriptive Statistics and Correlation Matrix
+
+
+
+
+
+
+```{r}
+#| label: tidy all bank-level variable data from SNL
+#| include: false
+
+# Total regulatory capital ratio
+TRCap <- read_excel(path = "Systemic_Financial_data/QTRCap_Ratio.xlsx", 
+                    sheet = "Sheet1", 
+                    col_names = TRUE) |> 
+  pivot_longer(cols = c("2022Q4":"2010Q1"), 
+               names_to = "Quarter", 
+               values_to = "TC_RWA")
+
+# Total assets and LnAssets
+TA <- read_excel(path = "Systemic_Financial_data/QTotal_Assets.xlsx", 
+                 sheet = "Sheet1", 
+                 col_names = TRUE) |> 
+  pivot_longer(cols = c("2022Q4":"2010Q1"), 
+               names_to = "Quarter", 
+               values_to = "Total_Assets")
+
+TA_Size <- TA |> 
+  mutate_at(c("SNL_INSTN_KEY", "Total_Assets"), as.numeric) |> 
+  mutate(LnAssets = log(Total_Assets))
+  
+# Net Loans to Total Assets
+NetLoans <- read_excel(path = "Systemic_Financial_data/QNetLoans.xlsx", 
+                       sheet = "Sheet1", 
+                       col_names = TRUE) |> 
+  pivot_longer(cols = c("2022Q4":"2010Q1"), 
+               names_to = "Quarter", 
+               values_to = "NL_to_TA")
+
+# Loan Loss Reserves to Total Gross Loans
+LLR <- read_excel(path = "Systemic_Financial_data/QLLR_Ratio.xlsx", 
+                  sheet = "Sheet1", 
+                  col_names = TRUE) |> 
+  pivot_longer(cols = c("2022Q4":"2010Q1"), 
+               names_to = "Quarter", 
+               values_to = "LLR")
+
+# Liquidity Assets to Total Assets
+Liquidity <- read_excel(path = "Systemic_Financial_data/QLiquidity.xlsx", 
+                        sheet = "Sheet1", 
+                        col_names = TRUE) |> 
+  pivot_longer(cols = c("2022Q4":"2010Q1"), 
+               names_to = "Quarter", 
+               values_to = "Liquidity_Ratio")
+
+# Deposits to Total Assets
+Funding <- read_excel(path = "Systemic_Financial_data/QFunding_Ratio.xlsx", 
+                      sheet = "Sheet1", 
+                      col_names = TRUE) |> 
+  pivot_longer(cols = c("2022Q4":"2010Q1"), 
+               names_to = "Quarter", 
+               values_to = "Funding_Ratio")
+
+# Create a data_list for all the data_frames
+df_list <- list(TRCap, TA_Size, NetLoans, LLR, Liquidity, Funding)
+
+df_variables <- df_list |> 
+  reduce(inner_join, 
+         by = c("COMPANY_NAME", "SNL_INSTN_KEY", "SIC", "ISIN", "Ownership", "Industry", "Quarter")) |> 
+  mutate_at("Ownership", as.factor) |> 
+  mutate_at(c("TC_RWA", "LLR", "NL_to_TA", "Liquidity_Ratio","Funding_Ratio"), as.numeric)
+
+df_variables$Quarter <- yq(df_variables$Quarter)
+
+```
+
+```{r}
+#| label: tbl-statistics
+#| tbl-cap: Descriptive Statistics
+
+stats <- df_variables |> 
+  select(c("TC_RWA", "LnAssets", "NL_to_TA", "Liquidity_Ratio", "Funding_Ratio", "LLR")) |> 
+  get_summary_stats(type = "full", 
+                    show = c("n", "mean", "median", "sd", "min", "max")) |> 
+  kbl(digits = 3, 
+      booktabs = TRUE, 
+      col.names = c("", "N", "Mean", "Median", "Sd", "Min", "Max")) |> 
+  kable_styling(full_width = FALSE, 
+                position = "center", 
+                latex_options = c("hold_position", "scale_down")) |> 
+  row_spec(0, bold = TRUE, 
+           align = "c") |> 
+  column_spec(1, bold = TRUE, 
+              width = "5cm")
+
+stats
+
+```
+
+
+
+
+
+
+
+@tbl-statistics reports descriptive statistics of bank-level variables. The values of the mean and the median of total regulatory capital ratio (TC_RWA) are 14.947% and 13.396%, respectively. The above two values both are about 1% higher than the values of the global banks reported by @DEMIRGUC-KUNT2018 (13.8% and 12.5%), which may indicate that a majority of jurisdictions[^chapter03-systemic-06] have accepted and been implementing the Basel III capital adequacy regulation. Bank size is represented by the variable *LnAssets* and measured as the natural logarithm of the value of total assets. The mean of LnAssets is 16.939 which is much higher than the cross-sectional data of the global bank sample at the end of 2006 reported by @LAEVEN2016_SYSTEMIC (3.83). However, the mean value of our sample is lower than the value reported by @ZHANG2021 (28.8799). The reason should be due to @ZHANG2021 use 16 listed Chinese banks accounting for 70% of total banking assets in 2010. The ratio of net loans to total assets (*NL_to_TA*) measures how much the individual banks rely on loans as one of the income sources. The mean value is 44.134% which is lower than the @DEMIRGUC-KUNT2018 sample (63.4%); relatively, the mean of *Liquidity_Ratio* is 34.37% which is higher than the @DEMIRGUC-KUNT2018 sample (10.7%). The values of the above pair of variables may show that financial assets for trading (e.g. bonds, inter-bank repurchase) serve as one of vital sources of income for banks over the period 2010-2022, since trading assets make up the principle component of liquidity assets. The statistics of *Funding_ratio* backs up the above statement. The ratio of deposits to total assets (*Funding_ratio*) has the mean value as 66.09% which is lower than the @DEMIRGUC-KUNT2018 sample (78.6%). However, the value of loan loss reserves (*LLR*) has the mean value as 3.499% which is much higher than the @DEMIRGUC-KUNT2018 sample (0.6%), and higher than what reported by @TAN2013 where they use a sample of 101 Chinese banks over the period 2003-2009. The higher mean of LLR might imply that the overall asset quality of Chinese banks has coincided with the expanding number of banks after the GFC. 
+
+[^chapter03-systemic-06]: @DEMIRGUC-KUNT2018 use the sample of 1735 banks in 61 countries.  
+
+
+Appendix @fig-appendixcorrelation reports the Pearson correlation matrix for the bank-level variables employed in our analysis. The strength of the associations between the bank-level variables are weak to moderate, which may indicate that the risk of multicollinearity is probably low. 
+
+
+
+### Relationship between Capital and Systemic Risk
+
+
+
+
+
+
+```{r}
+#| label: Accessing WRDS
+
+wrds <- dbConnect(
+  Postgres(), 
+  host = "wrds-pgdata.wharton.upenn.edu", 
+  dbname = "wrds", 
+  port = 9737, 
+  sslmode = "require", 
+  user = "yzhang107", 
+  password = "771106v71@812S"
+)
+
+```
+
+```{r}
+#| label: Identify g_company table
+
+idgc_db <- tbl(src = wrds, 
+               in_schema(schema = "comp_global",
+                         table = "g_company"))
+
+```
+
+```{r}
+#| label: Retrieve company data frame from SNL
+
+SNL_co <- read_excel(path = "Systemic_CO_data/SNL_total.xlsx", 
+                     sheet = "Sheet1", 
+                     col_names = TRUE, 
+                     col_types = "text")
+
+```
+
+```{r}
+#| label: Setting date range for daily prices
+
+start_date <- ymd("2010-01-01")
+end_date <- ymd("2022-12-31")
+
+```
+
+```{r}
+#| label: Identify company names and SIC codes in SNL_co data frame
+
+co_name <- SNL_co$COMPANY_NAME
+sic_code <- SNL_co$SIC
+ind <- SNL_co$Industry
+```
+
+```{r}
+#| label: Extract daily prices using the companies in the SNL_co data frame and the SIC codes
+
+co_name <- SNL_co$COMPANY_NAME
+sic_code <- SNL_co$SIC
+isin_code <- SNL_co$ISIN
+
+daily_db_SNL <- tbl(src = wrds, 
+                    in_schema(schema = "comp", 
+                              table = "g_secd"))
+
+
+price_dly_SNL <- daily_db_SNL |> 
+  filter(isin %in% isin_code &
+           datadate >= start_date & datadate <= end_date) |>
+  collect()
+  
+```
+
+```{r}
+#| label: Save all the data files from *SNL* into a .RDS file
+
+saveRDS(object = list(
+  companies = SNL_co, 
+  daily_price_SNL = price_dly_SNL, 
+  financials_SNL = df_variables), 
+  file = "Systemic_SNL_China.rds")
+
+```
+
+```{r}
+#| label: Get daily stock prices from Compustats and mutate returns
+#| include: false
+
+dat<-readRDS("Systemic_SNL_China.rds")
+
+dat$daily_price_SNL %>% 
+  {table(.$fic)} # countries where Chinese financials listed
+
+dat$daily_price_SNL %>%
+  filter(fic=="CHN") %>%
+  {length(unique(.$gvkey))} # number of financials listed in china
+
+china_only <- dat$daily_price_SNL %>%
+  filter(fic=="CHN")
+
+varlist <- read_excel("Systemic_CO_data/compustat_item_list_vendor.xlsx",sheet = 3,col_types = "text") |>
+  filter(Mnemonic %in% names(china_only)) %>%
+  distinct(Mnemonic,.keep_all = T)
+
+china_PriceReturn <- china_only |>
+  arrange(gvkey,iid,datadate,isin) |>
+  group_by(gvkey,iid,isin) |>
+  mutate(pr_rtn = c(NA, diff(log(prccd)))) |> 
+  ungroup()
+  
+```
+
+```{r}
+#| label: Create full names list of variable mnemonics
+
+compustat_item_list_vendor <- read_excel("Systemic_CO_data/compustat_item_list_vendor.xlsx", 
+    sheet = "Xpressfeed Items",col_types = "text")
+```
+
+```{r}
+# Create a unique list of price returns using "iid == 01W"
+
+df_returns <- china_PriceReturn |>
+  filter(iid=="01W") |>
+  select(datadate,isin,pr_rtn) |>
+  drop_na(pr_rtn) |>
+  pivot_wider(names_from = "isin",values_from ="pr_rtn")
+
+```
+
+```{r}
+#| label: Prepare state Variables
+#| include: false
+
+library(tidyquant)
+library(zoo)
+library(dplyr)
+
+state_vars <- read_excel(path = "Systemic_Market_data/china_market_vars.xlsx", 
+                         sheet = "State_Variables", 
+                         col_names = TRUE) |>
+  left_join(read_excel(path = "Systemic_Market_data/shibor.xlsx", sheet = "Sheet1"),
+            by="Date")
+
+names_updates <- c("Shanghai_Index","HangSengVol_Index","SSE180_Vol_Index","CSI_Real_Estate_Index","Shanghai_Shenzhen_CSI300_Index","CNY_ON_SHIBOR","CNY_3M_SHIBOR","Bank_LiquidityRisk_Spread", "Chg3M", "ChgSpd")
+
+names(state_vars)[-1] <- names_updates
+
+state_vars$Return_Shanghai = c(NA, diff(log(state_vars$Shanghai_Index)))
+
+state_vars$Return_HangSeng = c(NA, diff(log(state_vars$HangSengVol_Index)))
+
+state_vars$Return_SSE180 = c(NA, diff(log(state_vars$SSE180_Vol_Index)))
+
+state_vars$Return_RealEstate = c(NA, diff(log(state_vars$CSI_Real_Estate_Index)))
+
+state_vars$Return_CSI300 = c(NA, diff(log(state_vars$Shanghai_Shenzhen_CSI300_Index)))
+
+state_vars1 <- state_vars |> 
+  rowwise() |> 
+  mutate(MktRtn = mean(c_across(c("Return_Shanghai", "Return_HangSeng", "Return_SSE180", "Return_RealEstate", "Return_CSI300")), 
+                       na.rm = TRUE))
+
+state_vars2 <- state_vars1 |>
+  drop_na(MktRtn) |>
+  tidyquant::tq_mutate(select = MktRtn,
+                       mutate_fun = runSD,
+                       n=22,
+                       col_rename = "Vol_22DaySD"
+                       ) 
+
+state_vars2$ChgON = c(NA, diff(state_vars2$CNY_ON_SHIBOR))
+
+
+# lagged values
+state_vars2 %>%
+  transmute(lgMktR=dplyr::lag(MktRtn), 
+            lgVol=dplyr::lag(Vol_22DaySD), 
+            lgChgSpd= dplyr::lag(ChgSpd), 
+            lgchg3M=dplyr::lag(Chg3M),
+            Date=Date)-> state
+
+state |>
+  drop_na()
+
+```
+
+```{r}
+#| label: financials-returns
+#| include: false
+
+library(skimr)
+
+# non-missing greater than 252 day
+df_returns |>
+  pivot_longer(-datadate,
+               names_to = "ISIN",
+               values_to = "Rtn") |>
+  rename(Date=datadate) |>
+  arrange(ISIN,Date) |>
+  group_by(ISIN) |>
+  summarise(NonMissing =sum(!is.na(Rtn)),
+            Missing=sum(is.na(Rtn)))-> Missingness
+
+Missingness |> 
+  filter(NonMissing>252) |>
+  nrow()
+
+skimr::skim(Missingness)
+
+```
+
+```{r}
+#| label: Calculate Losses
+#| include: false
+
+df_returns |>
+  pivot_longer(-datadate,
+               names_to = "ISIN",
+               values_to = "Rtn") |>
+  rename(Date=datadate) |>
+  arrange(ISIN,Date) |>
+  group_by(ISIN) |>
+  drop_na(Rtn) |>
+  skimr::skim(Rtn)
+
+df_returns |>
+  pivot_longer(-datadate,
+               names_to = "ISIN",
+               values_to = "Rtn") |>
+  rename(Date=datadate) |>
+  arrange(Date,ISIN) |>
+  group_by(Date) |>
+  drop_na(Rtn) |>
+  mutate(rtn_loss=Rtn*(-1),
+         sys_loss=ifelse(
+    rtn_loss!=Inf,mean(rtn_loss,na.rm = T),NA)) |>
+  ungroup() -> FI_returns
+
+skimr::skim(FI_returns)
+
+```
+
+```{r}
+#| label: add-state-variables
+
+FI_returns %>% split(f=FI_returns$ISIN) -> rtn
+
+rtn %>% map(~(left_join(.x,state ,by="Date") |> drop_na())) -> rtn
+
+```
+
+```{r}
+#| label: CoVaR-calculates - Quantile Regression
+#| include: false
+
+#Step1: Run quantile regressions for 50th, 95th and 99th percentiles to estimate time varying VaRs for each institution
+
+#Step2: Estimate system betas $b_tVaR_k|System$
+
+#Step3: Estimate Delta CoVaRs
+
+reg_spec<-formula(rtn_loss~lgMktR+lgVol+lgChgSpd+lgchg3M)
+
+reg_spec_sys<-formula(sys_loss~rtn_loss+lgMktR+lgVol+lgChgSpd+lgchg3M)
+
+pb<-progress::progress_bar$new(total=length(rtn))
+
+covar <- function(df) {
+  pb$tick()
+  df %>% drop_na()->df
+  if (nrow(df)>40) {
+      v50<-fitted(rq(reg_spec,data =df,tau = 0.5))
+  v95<-fitted(rq(reg_spec,data =df,tau = 0.95))
+  v99<-fitted(rq(reg_spec,data =df,tau = 0.99))
+  
+  rq(reg_spec_sys,data=df,tau=0.95) %>% coef() -> beta
+  
+  b95<-beta["rtn_loss"]
+  
+  rq(reg_spec_sys,data=df,tau=0.99) %>% coef() -> beta
+  
+  b99<-beta["rtn_loss"]
+  
+  DCoVaR95<-b95*(v95-v50)
+  
+  DCoVaR99<-b99*(v99-v50)
+  
+  return(tibble(c99=DCoVaR99,c95=DCoVaR95,v95=v95,v99=v99,b95=b95,b99=b99))
+  } else{
+  return(NULL)  
+  }
+
+}  
+
+rtn %>% map(~covar(.x)) ->CoVaR_res
+
+CoVaR_res %>% 
+  bind_rows(.id = 'ISIN') %>% 
+  summary()
+
+rtn %>% bind_rows(.id="ISIN") %>% 
+  drop_na() %>%  
+  add_column(CoVaR_res %>% bind_rows)->dat_anual
+
+
+```
+
+```{r}
+#| label: tbl-CoVaRstatistics
+#| tbl-cap: Summary Statistics of CoVaR
+
+stats_CoVaR <- dat_anual |>   
+  select("c95", "c99", "v95", "v99") |> 
+  rename("95%CoVaR" = "c95", 
+         "99%CoVaR" = "c99",
+         "95%VaR" = "v95", 
+         "99%VaR" = "v99") |> 
+  get_summary_stats(type = "full", 
+                    show = c("n", "mean", "median", "sd", "min", "max")) |> 
+  kableExtra::kbl(booktabs = TRUE, 
+                  col.names = c("", "N", "Mean", "Median", "Sd", "Min", "Max")) |> 
+  kable_styling(full_width = FALSE, 
+                position = "center") |> 
+  column_spec(1, bold = TRUE, 
+              width = "4cm") |> 
+  row_spec(0, bold = TRUE)
+  
+stats_CoVaR
+  
+
+```
+
+
+
+
+
+
+
+@tbl-CoVaRstatistics reports the descriptive statistics of CoVaR at 95% and 99% confidence levels (the 95th and 99th percentiles of the loss distributions of an individual bank), respectively. The higher values indicate greater systemic risk. The 95%CoVaR has the mean value as 0.01 which is lower than the mean value reported by @ZHANG2021. The reason might be due to that they use 16 large listed banks over the period 2011-2016. According to the empirical analysis by @LAEVEN2016_SYSTEMIC, bank size is positively related to systemic risk. 
+
+
+
+
+
+
+
+```{r}
+#| label: fig-CoVaRindustry
+#| fig-cap: DCoVaR Visualization by Industry
+#| message: false
+
+#dat$companies
+
+#table(dat$companies$ISIN)
+
+p1 <- dat_anual |>
+  left_join(dat$companies,by="ISIN") |>
+  group_by(Date,Industry) |>
+  summarise(DCoVaR99=mean(c99,na.rm=T),DCoVaR95=mean(c95,na.rm=T)) |>
+  pivot_longer(!Date&!Industry,names_to = "Type",values_to = "MeanCoVaR") |>
+  ggplot(aes(x=Date,y=MeanCoVaR,colour=Type)) + geom_line() + facet_wrap(~Industry) 
+
+p1
+
+
+```
+
+
+
+
+
+
+
+@fig-CoVaRindustry presents the individual financial institutions' contribution to systemic risk based on industry. Based on the visulaization, CoVaR of financial institutions in the industries of securities and trust have higher volatility than banks, especially over the period 2015-2022. 
+
+
+
+
+
+
+
+```{r}
+#| label: tbl-regression
+#| tbl-cap: Regulatory Capital and Systemic Risk Estimated 
+#| message: false
+
+
+#Step1: Aggregate daily CoVaR to quarterly data;
+#Step2: Combine financial data with CoVaR to a data frame according to ISIN key;
+#Step3: Run regression in the data frame
+
+# Aggregate daily CoVaR
+CoVaR_aggr <- dat_anual |>
+  mutate(CoVaR_95=100*c95, 
+         CoVaR_99=100*c99) |> 
+  select(Date, ISIN, CoVaR_95, CoVaR_99)
+
+
+# Round dates down to quarters
+CoVaR_aggr$Quarter <- floor_date(CoVaR_aggr$Date, "quarter")
+
+CoVaR_aggrQ <- CoVaR_aggr |> 
+  group_by(Quarter, ISIN) |> 
+  summarize(CoVaR95 = mean(CoVaR_95, na.rm = TRUE), 
+            CoVaR99 = mean(CoVaR_99, na.rm = TRUE))
+
+
+# Combine financial data and CoVaR quarterly data
+
+## Lag financial variables by one year
+
+df_lagV <- df_variables |> 
+  mutate(LagTC_RWA = dplyr::lag(TC_RWA, n=4), 
+            LagLnAssets = dplyr::lag(LnAssets, n=4), 
+            LagNL_to_TA = dplyr::lag(NL_to_TA, n=4), 
+            LagLLR = dplyr::lag(LLR, n=4), 
+            LagLiquidity_Ratio = dplyr::lag(Liquidity_Ratio, n=4), 
+            LagFunding_Ratio = dplyr::lag(Funding_Ratio, n=4))
+
+## Combine financial data and SNL_co data
+
+SNL_co$SNL_INSTN_KEY <- as.numeric(SNL_co$SNL_INSTN_KEY)
+
+df_co_variables <- SNL_co |> 
+  left_join(df_lagV, 
+            by = c("COMPANY_NAME", "SNL_INSTN_KEY", "SIC", "ISIN", "Ownership", "Industry"))
+
+df_quarterly <- df_co_variables |> 
+  full_join(CoVaR_aggrQ, 
+            by = c("ISIN", "Quarter"))
+
+
+
+# Run fixed-effect regression
+
+## Create a pdata.frame
+panel <- df_quarterly |> 
+  pdata.frame(index = c("COMPANY_NAME", "Quarter"), 
+              drop.index = FALSE, 
+              row.names = TRUE)
+
+panel$Ownership <- factor(panel$Ownership, 
+                          levels = c( "Joint-stock",  "Foreign-owned", "State-owned", "Local government-holding", "Foreign Joint-stock"))
+
+#CoVaR95 Fixed-effect regression  
+fixed_95 <- plm(CoVaR95 ~ TC_RWA + LnAssets + NL_to_TA - LLR + Liquidity_Ratio + Funding_Ratio + Ownership,  
+             data = panel,
+             effect = "twoways",
+             model = "pooling")
+
+#summary(fixed_95)
+
+#CoVaR95 Random-effect regression
+random_95 <- plm(CoVaR95 ~ TC_RWA + LnAssets + NL_to_TA - LLR + Liquidity_Ratio + Funding_Ratio + Ownership,  
+             data = panel,
+             model = "random", 
+             random.method = "swar")
+
+#summary(random_95)
+
+#Hausman test for CoVaR95
+#phtest(fixed_95, random_95)
+
+#Hausman test rejects the null hypothesis. Therefore, the CoVaR95 fix-effect regression model will be run. 
+
+#Regression table for fixed- and random- CoVaR95
+#model_95 <- tab_model(fixed_95, random_95, 
+#                      digits = 5, 
+#                      auto.label = TRUE, 
+#                      p.style = "stars")
+
+#model_95
+
+
+#CoVaR99 Fixed-effect regression
+fixed_99 <- plm(CoVaR99 ~ TC_RWA + LnAssets + NL_to_TA - LLR + Liquidity_Ratio + Funding_Ratio + Ownership, 
+             data = panel,
+             effect = "twoways", 
+             model = "pooling")
+
+#summary(fixed_99)
+
+#CoVaR99 Random-effect regression
+random_99 <- plm(CoVaR99 ~ TC_RWA + LnAssets + NL_to_TA - LLR + Liquidity_Ratio + Funding_Ratio + Ownership,  
+             data = panel,
+             model = "random", 
+             random.method = "swar")
+
+#summary(random_99)
+
+#Hausman test for CoVaR99
+
+#phtest(fixed_99, random_99)
+
+#Hausman test rejects the null hypothesis. The CoVaR99 fixed-effect regression will be run. 
+
+#Regression table for the fixed- and random- effect CoVaR99
+#model_99 <- tab_model(fixed_99, random_99,
+#                     digits = 5, 
+#                     auto.label = TRUE, 
+#                     p.style = "stars")
+
+#model_99
+
+#Regression table for the fixed-effect CoVaR95 and CoVaR99
+
+model_fixed <- tab_model(fixed_95, fixed_99,
+                         dv.labels = c("CoVaR_95%CI", "CoVaR_99%CI"), 
+                         digits = 3, 
+                         auto.label = TRUE,
+                         collapse.ci = TRUE, 
+                         p.style = "stars")
+
+model_fixed
+
+
+```
+
+
+
+
+
+
+
+@tbl-regression presents the results from the regression Equation(1) where we examine the baseline relationship between Basel III capital adequacy regulation and systemic risk measured using CoVaR. Based on the results of Hausman test, we employ the fixed-effect OLS regression model to exmaine the relation between total regulatory capital ratio and CoVaR95 (CoVaR at 95% confidence level) and CoVaR99 (CoVaR at 99% confidence level), respectively. We find a significant (at 90% confidence level) negative relationship between total regulatory capital ratio and CoVaR. Our results are consistent with the findings of @LAEVEN2016_SYSTEMIC and @DEMIRGUC-KUNT2018 that regulatory capital is inversely related to systemic risk, and higher levels of the regulatory capital ratio may contribute to decreasing systemic risk. 
+
+
+
+### Bank Characteristics and Systemic Risk
+
+The bank-level variables perform as expected and show consistent results with the ones in @ADRIAN2016, @DEMIRGUC-KUNT2018 and @LAEVEN2016_SYSTEMIC. Bank size (variable *LnAssets*) is positively associated with systemic risk. Large banks usually have broad connectedness to the entire financial system and have inclines to engage more in risky investments such as trading. Therefore, the high maturity mis-match ratio makes those large banks more vulnerable and generate externalities of liquidity shocks and market faliures such as fire sale [see @SHLEIFER2010;@BOOT2012]. Our results also support the view of agency cost that large banks, because of their engagement with complex trading, may suffer from increased agency problems leading to build-up and generation of higher systemic risk [@LAEVEN2007]. *Liquidity Ratio* shows positive relation with systemic risk. When banks have higher liquidity ratio (i.e. more short-term trading assets), they may be exposed to higher illiquid risk. In financial distress, an individual bank's liquidity shortage can be transmitted to the entire financial system through fire sales. The positive relation holds between bank loans (variable *NL_to_TA*) and systemic risk. The ratio of total net loans to total assets (*NL_to_TA*) can be used as the proxy of an individual bank's involvement in market-based activities [@LAEVEN2016_SYSTEMIC]. An individual bank with a lower net loan ratio may be considered that it 
+may be engaged with more frequent market-based activities. Intuitively, the individual bank may be exposed to higher risk of negative externalities that affect the whole financial system. However, our result shows that high market-based exposures may not increase the individual bank's contribution to systemic risk (increasing the risk of contagion) when the bank is in financial distress. 
+
+Ownership structure of Chinese banks is always a research area that attracts academic interests. We find that adding ownership structure does not change the significant and negative association between the total regulatory capital ratio and systemic risk. @BERGER2009 study efficiency of Chinese banks from the perspective of ownership structure and report that a minority of foreign ownership help improve bank efficiency. @TAN2013 investigate the effect of capital ratio on Chinese banks' cost efficiency adjusting for ownership structure. The thirty years of the reform in China's banking industry (1978-2010) achieved the advancement of the legal and financial infrastructure, as well as the more diversified ownership structure. By 2010 the four G-SIBs and other 12 commercial banks all completed IPOs. Private shareholding accounted for 77.7% in rural commercial banks. The period after 2010 could be considered as a stage of the financial reform for further progressing and improving on both infrastructure and ownership changes. In recent times, as China seeks to decouple its reserve banking system from the US, there may be important implications for continued regulatory cooperation in international banking[^chapter03-systemic-07].
+
+[^chapter03-systemic-07]:  <https://rhg.com/research/us-china-decoupling>
+
+
+The results reveal that compared to joint-stock banks which is the base category, state-owned banks, local government-holding banks and foreign joint-stock banks (foreign ownership as the minority shareholder) have higher contribution to systemic risk when individual banks are in distress. From the perspective of standalone bank risk, our findings support the viewpoint that state-owned banks are engaged with a number of policy-guided credit activities which might not be profit-centered [see @PESSAROSSI2015]. The social lending theory of state ownership proposed by @ATKINSON1980 suggests that state-owned enterprises contribute to "correcting the 'failure' of market economy" due to imperfect competition, inefficiency and public good. Therefore, government-owned enterprises may help improve overall performance of economy [see @STIGLITZ1993]. Nevertheless, state-owned banks may be exposed to high credit risk brought by those social welfare projects. In China's banking context, the four of the "Big Six" were founded and conducted a large amount of government lending in the early 1990's, before national banks and city banks were established. Within a relatively long period, the state-owned banks (including local government-holding banks founded later in the end of 1990's) played a role of 'government agencies' to pursue the broader social welfare objectives rather than profit maximizing; for example, the projects of the nationwide High-speed Rail network. These projects are long-term focus, requiring patient capital and borne with high opportunity costs and probably low profitability. According to @TIROLE1994, the managers in the state-owned banks have low powered incentives, since the state-owned banks target multiple welfare objectives which might not be measurable. The engagement with social welfare projects resulted in the significant non-performing loan levels of 'Big Four' banks before China's WTO accession in 2001.
+
+Since 2001, the ownership structure has been dramatically transformed due to China's overall industrial reforms and the commitments to the WTO agreement. The large part of shares directly held by local government were gradually replaced by mixed ownership enterprises, foreign investments, and private investors. In terms of the state-owned banks, direct state intervention was replaced by Central Huijin (a corporate shareholder representing the state government) along with the establishment of modern corporate governance system. Those infrastructure projects that purely focus on social welfare would be taken over by the policy banks[^chapter03-systemic-08] or would be financed by syndicated loans, in order to mitigate potential downsides and remain resilient to adverse market conditions.  The state-shareholding in state-owned banks have been transformed into concentrated ownership [see @SHLEIFER1997] but with powerful cash flow rights. Therefore, concentrated ownership puts pressure on management decision [@SHLEIFER1997] and bank risk taking incentives [@BOYD2008]. Most of state-owned Chinese banks are those largest banks in China's market in terms of branches/subsidiaries and total assets. According to "Too-big-to-fail" view, large and complex banks tend to take excessive risk depending on anticipated regulatory policy reaction [@FARHI2012]. These large and complex state-owned banks are the essential part of the whole financial system through their diversified  activities and connected the whole financial network. Therefore, large size and the network connectedness increase the systemic risk contribution of state-owned banks, escalating the externalities created when they are in distress. 
+
+[^chapter03-systemic-08]: The three policy banks, China Development Bank,  The Export-Import Bank of China, and The Agricultural Development Bank of China, were founded in 1994.  
+
+
+
+## Conclusion
+
+The global financial crisis (GFC) in 2007-2009 has demonstrated that the capital regulations in place were not adequate to protect financial institutions from systematic distress. Therefore, there has been academic interest in assessing the key reforms in Basel regulation and supervision framework. In this paper, we examine the relation between Basel III regulatory capital ratio and systemic risk in China's banking industry over the period 2010-2022. We find that there is negative relation between total regulatory capital ratio and systemic risk, which means systemic risk is lower in more-capitalized banks in China. 
+
+We also analyze the impact of bank-level variables on systemic risk. Bank size makes positive contribution to the increase of systemic risk. Our findings also show that high liquidity ratio imposes excessive systemic risk, which can be considered as evidence in support of more stringent regulations on inter-bank trading and maturity mismatch. However, calls to regulate trading business should come with prudence because our empirical research does not provide more detailed evidence on optimal size of trading relative to liquid assets or total assets. 
+
+Moreover, we investigate the impact of different ownership structure on systemic risk. Our results show that state-owned banks have higher contribution to systemic risk than joint-stock banks. We argue that systemic risk is influenced by the interplay of ownership structure, bank size and diversification. The concentration of state-owned shareholding with significant cash flow rights, coupled with the sheer size, may amplify the systemic repercussion in times of economic stress. Furthermore, the high level of diversification across state-owned banks' portfolio can exacerbate systemic risk by the broad interconnectedness of the bank in the financial system. Four of twelve state-owned banks are G-SIBs. From this perspective, our findings underpin the importance of regulating "Too-big-to-fail" financial institutions. However, more detailed research is needed to facilitate regulations and supervision framework. 
+
+### Discussions and Research Directions
+
+Due to the expansion of the global financial network and the extensive integration and interconnectedness within the global financial system, financial stress experienced by one bank has the potential to cascade to other banks, posing a threat to the broader financial system and potentially triggering a global systemic crisis [@GREENWOOD2015]. Global systemically important banks (G-SIBs), given their significant exposure to economic shocks, primarily drive system-wide distress. Authorities such as Financial Stability Board(FSB) finalized the Total Loss-Absorbing Capacity(TLAC) standards to require resolvability of G-SIBs. Our future research endeavors could entail conducting a comparative study among emerging markets where global systemically important banks (G-SIBs) are situated, and which share similar macroeconomic environments. This exploration aims to broaden the existing literature on systemic risk and provide implication for regulators by examining how G-SIBs operate within various emerging market contexts. 
+
+Our results may be driven by the endogeneity concerns as the level of regulatory capital kept by banks may fluctuated when systemic risk increasing in the financial system. We use the lagged values of bank-level variables in order to partially alleviate the concerns in our main analysis. Our findings may also have been influenced by the methodology used to measure systemic risk, particularly considering criticisms of market-based measures in the literature. @BORIO2009 have highlighted the limited scope of market-based measures in capturing systemic risk adequately. Besides, while the market-based models have demonstrated satisfactory performance within the United States, their efficacy in other markets(e.g. emerging markets) may need refinement and adaptation [@ARNOLD2012]. In our study, we utilize a market-based systemic risk measure known as conditional value at risk (CoVaR), as proposed by @ADRIAN2016. CoVaR incorporates macroeconomic data and firm-specific characteristics, addressing some of the limitations associated with traditional market-based measures. Consequently, CoVaR has gained widespread acceptance as a tool for systemic risk assessment in literature such as @LAEVEN2016_SYSTEMIC, @DEMIRGUC-KUNT2018 and @HUANG2019. However, it is important to acknowledge that CoVaR's reliance on stock market returns may still present a limitation in terms of its coverage. We intend to employ other alternative measures of systemic risk such as the Marginal Expected Shortfall(MES) to gauge banks' expected equity loss when the financial system is in distress [see @ACHARYA2017] in future research. 
+
+
+
+\newpage
+
+## Appendix{.appendix}
+
+### Correlation Matrix
+
+
+
+
+
+
+
+```{r visualization of correlation matrix}
+#| label: fig-appendixcorrelation
+#| fig-cap: Linear Correlation Matrix
+#| fig-width: 4
+#| fig-height: 4
+
+
+df_corr <- df_variables |> 
+  select(c("TC_RWA", "LnAssets", "NL_to_TA", "Liquidity_Ratio", "Funding_Ratio", "LLR")) 
+
+corr <- round(cor(df_corr, 
+                  use = "complete.obs", 
+                  method = "pearson"), 
+              digits = 3)
+
+corrplot(corr, 
+         method = "number", 
+         type = "full", 
+         number.cex = 0.75, 
+         number.digits = 3)
+
+```
+

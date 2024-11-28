@@ -1,0 +1,53 @@
+project:
+  type: book
+
+book:
+  title: "Towards Financial Resilience: An Examination of Basel III Implementation, Efficiency and Stability in China's Banking Landscape"
+  author: 
+    - name: "Ying Zhang"
+      affiliations: 
+        - name: "Queen's University, Belfast"
+          department: "Queen's Business School"
+  date: "March 2024"
+  date-format: "MMMM YYYY"
+  chapters:
+    - index.qmd
+    - chapter00-intro.qmd
+    - chapter00-landscape_banking.qmd
+    - chapter01-credit_risk.qmd
+    - chapter02-efficiency.qmd
+    - chapter03-systemic_risk.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+csl: elsevier-harvard.csl
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    toc: true
+    toc-depth: 3
+    keep-tex: true
+    documentclass: scrreprt
+    papersize: a4
+    linestretch: 1.5
+    fontsize: 12pt
+    margin-top: 25mm
+    template-partials: 
+      - frontmatter/before-body.tex
+      - frontmatter/_titlepage.tex
+      - frontmatter/toc.tex
+    include-in-header: 
+      - frontmatter/include-in-header.tex
+execute: 
+  eval: true
+  echo: false
+  output: true
+  warning: false
+  error: false
+  include: true
+
+
+
